@@ -27,6 +27,7 @@ namespace Bint.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
+        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -35,14 +36,13 @@ namespace Bint.Controllers
         private readonly IHttpContextAccessor _request;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
-        private readonly static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly IMessage _message;
-        DBFunc dbf;
+        readonly DBFunc _dbf;
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IHttpContextAccessor httpcontext,
+            IHttpContextAccessor httpContext,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
             IConfiguration configuration,
@@ -52,13 +52,13 @@ namespace Bint.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-            _request = httpcontext;
+            _request = httpContext;
             _emailSender = emailSender;
             _logger = logger;
             _configuration = configuration;
             _context = context;
             _message = message;
-            dbf = new DBFunc(_logger);
+            _dbf = new DBFunc(_logger);
         }
 
         [TempData]
@@ -160,9 +160,9 @@ namespace Bint.Controllers
                             CaptureDeviceData cd = new CaptureDeviceData();
                             DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
-                            cd.OSName = dd.GetOs().Match.Name.ToString();
-                            cd.OSVersion = dd.GetOs().Match.Version.ToString();
-                            cd.OSPlatform = dd.GetOs().Match.Platform.ToString();
+                            cd.OsName = dd.GetOs().Match.Name;
+                            cd.OsVersion = dd.GetOs().Match.Version;
+                            cd.OsPlatform = dd.GetOs().Match.Platform.ToString();
                             cd.BrowserName = dd.GetBrowserClient().Match.Name;
                             cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
                             cd.DeviceName = dd.GetDeviceName().ToString();
@@ -170,12 +170,12 @@ namespace Bint.Controllers
                             cd.Brand = dd.GetBrand().ToString();
                             cd.BrandName = dd.GetBrandName().ToString();
                             cd.Useragent = uagent;
-                            cd.urole = roles[0];
-                            cd.userid = user.Id;
+                            cd.URole = roles[0];
+                            cd.UserId = user.Id;
                             cd.LoginTime = indianTime;
                             cd.PublicIp = pip;
-                            cd.IPv4 = ipv4;
-                            cd.IPv6 = ipv6;
+                            cd.Ipv4 = ipv4;
+                            cd.Ipv6 = ipv6;
 
                             _context._captureDeviceData.Add(cd);
                             _context.SaveChanges();
@@ -372,7 +372,7 @@ namespace Bint.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 user.Firstname = model.Firstname;
@@ -396,7 +396,7 @@ namespace Bint.Controllers
                 user.CreatedId = _userManager.GetUserId(User);
 
                 //engage role id
-                string f = "";
+                var f = "";
                 if (quick == "true")
                 {
                     f = user.UpiId;
@@ -416,7 +416,7 @@ namespace Bint.Controllers
                     //  await _signInManager.SignInAsync(user, isPersistent: false);    // disabled user signing after registering
 
                     var z = _context.regId.First();
-                    var z1=0;
+                    int z1;
                     if (role.Name == "Admin")
                     {
                         z1 = Convert.ToInt32(z.AdminId); z1 = z1 + 1; user.UserId = "A" + z1.ToString("D4"); z.AdminId =z1.ToString("D4");
@@ -433,19 +433,18 @@ namespace Bint.Controllers
                     {
                         z1 = Convert.ToInt32(z.ClientId); z1 = z1 + 1; user.UserId = "C" + z1.ToString("D4"); z.ClientId =z1.ToString("D4");
                     }
-                    else
-                    { }
-
-                    
+                
                     _context.SaveChanges();
                     //update reg id
                     await _userManager.UpdateAsync(user);
 
-                    ActivityLog activityLog = new ActivityLog();
-                    activityLog.Userid = user.CreatedBy;
-                    activityLog.ActivityType = ActivityLogEnum.Person.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-                    activityLog.Activity = "Created user " + user.UserId;
+                    ActivityLog activityLog = new ActivityLog
+                    {
+                        Userid = user.CreatedBy,
+                        ActivityType = ActivityLogEnum.Person.ToString(),
+                        ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                        Activity = "Created user " + user.UserId
+                    };
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -470,10 +469,10 @@ namespace Bint.Controllers
         public async Task<IActionResult> Logout()
         {
             
-            IPAddress remoteIpAddress = _request.HttpContext.Connection.remoteIpAddress; //major important one, gets public ip address
+            IPAddress remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
             string pip = remoteIpAddress.ToString();
             var id = _userManager.GetUserId(User);
-            var stu = _context._captureDeviceData.Where(j => (j.userid == id) && (j.PublicIp == pip)).LastOrDefault();
+            var stu = _context._captureDeviceData.Where(j => (j.UserId == id) && (j.PublicIp == pip)).LastOrDefault();
             DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
             stu.LogoutTime = indianTime;
             _context.SaveChanges();
@@ -585,7 +584,7 @@ namespace Bint.Controllers
 
 
         [HttpGet]
-        public IActionResult SaveProfile(string id,string firstname,string lastname,string mobile, string address, string BankName, string ifsc, string accountholder, string pan, string upi,string BankAccount )
+        public IActionResult SaveProfile(string id,string firstname,string lastname,string mobile, string address, string bankName, string ifsc, string accountHolder, string pan, string upi,string bankAccount )
         {
             try
             {
@@ -594,12 +593,12 @@ namespace Bint.Controllers
                 appuser.Lastname = lastname;
                 appuser.Mobile = mobile;
                 appuser.Address = address;
-                appuser.BankName = BankName;
+                appuser.BankName = bankName;
                 appuser.IfscCode = ifsc;
-                appuser.AccountHolderName = accountholder;
+                appuser.AccountHolderName = accountHolder;
                 appuser.Pan = pan;
                 appuser.UpiId = upi;
-                appuser.BankAccount = BankAccount;
+                appuser.BankAccount = bankAccount;
 
                 var result =  _userManager.UpdateAsync(appuser).Result;
                 if (result.Succeeded)
@@ -725,7 +724,7 @@ namespace Bint.Controllers
             string ipv6 = "";
             string pip = "";
 
-            IPAddress remoteIpAddress = _request.HttpContext.Connection.remoteIpAddress; //major important one, gets public ip address
+            IPAddress remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
             pip = remoteIpAddress.ToString();
 
             //normally will get wifi router ip
@@ -757,11 +756,11 @@ namespace Bint.Controllers
             dd.SkipBotDetection();
             dd.Parse();
 
-            RestrictedAccess cd = new RestrictedAccess();
-            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-            cd.OSName = dd.GetOs().Match.Name.ToString();
-            cd.OSVersion = dd.GetOs().Match.Version.ToString();
-            cd.OSPlatform = dd.GetOs().Match.Platform.ToString();
+            var cd = new RestrictedAccess();
+            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+            cd.OsName = dd.GetOs().Match.Name.ToString();
+            cd.OsVersion = dd.GetOs().Match.Version.ToString();
+            cd.OsPlatform = dd.GetOs().Match.Platform.ToString();
             cd.BrowserName = dd.GetBrowserClient().Match.Name;
             cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
             cd.DeviceName = dd.GetDeviceName().ToString();
@@ -769,12 +768,12 @@ namespace Bint.Controllers
             cd.Brand = dd.GetBrand().ToString();
             cd.BrandName = dd.GetBrandName().ToString();
             cd.Useragent = uagent;
-            cd.urole = crole;
-            cd.userid = id;
+            cd.Urole = crole;
+            cd.UserId = id;
             cd.ErrorTime = indianTime;
             cd.PublicIp = pip;
-            cd.IPv4 = ipv4;
-            cd.IPv6 = ipv6;
+            cd.Ipv4 = ipv4;
+            cd.Ipv6 = ipv6;
             cd.Verified = "Not Verified";
             cd.ReturnUrl = rurl;
             _context._restrictedAccess.Add(cd);
@@ -814,7 +813,7 @@ namespace Bint.Controllers
                 ApplicationUser u = await _userManager.FindByIdAsync(uid);
 
              //   await _userManager.SetLockoutEnabledAsync(u, true);
-                if (status)
+                if(status)
                     u.EmailConfirmed = true;
                 else    u.EmailConfirmed = false;
 
@@ -834,10 +833,10 @@ namespace Bint.Controllers
         {
             try
             {
-                Doc s = _context.Doc.Where(x => x.Id == id).First();
-                var z = Directory.GetCurrentDirectory(); var t = ""; FileInfo fileInfo;
-                t = z + "\\wwwroot" + s.Docpath.Replace("/", "\\");
-                fileInfo = new System.IO.FileInfo(t);
+                Doc s = _context.Doc.First(x => x.Id == id);
+                var z = Directory.GetCurrentDirectory(); var t = "";
+                t = z + "\\wwwroot" + s.DocPath.Replace("/", "\\");
+                var fileInfo = new System.IO.FileInfo(t);
                 if (fileInfo.Exists)
                     fileInfo.Delete();
                 _context.Doc.Remove(s);
@@ -862,13 +861,15 @@ namespace Bint.Controllers
                 var s = await _userManager.GetRolesAsync(user);
                 ViewData["layout"] = s[0];
 
-                AdminUserProfileDashboard aupd = new AdminUserProfileDashboard();
-                ApplicationUser u = _userManager.FindByIdAsync(id).Result;
-                aupd._userProfile = u;
-                ActivityLogDashboard adb = new ActivityLogDashboard();
-                adb.activityLogTable = dbf.GetUserActivityLog(u.UserId);
-                aupd._activityLogDashboard = adb;
-                aupd.UserDocs = dbf.GetKYCDocs(id);
+                var aupd = new AdminUserProfileDashboard();
+                var u = _userManager.FindByIdAsync(id).Result;
+                aupd.UserProfile = u;
+                var adb = new ActivityLogDashboard
+                {
+                    ActivityLogTable = _dbf.GetUserActivityLog(u.UserId)
+                };
+                aupd.ActivityLogDashboard = adb;
+                aupd.UserDocs = _dbf.GetKYCDocs(id);
                 aupd.UserList = _userManager.Users.Where(x => x.CreatedBy == u.UserId);
                 return View(aupd);
             }
