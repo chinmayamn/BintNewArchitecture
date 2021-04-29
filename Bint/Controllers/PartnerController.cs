@@ -16,7 +16,7 @@ namespace Bint.Controllers
     [Authorize(Roles = "Partner")]
     public class PartnerController : Controller
     {
-        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private IHttpContextAccessor _request;
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<ApplicationUser> _userManager;
@@ -116,7 +116,7 @@ namespace Bint.Controllers
             return View();
 
         }
-        public IActionResult USD()
+        public IActionResult Usd()
         {
             try
             {
@@ -158,7 +158,7 @@ namespace Bint.Controllers
             }
             return View();
         }
-        public IActionResult BGC()
+        public IActionResult Bgc()
         {
             try
             {
@@ -178,7 +178,7 @@ namespace Bint.Controllers
                 ViewBag.ReturnUrl = "/partner/clients";
                 CustomerUserCreate m = new CustomerUserCreate();
                 IOrderedEnumerable<ApplicationUser> z;
-                z = _userManager.Users.AsEnumerable().Where(u => u.Created_id == _userManager.GetUserId(User)).OrderByDescending(x => x.Created_on.TimeOfDay);
+                z = _userManager.Users.AsEnumerable().Where(u => u.CreatedId == _userManager.GetUserId(User)).OrderByDescending(x => x.CreatedOn.TimeOfDay);
                 m.appUser = z;
                 return View(m);
             }
@@ -203,7 +203,7 @@ namespace Bint.Controllers
                 ActivityLog activityLog = new ActivityLog();
                 activityLog.Userid = y.UserId;
                 activityLog.ActivityType = ActivityLogEnum.DeletePerson.ToString();
-                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 activityLog.Activity = "Deleted user " + u.UserId;
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();

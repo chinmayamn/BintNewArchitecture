@@ -32,7 +32,7 @@ namespace Bint.Controllers
         private RoleManager<IdentityRole> _roleManager;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
-        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
         private readonly IMessage _message;
         public ManageController(
@@ -528,7 +528,7 @@ namespace Bint.Controllers
         [Route("/investor/debitcreditusd")]
         [Route("/client/debitcreditusd")]
         [Route("/partner/debitcreditusd")]
-        public async Task<IActionResult> usd(string amount)
+        public async Task<IActionResult> Usd(string amount)
         {
             Message mm = new Message(_messageLogger);
             var route = Request.Path.Value.Split("/")[1]; //get current user
@@ -537,32 +537,32 @@ namespace Bint.Controllers
          
                 var ud = await _userManager.GetUserAsync(User);
 
-                if (ud.USD >= Convert.ToDecimal(amount)) //transfer if having amount
+                if (ud.Usd >= Convert.ToDecimal(amount)) //transfer if having amount
                 {
                     /**************** crediting action **************/
 
-                    DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                    DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     TransferUSD tusd = new TransferUSD();   //crediting action to user
                     tusd.Amount = Convert.ToDecimal(amount);
                     tusd.FromUserId = ud.UserId;    //creator lower level
-                    tusd.ToUserId = ud.Created_by;  //requestor higher level
+                    tusd.ToUserId = ud.CreatedBy;  //requestor higher level
                     tusd.RequestedDate = dt;
                     tusd.TransferDate = dt;
                     tusd.FromStatus = TransferUSDStatusEnum.Debit.ToString();
                     tusd.ToStatus = TransferUSDStatusEnum.Credit.ToString();
                     tusd.Userid = ud.Id;
    
-                    var sendu = await _userManager.FindByIdAsync(ud.Created_id);  //get his account
+                    var sendu = await _userManager.FindByIdAsync(ud.CreatedId);  //get his account
                                                                                   //update his wallet
-                    sendu.USD = sendu.USD + tusd.Amount;
+                    sendu.Usd = sendu.Usd + tusd.Amount;
                     await _userManager.UpdateAsync(sendu);
 
-                    ud.USD = ud.USD - tusd.Amount;
+                    ud.Usd = ud.Usd - tusd.Amount;
                     await _userManager.UpdateAsync(ud);
 
 
-                    tusd.FromTotalAmount = ud.USD;
-                    tusd.ToTotalAmount = sendu.USD;
+                    tusd.FromTotalAmount = ud.Usd;
+                    tusd.ToTotalAmount = sendu.Usd;
                     _context.transferusd.Add(tusd);
                     _context.SaveChanges();
 
@@ -570,7 +570,7 @@ namespace Bint.Controllers
                     activityLog.Userid = tusd.ToUserId;
                     activityLog.ActivityDate = dt;
                     activityLog.ActivityType = ActivityLogEnum.Credit.ToString();
-                    activityLog.Activity = "Credited " + amount + " USD, received from " + tusd.FromUserId+". Balance : "+ sendu.USD;
+                    activityLog.Activity = "Credited " + amount + " Usd, received from " + tusd.FromUserId+". Balance : "+ sendu.Usd;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -579,7 +579,7 @@ namespace Bint.Controllers
                     mm.SMSMessageBody = activityLog.Activity;
                     mm.MobileNumber = sendu.Mobile;
                     mm.To = sendu.Email;
-                    mm.Subject = "USD Credited";
+                    mm.Subject = "Usd Credited";
                     _message.SendMessage(mm);
                     //activity ends here
 
@@ -591,7 +591,7 @@ namespace Bint.Controllers
                     //tusd = new TransferUSD();
                     //tusd.Amount = Convert.ToDecimal(amount);
                     //tusd.FromUserId = ud.UserId;
-                    //tusd.ToUserId = ud.Created_by;
+                    //tusd.ToUserId = ud.CreatedBy;
                     //tusd.TransferDate = dt;
                     //tusd.RequestedDate = dt;
                     //tusd.Status = TransferUSDStatusEnum.Debit.ToString();
@@ -599,7 +599,7 @@ namespace Bint.Controllers
                     
                  
 
-                    //tusd.TotalAmount = ud.USD;
+                    //tusd.TotalAmount = ud.Usd;
                     //_context.transferusd.Add(tusd);
                     //_context.SaveChanges();
                     //update ends here
@@ -608,7 +608,7 @@ namespace Bint.Controllers
                     activityLog.Userid = tusd.FromUserId;
                     activityLog.ActivityType = ActivityLogEnum.Debit.ToString();
                     activityLog.ActivityDate = dt;
-                    activityLog.Activity = "Debited " + amount + " USD, transferred to " + tusd.ToUserId + ". Balance : " + ud.USD;
+                    activityLog.Activity = "Debited " + amount + " Usd, transferred to " + tusd.ToUserId + ". Balance : " + ud.Usd;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -617,26 +617,26 @@ namespace Bint.Controllers
                     mm.SMSMessageBody = activityLog.Activity;
                     mm.MobileNumber = ud.Mobile;
                     mm.To = ud.Email;
-                    mm.Subject = "USD Debited";
+                    mm.Subject = "Usd Debited";
                     _message.SendMessage(mm);
 
                     /**************** debiting action ends here **************/
                     TempData["data"] = activityLog.Activity;
-                    return RedirectToAction("usd", route);
+                    return RedirectToAction("Usd", route);
                 }
         
                 else
                 {
 
-                     TempData["error"] = "Insufficient amount in USD wallet to transfer";
-                    return RedirectToAction("usd", route);
+                     TempData["error"] = "Insufficient amount in Usd wallet to transfer";
+                    return RedirectToAction("Usd", route);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                TempData["error"] = "Error occurred while payback USD";
-                return View("usd",route);
+                TempData["error"] = "Error occurred while payback Usd";
+                return View("Usd",route);
             }
           
         }
@@ -647,7 +647,7 @@ namespace Bint.Controllers
         [Route("/investor/requestusd")]
         [Route("/client/requestusd")]
         [Route("/partner/requestusd")]
-        public async Task<IActionResult> requestusd(string amount)
+        public async Task<IActionResult> RequestUsd(string amount)
         {
             try
             {
@@ -658,8 +658,8 @@ namespace Bint.Controllers
                     TransferUSD tusd = new TransferUSD();
                     tusd.Amount = Convert.ToDecimal(amount);
                     tusd.FromUserId = ud.UserId;
-                    tusd.ToUserId = ud.Created_by;
-                    tusd.RequestedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                    tusd.ToUserId = ud.CreatedBy;
+                    tusd.RequestedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     tusd.TransferDate = null;
                     tusd.FromStatus = tusd.ToStatus = TransferUSDStatusEnum.Requested.ToString();
                     tusd.Userid = ud.Id;
@@ -669,8 +669,8 @@ namespace Bint.Controllers
                     ActivityLog activityLog = new ActivityLog();
                     activityLog.Userid = tusd.FromUserId;
                     activityLog.ActivityType = ActivityLogEnum.RequestUSD.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                    activityLog.Activity = "Requested " + amount + " USD to " + ud.Created_by;
+                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    activityLog.Activity = "Requested " + amount + " Usd to " + ud.CreatedBy;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -679,38 +679,38 @@ namespace Bint.Controllers
                     mm.SMSMessageBody = activityLog.Activity;
                     mm.MobileNumber = ud.Mobile;
                     mm.To = ud.Email;
-                    mm.Subject = "USD Request";
+                    mm.Subject = "Usd Request";
                     _message.SendMessage(mm);
 
 
                     var sendu = await _userManager.FindByIdAsync(tusd.Userid);  //sending message to requested person
                     mm = new Message(_messageLogger);
-                    mm.EmailMessageBody = ud.UserId + " has requested " + amount + " USD";
-                    mm.SMSMessageBody = ud.UserId + " has requested " + amount + " USD";
+                    mm.EmailMessageBody = ud.UserId + " has requested " + amount + " Usd";
+                    mm.SMSMessageBody = ud.UserId + " has requested " + amount + " Usd";
                     mm.MobileNumber = sendu.Mobile;
                     mm.To = sendu.Email;
-                    mm.Subject = "USD Requested";
+                    mm.Subject = "Usd Requested";
                     _message.SendMessage(mm);
 
                     activityLog = new ActivityLog();
                     activityLog.Userid = tusd.ToUserId;
                     activityLog.ActivityType = ActivityLogEnum.RequestUSD.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                    activityLog.Activity = ud.UserId + " has requested " + amount + " USD";
+                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    activityLog.Activity = ud.UserId + " has requested " + amount + " Usd";
                 _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
 
-                TempData["data"] = "Requested " + amount + " USD to " + ud.Created_by;
-                return RedirectToAction("usd", route);
+                TempData["data"] = "Requested " + amount + " Usd to " + ud.CreatedBy;
+                return RedirectToAction("Usd", route);
               
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                TempData["error"] = "Error occurred while requesting USD";
+                TempData["error"] = "Error occurred while requesting Usd";
             }
-            return View("usd");
+            return View("Usd");
         }
 
         [HttpGet]
@@ -719,7 +719,7 @@ namespace Bint.Controllers
         [Route("/investor/transferusd")]
         [Route("/client/transferusd")]
         [Route("/partner/transferusd")]
-        public async Task<IActionResult> transferusd(int id,string act)
+        public async Task<IActionResult> TransferUsd(int id,string act)
         {
             try
             {
@@ -730,43 +730,43 @@ namespace Bint.Controllers
 
                 if (act == "Transfer")
                 {
-                    if (ud.USD >= tusd.Amount) //transfer if having amount
+                    if (ud.Usd >= tusd.Amount) //transfer if having amount
                     {
                         Message mm = new Message(_messageLogger);
                         ActivityLog activityLog = new ActivityLog();
 
                         /**************** crediting action starts here **************/
 
-                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                         tusd.FromStatus =  TransferUSDStatusEnum.Received.ToString();
                         tusd.ToStatus = TransferUSDStatusEnum.Transferred.ToString();
                         // _context.transferusd.Add(tusd);
 
                         ApplicationUser uid = await _userManager.FindByIdAsync(tusd.Userid); //update in user -  credit
-                        uid.USD = uid.USD + tusd.Amount;
+                        uid.Usd = uid.Usd + tusd.Amount;
                         await _userManager.UpdateAsync(uid);
 
-                        ud.USD = ud.USD - tusd.Amount; //update in himself - debit
+                        ud.Usd = ud.Usd - tusd.Amount; //update in himself - debit
                         await _userManager.UpdateAsync(ud);
 
-                        tusd.FromTotalAmount = uid.USD;
-                        tusd.ToTotalAmount =ud.USD;
+                        tusd.FromTotalAmount = uid.Usd;
+                        tusd.ToTotalAmount =ud.Usd;
                         _context.SaveChanges();
 
                         activityLog = new ActivityLog(); //set activitylog
                         activityLog.Userid = tusd.FromUserId;
                         activityLog.ActivityType = ActivityLogEnum.ReceiveUSD.ToString();
-                        activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                        activityLog.Activity = "Received " + tusd.Amount + " USD from " + tusd.ToUserId + ". Balance : " + uid.USD;
+                        activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                        activityLog.Activity = "Received " + tusd.Amount + " Usd from " + tusd.ToUserId + ". Balance : " + uid.Usd;
                         _context.activitylog.Add(activityLog);
                         _context.SaveChanges();
 
                         mm = new Message(_messageLogger); //sending message to requested person
-                        mm.EmailMessageBody = ud.UserId + " has transferred " + tusd.Amount + " USD";
-                        mm.SMSMessageBody = ud.UserId + " has transferred " + tusd.Amount + " USD";
+                        mm.EmailMessageBody = ud.UserId + " has transferred " + tusd.Amount + " Usd";
+                        mm.SMSMessageBody = ud.UserId + " has transferred " + tusd.Amount + " Usd";
                         mm.MobileNumber = uid.Mobile;
                         mm.To = uid.Email;
-                        mm.Subject = "USD Received";
+                        mm.Subject = "Usd Received";
                         _message.SendMessage(mm);
 
                         /**************** crediting action ends here **************/
@@ -777,7 +777,7 @@ namespace Bint.Controllers
 
                         //TransferUSD stusd = new TransferUSD();  //dont add, will create duplicate and all problems will come
                         //stusd.Amount = tusd.Amount;
-                        //stusd.TotalAmount = ud.USD;
+                        //stusd.TotalAmount = ud.Usd;
                         //stusd.FromUserId = ud.UserId;
                         //stusd.ToUserId = tusd.ToUserId;
                         //stusd.TransferDate = tusd.TransferDate;
@@ -793,8 +793,8 @@ namespace Bint.Controllers
                         activityLog = new ActivityLog(); //set activitylog
                         activityLog.Userid = tusd.ToUserId;
                         activityLog.ActivityType = ActivityLogEnum.TransferUSD.ToString();
-                        activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                        activityLog.Activity = "Transferred " + tusd.Amount + " USD to " + tusd.FromUserId + ". Balance : " + ud.USD;
+                        activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                        activityLog.Activity = "Transferred " + tusd.Amount + " Usd to " + tusd.FromUserId + ". Balance : " + ud.Usd;
                         _context.activitylog.Add(activityLog);
                         _context.SaveChanges();
 
@@ -803,7 +803,7 @@ namespace Bint.Controllers
                         mm.SMSMessageBody = activityLog.Activity;
                         mm.MobileNumber = ud.Mobile;
                         mm.To = ud.Email;
-                        mm.Subject = "USD Transferred";
+                        mm.Subject = "Usd Transferred";
                         _message.SendMessage(mm);
 
                         /**************** debiting action ends here **************/
@@ -815,22 +815,22 @@ namespace Bint.Controllers
                     else
                     {
 
-                       // TempData["error"] = "Insufficient amount in USD wallet";
-                        return Json("Insufficient amount in USD wallet");
+                       // TempData["error"] = "Insufficient amount in Usd wallet";
+                        return Json("Insufficient amount in Usd wallet");
                     }
                 }
                 else if(act=="Reject")
                 {
 
                     tusd.FromStatus = tusd.ToStatus = TransferUSDStatusEnum.Rejected.ToString();
-                    tusd.TransferDate= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                    tusd.TransferDate= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     _context.SaveChanges();
 
                     ActivityLog activityLog = new ActivityLog(); //set activitylog
                     activityLog.Userid = tusd.ToUserId;
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                    activityLog.Activity = "Rejected " + tusd.Amount + " USD to " + tusd.FromUserId;
+                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    activityLog.Activity = "Rejected " + tusd.Amount + " Usd to " + tusd.FromUserId;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -839,24 +839,24 @@ namespace Bint.Controllers
                     mm.SMSMessageBody = activityLog.Activity;
                     mm.MobileNumber = ud.Mobile;
                     mm.To = ud.Email;
-                    mm.Subject = "USD Rejected";
+                    mm.Subject = "Usd Rejected";
                     _message.SendMessage(mm);
 
                     ApplicationUser uid = await _userManager.FindByIdAsync(tusd.Userid); //sending message to requested person
 
                     mm = new Message(_messageLogger);
-                    mm.EmailMessageBody =  ud.UserId + " has rejected " + tusd.Amount + " USD to transfer";
-                    mm.SMSMessageBody = ud.UserId + " has transferred " + tusd.Amount + " USD to transfer";
+                    mm.EmailMessageBody =  ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer";
+                    mm.SMSMessageBody = ud.UserId + " has transferred " + tusd.Amount + " Usd to transfer";
                     mm.MobileNumber = uid.Mobile;
                     mm.To = uid.Email;
-                    mm.Subject = "USD Rejected";
+                    mm.Subject = "Usd Rejected";
                     _message.SendMessage(mm);
 
                     activityLog = new ActivityLog(); //set activitylog
                     activityLog.Userid = uid.UserId;
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                    activityLog.Activity = ud.UserId + " has rejected " + tusd.Amount + " USD to transfer";
+                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    activityLog.Activity = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer";
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -869,14 +869,14 @@ namespace Bint.Controllers
 
                 }
 
-                return RedirectToAction("usd", route);
+                return RedirectToAction("Usd", route);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                TempData["error"] = "Error occurred while requesting USD";
+                TempData["error"] = "Error occurred while requesting Usd";
             }
-            return View("usd");
+            return View("Usd");
         }
 
         [HttpPost]
@@ -885,17 +885,17 @@ namespace Bint.Controllers
         [Route("/investor/withdrawusd")]
         [Route("/client/withdrawusd")]
         [Route("/partner/withdrawusd")]
-        public async Task<IActionResult> withdrawusd(string WithdrawAmount)
+        public async Task<IActionResult> WithdrawUsd(string withdrawAmount)
         {
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
                 var ud = await _userManager.GetUserAsync(User);
-                if(ud.USD>=Convert.ToDecimal(WithdrawAmount))
+                if(ud.Usd>=Convert.ToDecimal(withdrawAmount))
                 {
 
                
-                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
                 DepositWithdraw tusd = new DepositWithdraw();   //to user
                 tusd.Amount = Convert.ToDecimal(WithdrawAmount);
@@ -911,7 +911,7 @@ namespace Bint.Controllers
                 activityLog.Userid = tusd.UserId;
                 activityLog.ActivityType = ActivityLogEnum.WithdrawUSD.ToString();
                 activityLog.ActivityDate = dt;
-                activityLog.Activity = "Requested to withdraw " + WithdrawAmount + " USD to Admin";
+                activityLog.Activity = "Requested to withdraw " + WithdrawAmount + " Usd to Admin";
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();
 
@@ -920,43 +920,43 @@ namespace Bint.Controllers
                 mm.SMSMessageBody = activityLog.Activity;
                 mm.MobileNumber = ud.Mobile;
                 mm.To = ud.Email;
-                mm.Subject = "Withdraw USD";
+                mm.Subject = "Withdraw Usd";
                 _message.SendMessage(mm);
 
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result; //sending message to requested person
                 mm = new Message(_messageLogger);
-                mm.EmailMessageBody = ud.UserId + " has requested " + WithdrawAmount + " USD to withdraw";
-                mm.SMSMessageBody = ud.UserId + " has requested " + WithdrawAmount + " USD to withdraw";
+                mm.EmailMessageBody = ud.UserId + " has requested " + WithdrawAmount + " Usd to withdraw";
+                mm.SMSMessageBody = ud.UserId + " has requested " + WithdrawAmount + " Usd to withdraw";
                 mm.MobileNumber = au[0].Mobile;
                 mm.To = au[0].Email;
-                mm.Subject = "USD Withdraw Request";
+                mm.Subject = "Usd Withdraw Request";
                 _message.SendMessage(mm);
 
                 activityLog = new ActivityLog();
                 activityLog.Userid = au[0].UserId;
                 activityLog.ActivityType = ActivityLogEnum.WithdrawUSD.ToString();
-                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                activityLog.Activity = ud.UserId + " has requested " + WithdrawAmount + " USD to withdraw";
+                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                activityLog.Activity = ud.UserId + " has requested " + WithdrawAmount + " Usd to withdraw";
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();
 
 
-                TempData["data"] = "Withdraw request for " + WithdrawAmount + " USD has been raised to admin" ;
-                return RedirectToAction("usd", route);
+                TempData["data"] = "Withdraw request for " + WithdrawAmount + " Usd has been raised to admin" ;
+                return RedirectToAction("Usd", route);
                 }
                 else
                 {
                     TempData["error"] = "Insufficient amount in account to withdraw";
-                    return RedirectToAction("usd", route);
+                    return RedirectToAction("Usd", route);
                 }
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                TempData["error"] = "Error occurred while withdraw USD";
+                TempData["error"] = "Error occurred while withdraw Usd";
             }
-            return View("usd");
+            return View("Usd");
         }
 
         [HttpPost]
@@ -965,14 +965,14 @@ namespace Bint.Controllers
         [Route("/investor/depositusd")]
         [Route("/client/depositusd")]
         [Route("/partner/depositusd")]
-        public async Task<IActionResult> depositusd(string txtDepositTransactionId,string txtDepositAmount)
+        public async Task<IActionResult> DepositUsd(string txtDepositTransactionId,string txtDepositAmount)
         {
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
                 var ud = await _userManager.GetUserAsync(User);
              
-                    DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                    DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
                     DepositWithdraw tusd = new DepositWithdraw();   //to user
                     tusd.Amount = Convert.ToDecimal(txtDepositAmount);
@@ -990,7 +990,7 @@ namespace Bint.Controllers
                     activityLog.Userid = tusd.UserId;
                     activityLog.ActivityType = ActivityLogEnum.DepositUSD.ToString();
                     activityLog.ActivityDate = dt;
-                    activityLog.Activity = "Requested to deposit " + txtDepositAmount + " USD to Admin";
+                    activityLog.Activity = "Requested to deposit " + txtDepositAmount + " Usd to Admin";
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -999,37 +999,37 @@ namespace Bint.Controllers
                     mm.SMSMessageBody = activityLog.Activity;
                     mm.MobileNumber = ud.Mobile;
                     mm.To = ud.Email;
-                    mm.Subject = "Deposit USD";
+                    mm.Subject = "Deposit Usd";
                     _message.SendMessage(mm);
 
                     var au = _userManager.GetUsersInRoleAsync("Admin").Result; //sending message to requested person
                     mm = new Message(_messageLogger);
-                    mm.EmailMessageBody = ud.UserId + " has requested " + txtDepositAmount + " USD to deposit";
-                    mm.SMSMessageBody = ud.UserId + " has requested " + txtDepositAmount + " USD to deposit";
+                    mm.EmailMessageBody = ud.UserId + " has requested " + txtDepositAmount + " Usd to deposit";
+                    mm.SMSMessageBody = ud.UserId + " has requested " + txtDepositAmount + " Usd to deposit";
                     mm.MobileNumber = au[0].Mobile;
                     mm.To = au[0].Email;
-                    mm.Subject = "USD Deposit Request";
+                    mm.Subject = "Usd Deposit Request";
                     _message.SendMessage(mm);
 
                     activityLog = new ActivityLog();
                     activityLog.Userid = au[0].UserId;
                     activityLog.ActivityType = ActivityLogEnum.DepositUSD.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
-                    activityLog.Activity = ud.UserId + " has requested " + txtDepositAmount + " USD to deposit";
+                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    activityLog.Activity = ud.UserId + " has requested " + txtDepositAmount + " Usd to deposit";
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
 
-                    TempData["data"] = "Deposit request for " + txtDepositAmount + " USD has been raised to admin";
-                    return RedirectToAction("usd", route);
+                    TempData["data"] = "Deposit request for " + txtDepositAmount + " Usd has been raised to admin";
+                    return RedirectToAction("Usd", route);
                
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                TempData["error"] = "Error occurred while deposit USD";
+                TempData["error"] = "Error occurred while deposit Usd";
             }
-            return View("usd");
+            return View("Usd");
         }
         #region Helpers
 
@@ -1090,9 +1090,9 @@ namespace Bint.Controllers
 
             if (await _userManager.IsInRoleAsync(r, "Admin"))
             {
-                ll.Add("USDRequested", bd._Stats.Rows[0][1].ToString() + " USD requested");
-                ll.Add("USDDepositRequest", bd._Stats.Rows[0][2].ToString() + " USD deposit requests received");
-                ll.Add("USDWithdrawRequest", bd._Stats.Rows[0][3].ToString() + " USD withdraw requests received");
+                ll.Add("USDRequested", bd._Stats.Rows[0][1].ToString() + " Usd requested");
+                ll.Add("USDDepositRequest", bd._Stats.Rows[0][2].ToString() + " Usd deposit requests received");
+                ll.Add("USDWithdrawRequest", bd._Stats.Rows[0][3].ToString() + " Usd withdraw requests received");
                 ll.Add("AdminUsers", bd._Stats.Rows[0][7].ToString());
                 ll.Add("InvestorUsers", bd._Stats.Rows[0][8].ToString());
                 ll.Add("PartnerUsers", bd._Stats.Rows[0][9].ToString());
@@ -1101,9 +1101,9 @@ namespace Bint.Controllers
             }
             else
             {
-                ll.Add("USDRequested", bd._Stats.Rows[0][1].ToString() + " USD requested");
-                ll.Add("USDDepositRequest", bd._Stats.Rows[0][4].ToString() + " USD deposit requests pending");
-                ll.Add("USDWithdrawRequest", bd._Stats.Rows[0][5].ToString() + " USD withdraw requests pending");
+                ll.Add("USDRequested", bd._Stats.Rows[0][1].ToString() + " Usd requested");
+                ll.Add("USDDepositRequest", bd._Stats.Rows[0][4].ToString() + " Usd deposit requests pending");
+                ll.Add("USDWithdrawRequest", bd._Stats.Rows[0][5].ToString() + " Usd withdraw requests pending");
                 ll.Add("UsersCreated", bd._Stats.Rows[0][6].ToString());
             }
 

@@ -13,7 +13,7 @@ namespace Bint.Controllers
     [Authorize(Roles = "Investor")]
     public class InvestorController : Controller
     {
-        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ILogger<InvestorController> _logger;
         private UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
@@ -41,14 +41,12 @@ namespace Bint.Controllers
             {
                 InvestorDashboard idb = new InvestorDashboard();
                 UserCount u = new UserCount();
-
                 IEnumerable<ApplicationUser> z;
-                string id = _userManager.GetUserId(User);
-                z = _userManager.Users.Where(x => x.Created_by == _userManager.GetUserAsync(User).Result.UserId);
+                z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
                 u.PartnerCount = z.Count();
                 u.PartnerList = z.TakeLast(8);
-                idb.TotalBGC = z.Sum(x => x.BGC);
-                idb.TotalUSD = z.Sum(x => x.USD);
+                idb.TotalBGC = z.Sum(x => x.Bgc);
+                idb.TotalUSD = z.Sum(x => x.Usd);
                 idb.userCount = u;
                 Payback pdb = new Payback();
                 pdb.USDPaybackUser = dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId);
@@ -123,7 +121,7 @@ namespace Bint.Controllers
                 CustomerUserCreate m = new CustomerUserCreate();
                 IEnumerable<ApplicationUser> z;
                 string id = _userManager.GetUserId(User);
-                z = _userManager.Users.Where(x=>x.Created_by==_userManager.GetUserAsync(User).Result.UserId);
+                z = _userManager.Users.Where(x=>x.CreatedBy==_userManager.GetUserAsync(User).Result.UserId);
                 m.appUser = z;
                 return View(m);
             }
@@ -133,7 +131,7 @@ namespace Bint.Controllers
             }
             return View();
         }
-        public IActionResult USD()
+        public IActionResult Usd()
         {
             try
             {
@@ -175,7 +173,7 @@ namespace Bint.Controllers
             }
             return View();
         }
-        public IActionResult BGC()
+        public IActionResult Bgc()
         {
             try
             {
@@ -234,7 +232,7 @@ namespace Bint.Controllers
                 ActivityLog activityLog = new ActivityLog();
                 activityLog.Userid = y.UserId;
                 activityLog.ActivityType = ActivityLogEnum.DeletePerson.ToString();
-                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 activityLog.Activity = "Deleted user " + u.UserId;
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();

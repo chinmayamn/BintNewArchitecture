@@ -87,7 +87,7 @@ namespace Bint.Controllers
             {
 
            
-            IdentityRole role = await _roleManager.FindByIdAsync(id);
+                IdentityRole role = await _roleManager.FindByIdAsync(id);
             if (role != null)
             {
                 var rc = _userManager.GetUsersInRoleAsync(role.Name).Result.Count;

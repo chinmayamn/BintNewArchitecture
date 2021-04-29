@@ -19,17 +19,17 @@ namespace Bint.Controllers
     public class AdminApiController : Controller
     {
         private IAdminRepository _adminRepository;
-        RoleManager<IdentityRole> _roleManager;
-        private UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AdminApiController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<Message> _messageLogger;
         private readonly IMessage _message;
-        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository, UserManager<ApplicationUser> usermanager, ILogger<AdminApiController> logger, ApplicationDbContext context, ILogger<Message> messageLogger, IMessage message)
+        private readonly static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository, UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context, ILogger<Message> messageLogger, IMessage message)
         {
             _adminRepository = adminRepository;
-            _roleManager = roleManager; _userManager = usermanager;_logger = logger;_context = context;
+            _roleManager = roleManager; _userManager = userManager;_logger = logger;_context = context;
             _messageLogger = messageLogger;
             _message = message;
         }
@@ -59,10 +59,10 @@ namespace Bint.Controllers
         // POST: api/Admin
         [HttpPost]
         [Route("createrole")]
-        public async Task<string> CreateRole([FromBody] string rolename)
+        public async Task<string> CreateRole([FromBody] string roleName)
         {
            
-            IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(rolename));
+            IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(roleName));
             return "success";
         }
         
@@ -88,9 +88,9 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string UniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
+                string uniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
                 string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + UniqueName + "." + words[1];//file extension
+                string z1 = words[0] + uniqueName + "." + words[1];//file extension
                 
                 var path = Path.Combine("wwwroot", "uploads", z1);
                 ApplicationUser u = _userManager.GetUserAsync(User).Result;
@@ -99,7 +99,7 @@ namespace Bint.Controllers
                 try
                 {
                     var z = Directory.GetCurrentDirectory();
-                    var t = z+ "\\wwwroot"+ u.Profilepicture.Replace("/", "\\");
+                    var t = z+ "\\wwwroot"+ u.ProfilePicture.Replace("/", "\\");
                     var fileInfo = new System.IO.FileInfo(t);
                     if(fileInfo.Exists)
                          fileInfo.Delete();
@@ -112,7 +112,7 @@ namespace Bint.Controllers
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream);
-                    u.Profilepicture = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                    u.ProfilePicture = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
                     var s = await _userManager.UpdateAsync(u);
                     if(s.Succeeded)
                     {
@@ -145,9 +145,9 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string UniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
+                string uniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
                 string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + UniqueName + "." + words[1];//file extension
+                string z1 = words[0] + uniqueName + "." + words[1];//file extension
 
                 var path = Path.Combine("wwwroot", "docs", z1);
                 ApplicationUser u = _userManager.GetUserAsync(User).Result;
@@ -158,9 +158,9 @@ namespace Bint.Controllers
                     await formFile.CopyToAsync(stream); //push file
                
                     Doc d = new Doc();
-                    DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                    DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     d.CreatedDate = indianTime;
-                    d.Docpath = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); ;
+                    d.DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); ;
                     d.Filename = filename;
                     d.Status = "Pending";
                     d.Userid = u.Id.ToString();
@@ -188,9 +188,9 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string UniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
+                string uniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
                 string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + UniqueName + "." + words[1];//file extension
+                string z1 = words[0] + uniqueName + "." + words[1];//file extension
 
                 var path = Path.Combine("wwwroot", "Tether", z1);
                 ApplicationUser u = _userManager.GetUserAsync(User).Result;
@@ -202,28 +202,28 @@ namespace Bint.Controllers
                     var z = Directory.GetCurrentDirectory();var t = "";FileInfo fileInfo;
                     if(role=="Admin")
                     {
-                         t = z + "\\wwwroot" + u.AdminQRCode.Replace("/", "\\");
+                         t = z + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
                          fileInfo = new System.IO.FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
                     else if(role=="Investor")
                     {
-                         t = z + "\\wwwroot" + u.InvestorQRCode.Replace("/", "\\");
+                         t = z + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
                          fileInfo = new System.IO.FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
                     else if(role=="Partner")
                     {
-                         t = z + "\\wwwroot" + u.PartnerQRCode.Replace("/", "\\");
+                         t = z + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\");
                          fileInfo = new System.IO.FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
                     else if(role=="Client")
                     {
-                        t = z + "\\wwwroot" + u.ClientQRCode.Replace("/", "\\");
+                        t = z + "\\wwwroot" + u.ClientQrCode.Replace("/", "\\");
                         fileInfo = new System.IO.FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
@@ -244,19 +244,19 @@ namespace Bint.Controllers
                     await formFile.CopyToAsync(stream);
                     if (role == "Admin")
                     {
-                        u.AdminQRCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");u.AdminTetherAddress = txtTether;
+                        u.AdminQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");u.AdminTetherAddress = txtTether;
                     }
                     else if (role == "Investor")
                     {
-                        u.InvestorQRCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.InvestorTetherAddress= txtTether;
+                        u.InvestorQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.InvestorTetherAddress= txtTether;
                     }
                     else if (role == "Partner")
                     {
-                        u.PartnerQRCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.PartnerTetherAddress = txtTether;
+                        u.PartnerQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.PartnerTetherAddress = txtTether;
                     }
                     else if (role == "Client")
                     {
-                        u.ClientQRCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.ClientTetherAddress = txtTether;
+                        u.ClientQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.ClientTetherAddress = txtTether;
                     }
                     else
                     {
@@ -292,7 +292,7 @@ namespace Bint.Controllers
         {
             try
             {
-                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 Message mm = new Message(_messageLogger);
                 ActivityLog activityLog = new ActivityLog();
@@ -301,23 +301,26 @@ namespace Bint.Controllers
                 if (status == "Deposit")
                 {
                     tusd.ModifiedDate = dt;
-                    tusd.Status = TransferUSDStatusEnum.Accepted.ToString();
+                    tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
                     _context.SaveChanges();
 
                     var ud = _userManager.Users.First(x=>x.UserId==tusd.UserId); //update his account with deposit
-                    ud.USD = ud.USD + tusd.Amount;
+                    ud.Usd = ud.Usd + tusd.Amount;
                     await _userManager.UpdateAsync(ud);
 
-                    TransferUSD myt = new TransferUSD();
-                    myt.Amount = tusd.Amount;
-                    myt.FromStatus = TransferUSDStatusEnum.Deposit.ToString();
-                    myt.ToStatus= TransferUSDStatusEnum.Deposit.ToString();
-                    myt.FromTotalAmount = ud.USD;
-                    myt.ToTotalAmount = ud.USD;
-                    myt.RequestedDate = dt;
-                    myt.TransferDate = dt;
-                    myt.FromUserId = myt.ToUserId = tusd.UserId;
-                    myt.Userid = ud.Id;
+                    TransferUsd myt = new TransferUsd
+                    {
+                        Amount = tusd.Amount,
+                        FromStatus = TransferUsdStatusEnum.Deposit.ToString(),
+                        ToStatus = TransferUsdStatusEnum.Deposit.ToString(),
+                        FromTotalAmount = ud.Usd,
+                        ToTotalAmount = ud.Usd,
+                        RequestedDate = dt,
+                        TransferDate = dt,
+                        FromUserId = tusd.UserId,
+                        ToUserId = tusd.UserId,
+                        Userid = ud.Id
+                    };
                     _context.transferusd.Add(myt);
                     _context.SaveChanges();
 
@@ -325,33 +328,37 @@ namespace Bint.Controllers
                     //to admin
                     activityLog.Userid = au[0].UserId;
                     activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUSD.ToString();
-                    activityLog.Activity = "Confirmed deposit " + tusd.Amount + " USD of user " + tusd.UserId + ". Balance : " + ud.USD;
+                    activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString();
+                    activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId + ". Balance : " + ud.Usd;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
-                    mm = new Message(_messageLogger);  //to admin
-                    mm.EmailMessageBody = activityLog.Activity;
-                    mm.SMSMessageBody = activityLog.Activity;
-                    mm.MobileNumber = au[0].Mobile;
-                    mm.To = au[0].Email;
-                    mm.Subject = "USD Deposit Confirmed";
+                    mm = new Message(_messageLogger)
+                    {
+                        EmailMessageBody = activityLog.Activity,
+                        SmsMessageBody = activityLog.Activity,
+                        MobileNumber = au[0].Mobile,
+                        To = au[0].Email,
+                        Subject = "Usd Deposit Confirmed"
+                    };  //to admin
                     _message.SendMessage(mm);
 
-                    activityLog = new ActivityLog();  //to user
-                    activityLog.Userid = tusd.UserId;
-                    activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUSD.ToString();
-                    activityLog.Activity = "Confirmed deposit " + tusd.Amount + " USD by Admin. Balance : " + ud.USD;
+                    activityLog = new ActivityLog
+                    {
+                        Userid = tusd.UserId,
+                        ActivityDate = dt,
+                        ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString(),
+                        Activity = "Confirmed deposit " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
+                    };  //to user
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger); //to user
                     mm.EmailMessageBody = activityLog.Activity;
-                    mm.SMSMessageBody = activityLog.Activity;
+                    mm.SmsMessageBody = activityLog.Activity;
                     mm.MobileNumber = ud.Mobile;
                     mm.To = ud.Email;
-                    mm.Subject = "USD Deposit Confirmed";
+                    mm.Subject = "Usd Deposit Confirmed";
                     _message.SendMessage(mm);
 
                     TempData["data"] = activityLog.Activity;
@@ -361,7 +368,7 @@ namespace Bint.Controllers
                 if(status=="Reject")
                 {
                     tusd.ModifiedDate = dt;
-                    tusd.Status = TransferUSDStatusEnum.Rejected.ToString();
+                    tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
                     _context.SaveChanges();
 
                     var ud = await _userManager.GetUserAsync(User); //update his account with deposit
@@ -371,32 +378,36 @@ namespace Bint.Controllers
                     activityLog.Userid = au[0].UserId;
                     activityLog.ActivityDate = dt;
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.Activity = "Rejected deposit " + tusd.Amount + " USD of user " + tusd.UserId;
+                    activityLog.Activity = "Rejected deposit " + tusd.Amount + " Usd of user " + tusd.UserId;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger);  //to admin
                     mm.EmailMessageBody = activityLog.Activity;
-                    mm.SMSMessageBody = activityLog.Activity;
+                    mm.SmsMessageBody = activityLog.Activity;
                     mm.MobileNumber = au[0].Mobile;
                     mm.To = au[0].Email;
-                    mm.Subject = "USD Deposit Rejected";
+                    mm.Subject = "Usd Deposit Rejected";
                     _message.SendMessage(mm);
 
-                    activityLog = new ActivityLog();  //to user
-                    activityLog.Userid = tusd.UserId;
-                    activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.Activity = "Rejected deposit " + tusd.Amount + " USD by Admin";
+                    activityLog = new ActivityLog
+                    {
+                        Userid = tusd.UserId,
+                        ActivityDate = dt,
+                        ActivityType = ActivityLogEnum.Reject.ToString(),
+                        Activity = "Rejected deposit " + tusd.Amount + " Usd by Admin"
+                    };  //to user
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
-                    mm = new Message(_messageLogger); //to user
-                    mm.EmailMessageBody = activityLog.Activity;
-                    mm.SMSMessageBody = activityLog.Activity;
-                    mm.MobileNumber = ud.Mobile;
-                    mm.To = ud.Email;
-                    mm.Subject = "USD Deposit Rejected";
+                    mm = new Message(_messageLogger)
+                    {
+                        EmailMessageBody = activityLog.Activity,
+                        SmsMessageBody = activityLog.Activity,
+                        MobileNumber = ud.Mobile,
+                        To = ud.Email,
+                        Subject = "Usd Deposit Rejected"
+                    }; //to user
                     _message.SendMessage(mm);
 
                     TempData["data"] = activityLog.Activity;
@@ -418,7 +429,7 @@ namespace Bint.Controllers
         {
             try
             {
-                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 Message mm = new Message(_messageLogger);
                 ActivityLog activityLog = new ActivityLog();
@@ -427,27 +438,30 @@ namespace Bint.Controllers
 
                 if (status == "Withdraw")
                 {
-                    if (ud.USD >= tusd.Amount)
+                    if (ud.Usd >= tusd.Amount)
                     {
                         tusd.ModifiedDate = dt;
-                        tusd.Status = TransferUSDStatusEnum.Accepted.ToString();
+                        tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
                         tusd.TransactionId = trnsid;
                         _context.SaveChanges();
 
                         //update his account with deposit
-                        ud.USD = ud.USD - tusd.Amount;
+                        ud.Usd = ud.Usd - tusd.Amount;
                         await _userManager.UpdateAsync(ud);
 
-                        TransferUSD myt = new TransferUSD();
-                        myt.Amount = tusd.Amount;
-                        myt.FromStatus = TransferUSDStatusEnum.Withdraw.ToString();
-                        myt.ToStatus = TransferUSDStatusEnum.Withdraw.ToString();
-                        myt.FromTotalAmount = ud.USD;
-                        myt.ToTotalAmount = ud.USD;
-                        myt.RequestedDate = dt;
-                        myt.TransferDate = dt;
-                        myt.FromUserId = myt.ToUserId = tusd.UserId;
-                        myt.Userid = ud.Id;
+                        TransferUsd myt = new TransferUsd
+                        {
+                            Amount = tusd.Amount,
+                            FromStatus = TransferUsdStatusEnum.Withdraw.ToString(),
+                            ToStatus = TransferUsdStatusEnum.Withdraw.ToString(),
+                            FromTotalAmount = ud.Usd,
+                            ToTotalAmount = ud.Usd,
+                            RequestedDate = dt,
+                            TransferDate = dt,
+                            FromUserId = tusd.UserId,
+                            ToUserId = tusd.UserId,
+                            Userid = ud.Id
+                         };
                         _context.transferusd.Add(myt);
                         _context.SaveChanges();
 
@@ -455,33 +469,33 @@ namespace Bint.Controllers
                         //to admin
                         activityLog.Userid = au[0].UserId;
                         activityLog.ActivityDate = dt;
-                        activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUSD.ToString();
-                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " USD of user " + tusd.UserId + ". Balance : " + ud.USD;
+                        activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
+                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd of user " + tusd.UserId + ". Balance : " + ud.Usd;
                         _context.activitylog.Add(activityLog);
                         _context.SaveChanges();
 
                         mm = new Message(_messageLogger);  //to admin
                         mm.EmailMessageBody = activityLog.Activity;
-                        mm.SMSMessageBody = activityLog.Activity;
+                        mm.SmsMessageBody = activityLog.Activity;
                         mm.MobileNumber = au[0].Mobile;
                         mm.To = au[0].Email;
-                        mm.Subject = "USD Withdraw Confirmed";
+                        mm.Subject = "Usd Withdraw Confirmed";
                         _message.SendMessage(mm);
 
                         activityLog = new ActivityLog();  //to user
                         activityLog.Userid = tusd.UserId;
                         activityLog.ActivityDate = dt;
-                        activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUSD.ToString();
-                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " USD by Admin. Balance : " + ud.USD;
+                        activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
+                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd;
                         _context.activitylog.Add(activityLog);
                         _context.SaveChanges();
 
                         mm = new Message(_messageLogger); //to user
                         mm.EmailMessageBody = activityLog.Activity;
-                        mm.SMSMessageBody = activityLog.Activity;
+                        mm.SmsMessageBody = activityLog.Activity;
                         mm.MobileNumber = ud.Mobile;
                         mm.To = ud.Email;
-                        mm.Subject = "USD Withdraw Confirmed";
+                        mm.Subject = "Usd Withdraw Confirmed";
                         _message.SendMessage(mm);
 
                         TempData["data"] = activityLog.Activity;
@@ -498,7 +512,7 @@ namespace Bint.Controllers
                 if (status == "Reject")
                 {
                     tusd.ModifiedDate = dt;
-                    tusd.Status = TransferUSDStatusEnum.Rejected.ToString();
+                    tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
                     _context.SaveChanges();
 
                     var sud = await _userManager.GetUserAsync(User); //update his account with deposit
@@ -508,32 +522,38 @@ namespace Bint.Controllers
                     activityLog.Userid = au[0].UserId;
                     activityLog.ActivityDate = dt;
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.Activity = "Rejected withdraw " + tusd.Amount + " USD of user " + tusd.UserId;
+                    activityLog.Activity = "Rejected withdraw " + tusd.Amount + " Usd of user " + tusd.UserId;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
-                    mm = new Message(_messageLogger);  //to admin
-                    mm.EmailMessageBody = activityLog.Activity;
-                    mm.SMSMessageBody = activityLog.Activity;
-                    mm.MobileNumber = au[0].Mobile;
-                    mm.To = au[0].Email;
-                    mm.Subject = "USD Withdraw Rejected";
+                    mm = new Message(_messageLogger)
+                    {
+                        EmailMessageBody = activityLog.Activity,
+                        SmsMessageBody = activityLog.Activity,
+                        MobileNumber = au[0].Mobile,
+                        To = au[0].Email,
+                        Subject = "Usd Withdraw Rejected"
+                    };  //to admin
                     _message.SendMessage(mm);
 
-                    activityLog = new ActivityLog();  //to user
-                    activityLog.Userid = tusd.UserId;
-                    activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.Activity = "Rejected withdraw " + tusd.Amount + " USD by Admin";
+                    activityLog = new ActivityLog
+                    {
+                        Userid = tusd.UserId,
+                        ActivityDate = dt,
+                        ActivityType = ActivityLogEnum.Reject.ToString(),
+                        Activity = "Rejected withdraw " + tusd.Amount + " Usd by Admin"
+                    };  //to user
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
-                    mm = new Message(_messageLogger); //to user
-                    mm.EmailMessageBody = activityLog.Activity;
-                    mm.SMSMessageBody = activityLog.Activity;
-                    mm.MobileNumber = sud.Mobile;
-                    mm.To = sud.Email;
-                    mm.Subject = "USD Withdraw Rejected";
+                    mm = new Message(_messageLogger)
+                    {
+                        EmailMessageBody = activityLog.Activity,
+                        SmsMessageBody = activityLog.Activity,
+                        MobileNumber = sud.Mobile,
+                        To = sud.Email,
+                        Subject = "Usd Withdraw Rejected"
+                    }; //to user
                     _message.SendMessage(mm);
 
                     TempData["data"] = activityLog.Activity;

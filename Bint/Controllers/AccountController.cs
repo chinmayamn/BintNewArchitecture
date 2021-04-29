@@ -29,13 +29,13 @@ namespace Bint.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
-        private IHttpContextAccessor _request;
-        private IConfiguration _configuration;
+        private readonly IHttpContextAccessor _request;
+        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
-        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private readonly static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly IMessage _message;
         DBFunc dbf;
         public AccountController(
@@ -114,32 +114,32 @@ namespace Bint.Controllers
                             string ipv6 = "";
                             string pip = "";
 
-                            IPAddress remoteIPAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
-                            pip = remoteIPAddress.ToString();
+                            IPAddress remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
+                            pip = remoteIpAddress.ToString();
 
                             //normally will get wifi router ip. for mobile it will throw socket exception
                             try
                             {
-                                if (System.Net.Dns.GetHostEntry(remoteIPAddress).AddressList.Count() > 0)
+                                if (System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
                                 {
-                                    if (remoteIPAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                                    if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
                                     // for mobiles normally ipv6 will not be there
                                     {
 
-                                        remoteIPAddress = System.Net.Dns.GetHostEntry(remoteIPAddress).AddressList
+                                        remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList
                                             .First(x => x.AddressFamily ==
                                                         System.Net.Sockets.AddressFamily.InterNetwork);
-                                        ipv6 = remoteIPAddress.ToString();
+                                        ipv6 = remoteIpAddress.ToString();
 
                                     }
 
 
-                                    if (remoteIPAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) //
+                                    if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) //
                                     {
 
-                                        remoteIPAddress = System.Net.Dns.GetHostEntry(remoteIPAddress).AddressList.Last(x =>
+                                        remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Last(x =>
                                             x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
-                                        ipv4 = remoteIPAddress.ToString();
+                                        ipv4 = remoteIpAddress.ToString();
                                     }
                                 }
                             }
@@ -158,7 +158,7 @@ namespace Bint.Controllers
                             dd.Parse();
 
                             CaptureDeviceData cd = new CaptureDeviceData();
-                            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
                             cd.OSName = dd.GetOs().Match.Name.ToString();
                             cd.OSVersion = dd.GetOs().Match.Version.ToString();
@@ -372,35 +372,35 @@ namespace Bint.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 user.Firstname = model.Firstname;
                 user.Lastname = model.Lastname;
                 user.Mobile = model.Mobile;
                 user.Address = model.Address;
-                user.Bankname = model.Bankname;
-                user.Bankaccount = model.Bankaccount;
-                user.Ifsc_code = model.Ifsc_code;
-                user.Account_holder_name = model.Account_holder_name;
+                user.BankName = model.BankName;
+                user.BankAccount = model.BankAccount;
+                user.IfscCode = model.IfscCode;
+                user.AccountHolderName = model.AccountHolderName;
                 user.Pan = model.Pan;
-                user.Upi_id = model.Upi_id;
+                user.UpiId = model.UpiId;
                 user.Status = model.Status;
-                user.Created_by = _userManager.GetUserAsync(User).Result.UserId;
-                user.KYC = ActivityLogEnum.Pending.ToString();
+                user.CreatedBy = _userManager.GetUserAsync(User).Result.UserId;
+                user.Kyc = ActivityLogEnum.Pending.ToString();
 
-                if (model.Profilepicture==null)
-                    user.Profilepicture = "/content/avatar.png";
+                if (model.ProfilePicture ==null)
+                    user.ProfilePicture = "/content/avatar.png";
                 
-                user.Created_on = indianTime;
-                user.Created_id = _userManager.GetUserId(User);
+                user.CreatedOn = indianTime;
+                user.CreatedId = _userManager.GetUserId(User);
 
                 //engage role id
                 string f = "";
                 if (quick == "true")
                 {
-                    f = user.Upi_id;
-                    user.Upi_id = "";
+                    f = user.UpiId;
+                    user.UpiId = "";
                     user.Status = "Active";
                 }
 
@@ -442,9 +442,9 @@ namespace Bint.Controllers
                     await _userManager.UpdateAsync(user);
 
                     ActivityLog activityLog = new ActivityLog();
-                    activityLog.Userid = user.Created_by;
+                    activityLog.Userid = user.CreatedBy;
                     activityLog.ActivityType = ActivityLogEnum.Person.ToString();
-                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                    activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     activityLog.Activity = "Created user " + user.UserId;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
@@ -470,11 +470,11 @@ namespace Bint.Controllers
         public async Task<IActionResult> Logout()
         {
             
-            IPAddress remoteIPAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
-            string pip = remoteIPAddress.ToString();
+            IPAddress remoteIpAddress = _request.HttpContext.Connection.remoteIpAddress; //major important one, gets public ip address
+            string pip = remoteIpAddress.ToString();
             var id = _userManager.GetUserId(User);
             var stu = _context._captureDeviceData.Where(j => (j.userid == id) && (j.PublicIp == pip)).LastOrDefault();
-            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
             stu.LogoutTime = indianTime;
             _context.SaveChanges();
             await _signInManager.SignOutAsync();
@@ -585,7 +585,7 @@ namespace Bint.Controllers
 
 
         [HttpGet]
-        public IActionResult SaveProfile(string id,string firstname,string lastname,string mobile, string address, string bankname, string ifsc, string accountholder, string pan, string upi,string bankaccount )
+        public IActionResult SaveProfile(string id,string firstname,string lastname,string mobile, string address, string BankName, string ifsc, string accountholder, string pan, string upi,string BankAccount )
         {
             try
             {
@@ -594,12 +594,12 @@ namespace Bint.Controllers
                 appuser.Lastname = lastname;
                 appuser.Mobile = mobile;
                 appuser.Address = address;
-                appuser.Bankname = bankname;
-                appuser.Ifsc_code = ifsc;
-                appuser.Account_holder_name = accountholder;
+                appuser.BankName = BankName;
+                appuser.IfscCode = ifsc;
+                appuser.AccountHolderName = accountholder;
                 appuser.Pan = pan;
-                appuser.Upi_id = upi;
-                appuser.Bankaccount = bankaccount;
+                appuser.UpiId = upi;
+                appuser.BankAccount = BankAccount;
 
                 var result =  _userManager.UpdateAsync(appuser).Result;
                 if (result.Succeeded)
@@ -630,7 +630,7 @@ namespace Bint.Controllers
                     return RedirectToAction(nameof(Login));
                 }
                 if(!(await _userManager.IsEmailConfirmedAsync(user)))
-                    {
+                {
                     TempData["error"] = "Account not verified, check your email for confirm email";
                     _logger.LogError("Account not verified, check your email for confirm email {model.Email}", model.Email);
                     return RedirectToAction(nameof(Login));
@@ -725,26 +725,26 @@ namespace Bint.Controllers
             string ipv6 = "";
             string pip = "";
 
-            IPAddress remoteIPAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
-            pip = remoteIPAddress.ToString();
+            IPAddress remoteIpAddress = _request.HttpContext.Connection.remoteIpAddress; //major important one, gets public ip address
+            pip = remoteIpAddress.ToString();
 
             //normally will get wifi router ip
-            if (System.Net.Dns.GetHostEntry(remoteIPAddress).AddressList.Count() > 0)
+            if (System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
             {
-                if (remoteIPAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) //
+                if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) //
                 {
 
-                    remoteIPAddress = System.Net.Dns.GetHostEntry(remoteIPAddress).AddressList.First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
-                    ipv6 = remoteIPAddress.ToString();
+                    remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                    ipv6 = remoteIpAddress.ToString();
                 }
 
 
 
-                if (remoteIPAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) //
+                if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) //
                 {
 
-                    remoteIPAddress = System.Net.Dns.GetHostEntry(remoteIPAddress).AddressList.Last(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
-                    ipv4 = remoteIPAddress.ToString();
+                    remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Last(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                    ipv4 = remoteIpAddress.ToString();
                 }
             }
 
@@ -758,7 +758,7 @@ namespace Bint.Controllers
             dd.Parse();
 
             RestrictedAccess cd = new RestrictedAccess();
-            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
             cd.OSName = dd.GetOs().Match.Name.ToString();
             cd.OSVersion = dd.GetOs().Match.Version.ToString();
             cd.OSPlatform = dd.GetOs().Match.Platform.ToString();
@@ -869,7 +869,7 @@ namespace Bint.Controllers
                 adb.activityLogTable = dbf.GetUserActivityLog(u.UserId);
                 aupd._activityLogDashboard = adb;
                 aupd.UserDocs = dbf.GetKYCDocs(id);
-                aupd.UserList = _userManager.Users.Where(x => x.Created_by == u.UserId);
+                aupd.UserList = _userManager.Users.Where(x => x.CreatedBy == u.UserId);
                 return View(aupd);
             }
             catch (Exception e)

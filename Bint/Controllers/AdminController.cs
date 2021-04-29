@@ -30,7 +30,7 @@ namespace Bint.Controllers
         private IHostingEnvironment Environment;
         private readonly ILogger<AdminController> _logger;
         private readonly ApplicationDbContext _context;
-        private static TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         DBFunc dbf;
         public AdminController(IHttpContextAccessor httpcontext, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> usermanager, IHostingEnvironment _environment, ILogger<AdminController> logger, ApplicationDbContext context)
         {
@@ -64,7 +64,7 @@ namespace Bint.Controllers
                 u.ClientList = _userManager.GetUsersInRoleAsync("Client").Result.TakeLast(8);
                 u.PartnerList = _userManager.GetUsersInRoleAsync("Partner").Result.TakeLast(8);
                 u.LockedUsersList = _userManager.Users.AsEnumerable().Where(uu => uu.LockoutEnd != null);
-                u.PendingKYCCount = _userManager.Users.AsEnumerable().Where(uu => uu.KYC == "Pending").Count();
+                u.PendingKYCCount = _userManager.Users.AsEnumerable().Where(uu => uu.Kyc == "Pending").Count();
 
                 u.AdminCount = u.AdminList.Count();
                 u.InvestorCount = u.InvestorList.Count();
@@ -72,9 +72,9 @@ namespace Bint.Controllers
                 u.PartnerCount = u.PartnerList.Count();
                 u.LockedUsersCount = u.LockedUsersList.Count();
 
-                adb.userCount = u; // load viewmodel with full data
-                adb.TotalBGC = _userManager.Users.Sum(x => x.BGC);
-                adb.TotalUSD = _userManager.Users.Sum(x => x.USD);
+                adb.UserCount = u; // load viewmodel with full data
+                adb.TotalBGC = _userManager.Users.Sum(x => x.Bgc);
+                adb.TotalUSD = _userManager.Users.Sum(x => x.Usd);
 
                 adb.AdminRequestDashboard = dbf.GetAdminRequestDashboard();
                 DataTable USDInvestment = dbf.GetUSDInvestment();
@@ -236,7 +236,7 @@ namespace Bint.Controllers
                 ActivityLog activityLog = new ActivityLog();
                 activityLog.Userid = y.UserId;
                 activityLog.ActivityType = ActivityLogEnum.DeletePerson.ToString();
-                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
+                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 activityLog.Activity = "Deleted user " +u.UserId;
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();
@@ -256,15 +256,15 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
-        public JsonResult setkyc(string userid, string kyc)
+        public JsonResult setkyc(string userid, string Kyc)
         {
             try
             {
                 ApplicationUser u = _userManager.FindByIdAsync(userid).Result;
-                u.KYC = kyc;
+                u.Kyc = Kyc;
                 var t =  _userManager.UpdateAsync(u).Result;
                 if (t.Succeeded)
-                    return Json(kyc);
+                    return Json(Kyc);
                 else
                     return Json("error");
 
@@ -355,7 +355,7 @@ namespace Bint.Controllers
             return View();
         }
 
-        public IActionResult USD()
+        public IActionResult Usd()
         {
             try
             {
@@ -375,7 +375,7 @@ namespace Bint.Controllers
             }
             return View();
         }
-        public IActionResult BGC()
+        public IActionResult Bgc()
         {
             try
             {
