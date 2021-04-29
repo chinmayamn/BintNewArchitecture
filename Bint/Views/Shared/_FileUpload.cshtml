@@ -1,0 +1,77 @@
+﻿@using System.Data
+@model UserProfileDoc
+<div class="card card-outline card-secondary ">
+    <div class="card-header">
+        <h1 class="card-title">My Docs</h1>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-3">
+        <table id="example1" class="table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>File</th>
+                    <th>Uploaded Date</th>
+                    <th>Delete</th>
+
+                </tr>
+            </thead>
+            <tbody>
+              
+                    @foreach (DataRow row in Model.UserDocs.Rows)
+                    {
+                        <tr>
+                            <td>@row["filename"]</td>
+                            <td><a href="@row["docpath"]" download>Download</a></td>
+                            <td>@row["createddate"]</td>
+                            <td>
+                                <button class="btn btn-sm" id="btnDeleteDoc_@row["id"]"><i class="fa fa-trash" aria-hidden="true"></i></button>
+
+                            </td>
+                        </tr>
+                    }
+                   
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("[id^=btnDeleteDoc_]").click(function (event) {
+            var id = this.id.split('_');
+            if (confirm('Are you sure to delete file ?')) {
+                $.ajax({
+                    type: "GET",
+                    url: "/account/DeleteDocs?id="+id[1],
+                    async: false,
+                    dataType: "text json",
+                    contentType: "application/json;charset=utf-8",
+                    data: {},
+                    success: function (data) { 
+                      
+                        if (data == "success") {
+                           
+                            window.location.reload(true);
+                        }
+                        else {
+                            toastr.error(data);
+                        }
+                    },
+                    error: function (a, b, c) {
+                     
+                        toastr.error("Error occurred");
+                    }
+                });
+            }
+        });
+      
+
+    });
+</script>

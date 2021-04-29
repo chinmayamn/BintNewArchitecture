@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Bint.Data;
+using Bint.Models;
+using Bint.Services;
+using Bint.Repository;
+using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Serilog;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+namespace Bint
+{
+    public class Startup
+    {
+        public List<ApplicationUser> globalappuser = new List<ApplicationUser>();
+        public Startup(IConfiguration configuration)
+        {
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
+
+            Configuration = configuration;
+           
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            // Add application services.
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IInvestorRepository, InvestorRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddTransient<IApplicationDBContext, ApplicationDbContext>();
+            services.AddTransient<IMessage, Message>();
+            
+
+
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services.Configure<IdentityOptions>(options => {
+
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(700);
+                
+     
+                    });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/account/login";
+                options.Cookie.IsEssential = true;
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+            });
+           
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseBrowserLink();
+               // app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+               
+                app.UseExceptionHandler("/Account/Error");
+            }
+            else
+            {
+                app.UseExceptionHandler("/Account/Error");
+            }
+
+            app.UseStatusCodePagesWithReExecute("/Account/Error/{0}");
+            loggerFactory.AddSerilog();
+
+            app.UseStaticFiles();
+
+            app.UseAuthentication();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            //added to get ip address
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+            });
+         
+           
+        }
+    }
+}

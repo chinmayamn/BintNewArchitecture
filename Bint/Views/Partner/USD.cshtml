@@ -1,0 +1,378 @@
+﻿@model Bint.Models.USDDashboard
+@using System.Data
+@{
+
+    Layout = "~/Views/Shared/_PartnerLayout.cshtml";
+}
+<style>
+    #example2 tr th {
+        padding-left: 5px !important;
+    }
+
+    #example2 tr td {
+        padding: 5px !important;
+    }
+
+        #example2 tr td .form-group {
+            margin: 0px !important;
+        }
+</style>
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">USD</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/client/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">My Coins</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="card card-outline card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title">USD Deposit</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <button id="btnDepositAmount" class="btn btn-block bg-indigo-300 text-white" data-toggle="modal" data-target="#modal-depositusd">Deposit USD</button>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="card card-outline card-danger">
+                                    <div class="card-header">
+                                        <h3 class="card-title">USD Withdrawal</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <button id="btnWithdrawalAmount" class="btn btn-block bg-indigo-300 text-white" data-toggle="modal" data-target="#modal-withdrawusd">Withdraw USD</button>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+
+
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="card card-outline card-warning">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Request USD</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <form asp-action="requestusd" method="post">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="txtRequestAmount" name="amount" placeholder="Amount">
+                                            </div>
+                                            <button type="submit" id="btnRequestAmount" class="btn bg-indigo-300 text-white">Request</button>
+                                        </form>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="card card-outline card-secondary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Transfer USD</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <form asp-action="debitcreditusd" method="post">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="txtTransferAmount" name="amount" placeholder="Amount">
+                                            </div>
+                                            <button type="submit" id="btnTransferAmount" class="btn bg-indigo-300 text-white">Transfer</button>
+                                        </form>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @await Html.PartialAsync("_USDTransactions", new USDDashboard { _requestUSD = Model._requestUSD,_Stats = Model._Stats})
+                            </div>
+                            <div class="col-md-12">
+                                @await Html.PartialAsync("_USDRequests", new USDDashboard { _transferUSD = Model._transferUSD, _Stats = Model._Stats })
+                            </div>
+
+                        </div>
+                        @await Html.PartialAsync("_DepositUSDHistory", new USDDashboard { _depositUSD = Model._depositUSD, _Stats = Model._Stats })
+                        @await Html.PartialAsync("_WithdrawUSDHistory", new USDDashboard { _withdrawUSD = Model._withdrawUSD, _Stats = Model._Stats })
+                        @await Html.PartialAsync("_TransferTerms")
+                    </div>
+                    @await Html.PartialAsync("_PartnerProfile")
+
+                </div><!--/. container-fluid -->
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<div class="modal fade" id="modal-depositusd">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="partner" asp-action="DepositUSD" method="post" enctype="multipart/form-data">
+                <div class="modal-header bg-success">
+                    <h4 class="modal-title">USD Deposit</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body box-profile bg-gray-dark">
+                            <!-- About Me Box -->
+                            <div>
+                                <h3 class="text-center">Deposit Tether USD</h3>
+                                <p class="text-center">by scanning this QR Code</p>
+                                <center><img src="@Model._qrcode" class="img-fluid w-50" /> </center>
+
+                            </div>
+                            <p class="text-center mt-3 mb-1">or use this address below</p>
+                            <div class="alert alert-secondary">
+                                @Model._tether
+                            </div>
+                            <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
+                            <ul>
+                                <li>Minimum deposit of 1 USD</li>
+                                <li>Please deposit only USD on this address</li>
+                                <li>If you deposit to any other address then it will be lost forever</li>
+
+                            </ul>
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <label for="inputPassword3" class="col-sm-12 col-form-label">Transaction Id</label>
+                                <div class="col-sm-12 col-md-12 col-xs-12">
+                                    <input type="text" class="form-control" id="txtDepositTransactionId" name="txtDepositTransactionId" placeholder="Transaction Id">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <label for="inputPassword3" class="col-sm-12 col-form-label">Amount</label>
+                                <div class="col-sm-12 col-md-12 col-xs-12">
+                                    <input type="text" class="form-control" id="txtDepositAmount" name="txtDepositAmount" placeholder="Amount">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+
+                                <div class="col-sm-12 col-md-12 col-xs-12">
+                                    <button id="btnDepositUSDAmount" class="btn btn-block bg-success text-white">Deposit USD</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-withdrawusd">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="partner" asp-action="WithdrawUSD" method="post" enctype="multipart/form-data">
+                <div class="modal-header bg-danger">
+                    <h4 class="modal-title">USD Withdrawal</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body box-profile bg-gray-dark">
+                            <!-- About Me Box -->
+
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <label for="inputPassword3" class="col-sm-12 col-form-label">Amount</label>
+                                <div class="col-sm-12 col-md-12 col-xs-12">
+                                    <input type="text" class="form-control" id="txtWithdrawAmount" name="WithdrawAmount" placeholder="Amount">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+
+                                <div class="col-sm-12 col-md-12 col-xs-12">
+                                    <button id="btnWithdrawUSDAmount" class="btn btn-block bg-danger text-white">Withdraw USD</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#example2").DataTable({
+            "order": [[0, "desc"]],
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        $("#btnRequestAmount").click(function (event) {
+            var amount = $("#txtRequestAmount").val().trim();
+            if (amount == "") {
+                toastr.error("Enter USD request amount"); $("#txtRequestAmount").val("");return false; event.preventDefault();
+            }
+            else if (isNaN(amount)) {
+                $("#txtRequestAmount").val(""); toastr.error("Enter valid USD request amount"); return false; event.preventDefault();
+            }
+            else {
+                return true;
+            }
+        });
+
+        $("#btnTransferAmount").click(function (event) {
+            var amount = $("#txtTransferAmount").val().trim();
+            if (amount == "") {
+                toastr.error("Enter USD amount to transfer"); $("#txtTransferAmount").val("");return false; event.preventDefault();
+            }
+            else if (isNaN(amount)) {
+                $("#txtTransferAmount").val(""); toastr.error("Enter valid USD amount to transfer"); return false; event.preventDefault();
+            }
+            else {
+                return true;
+            }
+        });
+
+        $("#btnWithdrawUSDAmount").click(function (event) {
+            var amount = $("#txtWithdrawAmount").val().trim();
+            if (amount == "") {
+                toastr.error("Enter USD withdrawal amount"); $("#txtWithdrawAmount").val(""); return false; event.preventDefault();
+            }
+            else if (isNaN(amount)) {
+                $("#txtWithdrawAmount").val(""); toastr.error("Enter valid USD amount to withdraw"); return false; event.preventDefault();
+            }
+            else {
+                return true;
+            }
+        });
+
+        $("#btnDepositUSDAmount").click(function () {
+            var amount = $("#txtDepositAmount").val().trim();
+            var tid = $("#txtDepositTransactionId").val().trim();
+
+            if (amount == "") {
+                toastr.error("Enter USD deposit amount"); $("#txtDepositAmount").val(""); event.preventDefault();
+            }
+            else if (isNaN(amount)) {
+                $("#txtDepositAmount").val(""); toastr.error("Enter valid USD amount to deposit"); event.preventDefault();
+            }
+            else {
+
+            }
+            if (tid == "") {
+                toastr.error("Transaction id required"); $("#txtDepositTransactionId").val(""); event.preventDefault();
+            }
+        });
+
+        $("[id^=ddlstatus_]").change(function (event) {
+            var s = $(this).find("option:selected").text();
+            var id = $(this).val();
+            if (s == "Transfer") {
+                if (confirm('Are you sure to transfer USD ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/partner/transferusd",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "act": "Transfer"
+                        },
+                        success: function (data) {
+                           
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+                           
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else if (s == "Reject") {
+                if (confirm('Are you sure to reject USD ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/partner/transferusd",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "act": "Reject"
+                        },
+                        success: function (data) {
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else {
+
+            }
+
+        });
+    });
+</script>
+

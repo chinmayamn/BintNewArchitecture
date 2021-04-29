@@ -1,0 +1,393 @@
+﻿@model USDDashboard
+@using System.Data
+@{
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    #example3 tr th {
+        padding-left: 5px !important;
+    }
+
+    #example3 tr td {
+        padding: 5px !important;
+    }
+
+        #example3 tr td .form-group {
+            margin: 0px !important;
+        }
+    #example4 tr th {
+        padding-left: 5px !important;
+    }
+
+    #example4 tr td {
+        padding: 5px !important;
+    }
+
+        #example4 tr td .form-group {
+            margin: 0px !important;
+        }
+</style>
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">USD</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">USD Deposit / Withdraw requests</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-outline card-info">
+                                    <div class="card-header">
+                                        <h1 class="card-title">Deposit USD Requests</h1>
+                                        <div class="card-tools">
+                                            @foreach (DataRow row in Model._Stats.Rows)
+                                            {<span class="badge badge-secondary">
+
+                                                    @row["depositrequest"] USD deposit requests pending
+                                                </span>
+                                            }
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-3">
+                                        <table id="example3" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th class="text-center">Amount</th>
+                                                    <th>User Id</th>
+                                                    <th>Requested Date</th>
+                                                    <th>Response Date</th>
+                                                    <th>Action</th>
+                                                    <th>Transaction Id</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (DataRow row in Model._depositUSD.Rows)
+                                                {
+
+                                                    var a = ""; var b = "";
+                                                    if (@row["status"].ToString() == "Pending")
+                                                    { a = "badge-warning"; }
+                                                    else if (@row["status"].ToString() == "Accepted")
+                                                    { a = "badge-success"; b = "disabled"; }
+                                                    else if (@row["status"].ToString() == "Rejected")
+                                                    { a = "badge-danger"; b = "disabled"; }
+                                                    else
+                                                    { }
+                                                <tr>
+                                                    <td>@row["id"]</td>
+                                                    <td class="text-danger-400 text-bold text-right ">@row["amount"]</td>
+                                                    <td>@row["userid"]</td>
+                                                    <td>@row["createddate"]</td>
+                                                    <td>@row["modifieddate"]</td>
+                                                    <td>@row["usdaction"]</td>
+                                                    <td>@row["transactionid"]</td>
+                                                    <td><span class="badge @a">@row["status"]</span></td>
+                                                    <td>
+                                                        <div class="form-group">
+
+
+                                                            <select class="custom-select" id="ddldepositstatus_@row["id"]" @b>
+                                                                <option value="Select">Select</option>
+                                                                <option value="@row["id"]">Deposit</option>
+                                                                <option value="@row["id"]">Reject</option>
+
+                                                            </select>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-outline card-info">
+                                    <div class="card-header">
+                                        <h1 class="card-title">Withdraw USD Requests</h1>
+                                        <div class="card-tools">
+                                            @foreach (DataRow row in Model._Stats.Rows)
+                                            {<span class="badge badge-secondary">
+
+                                                    @row["withdrawrequest"] USD withdraw requests pending
+                                                </span>
+                                            }
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-3">
+                                        <table id="example4" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th class="text-center">Amount</th>
+                                                    <th>User Id</th>
+                                                    <th>Requested Date</th>
+                                                    <th>Response Date</th>
+                                                    <th>Action</th>
+                                                    <th>Trns Id</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (DataRow row in Model._withdrawUSD.Rows)
+                                                {
+
+                                                    var a = ""; var b = "";
+                                                    if (@row["status"].ToString() == "Pending")
+                                                    { a = "badge-warning"; }
+                                                    else if (@row["status"].ToString() == "Accepted")
+                                                    { a = "badge-success"; b = "disabled"; }
+                                                    else if (@row["status"].ToString() == "Rejected")
+                                                    { a = "badge-danger"; b = "disabled"; }
+                                                    else
+                                                    { }
+                                                <tr>
+                                                    <td>@row["id"]</td>
+                                                    <td class="text-danger-400 text-bold text-right ">@row["amount"]</td>
+                                                    <td>@row["userid"]</td>
+                                                    <td>@row["createddate"]</td>
+                                                    <td>@row["modifieddate"]</td>
+                                                    <td>@row["usdaction"]</td>
+                                                    <td> <input type="text" class="form-control" id="txtWdrTrnsId_@row["id"]" placeholder="Transaction Id" name="wdrtrnsid" value="@row["transactionid"]" @b></td>
+                                                    <td><span class="badge @a">@row["status"]</span></td>
+                                                    <td>
+                                                        <div class="form-group">
+
+
+                                                            <select class="custom-select" id="ddlwithdrawstatus_@row["id"]" @b>
+                                                                <option value="Select">Select</option>
+                                                                <option value="@row["id"]">Withdraw</option>
+                                                                <option value="@row["id"]">Reject</option>
+
+                                                            </select>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @await Html.PartialAsync("_AdminProfile")
+                </div>
+             </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //deposit
+        $("#example3").on('change', "[id^=ddldepositstatus_]", function (event) {
+            var s = $(this).find("option:selected").text();
+            var id = $(this).val();
+            if (s == "Deposit") {
+                if (confirm('Are you sure to deposit USD ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/admin/confirmdeposit",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "status": "Deposit"
+                        },
+                        success: function (data) {
+
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+                           
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else if (s == "Reject") {
+                if (confirm('Are you sure to reject USD deposit ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/admin/confirmdeposit",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "status": "Reject"
+                        },
+                        success: function (data) {
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else {
+
+            }
+
+        });
+
+        //withdraw
+       $("#example4").on('change', "[id^=ddlwithdrawstatus_]", function (event) {
+            var s = $(this).find("option:selected").text();
+            var id = $(this).val();
+            var tid = $("#txtWdrTrnsId_"+id).val().trim();
+            if (s == "Withdraw") {
+                if (confirm('Are you sure to withdraw USD ?')) {
+                    if (tid == "") {
+                        toastr.error("Transaction id for respective request is required"); $("#txtWdrTrnsId").val(""); $(this).val("Select").change();event.preventDefault();
+                    }
+                    else {
+                        $.ajax({
+                            type: "GET",
+                            url: "/admin/confirmwithdraw",
+                            async: false,
+                            dataType: "text json",
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                "id": id, "status": "Withdraw", "trnsid": tid
+                            },
+                            success: function (data) {
+
+                                if (data == "success") {
+                                    window.location.reload(true);
+                                }
+                                else {
+
+                                    toastr.error(data);
+                                }
+                            },
+                            error: function (a, b, c) {
+                             
+                                toastr.error("Error occurred");
+                            }
+                        });
+                    }
+
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else if (s == "Reject") {
+                if (confirm('Are you sure to reject USD withdraw ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/admin/confirmwithdraw",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "status": "Reject"
+                        },
+                        success: function (data) {
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else {
+
+            }
+
+        });
+
+
+        $("#example3").DataTable({
+            "order": [[0, "Desc"]],
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        $("#example4").DataTable({
+            "order": [[0, "Desc"]],
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+    });
+</script>

@@ -1,0 +1,140 @@
+﻿@model RegisterViewModel
+@{
+    string u = Convert.ToString(ViewData["layout"]).ToLower();
+    if (u == "admin")
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (u == "investor")
+    {
+        Layout = "~/Views/Shared/_InvestorLayout.cshtml";
+    }
+    else if (u == "partner")
+    {
+        Layout = "~/Views/Shared/_PartnerLayout.cshtml"; 
+    }
+    else if (u == "client")
+    {
+        Layout = "~/Views/Shared/_ClientLayout.cshtml"; 
+    }
+    else
+    {
+
+    }
+}
+<div class="wrapper">
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header" style="padding-bottom:0px !important">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+
+
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/Admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item active">Create Profile</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="card card-outline card-success">
+                            <div class="card-body row">
+
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label asp-for="Mobile"></label>
+                                    <input asp-for="Mobile" class="form-control" />
+                                    <span asp-validation-for="Mobile" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label asp-for="Password"></label>
+                                    <input asp-for="Password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label asp-for="ConfirmPassword"></label>
+                                    <input asp-for="ConfirmPassword" class="form-control" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>First name</label>
+                                    <input asp-for="Firstname" class="form-control" />
+                                    <span asp-validation-for="Firstname" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>Last name</label>
+                                    <input asp-for="Lastname" class="form-control" />
+                                    <span asp-validation-for="Lastname" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label asp-for="Address"></label>
+                                    <input asp-for="Address" class="form-control" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>Bank name</label>
+                                    <input asp-for="Bankname" class="form-control" />
+                                    <span asp-validation-for="Bankname" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>Bank account</label>
+                                    <input asp-for="Bankaccount" class="form-control" />
+                                    <span asp-validation-for="Bankaccount" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>IFSC code</label>
+                                    <input asp-for="Ifsc_code" class="form-control" />
+                                    <span asp-validation-for="Ifsc_code" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>Account holder name</label>
+                                    <input asp-for="Account_holder_name" class="form-control" />
+                                    <span asp-validation-for="Account_holder_name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>PAN</label>
+                                    <input asp-for="Pan" class="form-control" />
+                                    <span asp-validation-for="Pan" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label>UPI Id</label>
+                                    <input asp-for="Upi_id" class="form-control" />
+                                    <span asp-validation-for="Upi_id" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label"></label>
+                                    <div class="col-sm-9  pt-2">
+                                        <button type="button" id="btnSaveProfile" class="btn bg-indigo-300 text-white">Save</button>
+                                    </div>
+                                </div>
+                              
+
+
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@*@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}*@

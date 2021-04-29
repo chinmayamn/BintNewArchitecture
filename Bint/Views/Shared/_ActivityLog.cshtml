@@ -1,0 +1,53 @@
+﻿@model Bint.Models.ActivityLogDashboard
+@using System.Data
+<div class="row m-1 mt-3">
+    <div class="col-md-12">
+        <!-- The time line -->
+        <div class="timeline">
+            @foreach (DataRow row in Model.activityLogTable.Rows)
+            {
+
+                var a = "";
+
+                if (@row["activitytype"].ToString() == "Credit")
+                { a = "nav-icon fas fa-money-bill-alt bg-fuchsia"; }
+                else if (@row["activitytype"].ToString() == "Debit")
+                { a = "fas fas fa-hand-holding-usd bg-secondary"; }
+                else if (@row["activitytype"].ToString() == "Reject")
+                { a = "fa fa-ban bg-danger"; }
+                else if (@row["activitytype"].ToString() == "Person")
+                { a = "fas fa-user bg-pink"; }
+                else if (@row["activitytype"].ToString() == "DeletePerson")
+                { a = "fa fa-trash bg-darkblack"; }
+                else if (@row["activitytype"].ToString() == "RequestUSD")
+                { a = "fas fa-arrow-right bg-yellow"; }
+                else if (@row["activitytype"].ToString() == "TransferUSD")
+                { a = "fas fa-arrow-right bg-info"; }
+                else if (@row["activitytype"].ToString() == "ReceiveUSD")
+                { a = "fas fa-arrow-left bg-gradient-green"; }
+                else if (@row["activitytype"].ToString() == "DepositUSD")
+                { a = "fas fa-donate bg-lime"; }
+                else if (@row["activitytype"].ToString() == "ConfirmDepositUSD")
+                { a = "fas fa-donate bg-gradient-olive"; }
+                else if (@row["activitytype"].ToString() == "WithdrawUSD")
+                { a = "fa fa-coins bg-gradient-gray-dark"; }
+                else if (@row["activitytype"].ToString() == "ConfirmWithdrawUSD")
+                { a = "fas fa-coins bg-black"; }
+                else
+                { a = ""; }
+                <div>
+                    <i class="@a"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fas fa-clock "></i>@row["activitydate"]</span>
+                        <h3 class="timeline-header no-border">@row["activity"]</h3>
+                    </div>
+                </div>
+            }
+
+            <div>
+                <i class="fas fa-clock bg-gray"></i>
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+</div>

@@ -1,0 +1,620 @@
+﻿@model Bint.Models.AdminUserProfileDashboard
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@inject UserManager<ApplicationUser> UserManager
+@using System.Data
+@{
+
+    string u = Convert.ToString(ViewData["layout"]).ToLower();
+    
+    if (u == "admin")
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml"; 
+    }
+    else if (u == "investor")
+    {
+        Layout = "~/Views/Shared/_InvestorLayout.cshtml";
+    }
+    else if (u == "partner")
+    {
+        Layout = "~/Views/Shared/_PartnerLayout.cshtml"; 
+    }
+    else if (u == "client")
+    {
+        Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    }
+    else
+    {
+
+    }
+
+    var uid = Context.Request.Path.Value.Split('/')[3];
+
+}
+
+<link rel="stylesheet" href="/js/components.min.css">
+
+<style>
+    .social-box {
+        min-height: 90px;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        background: #fff;
+    }
+
+        .social-box.facebook span {
+            color: #fff;
+            background: #3b5998;
+        }
+
+        .social-box span {
+            display: block;
+            margin: -1px -1px 0;
+            font-size: 40px;
+            line-height: 90px;
+            background: #e9ecef;
+        }
+
+        .social-box ul {
+            display: contents;
+            /*margin: 7px 0 0;*/
+            /*padding: 10px;*/
+            width: 100%;
+            background-color: #f3efef;
+        }
+
+            .social-box ul li {
+                color: black;
+                font-size: 24px;
+                padding: 0 10px 0 0;
+                text-align: center;
+                list-style: none;
+                background-color: #f3efef;
+                line-height: 40px;
+                display: contents;
+            }
+</style>
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">User Detail</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">User Detail</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3 ">
+                        <div class="card card-info card-outline">
+                            <div class="card-body box-profile">
+                                @{
+                                    var ol = @Model._userProfile.KYC;
+                                    var lol = "";
+                                    if (ol == "Pending")
+                                    {
+                                        lol = "badge-warning";
+                                    }
+                                    else if (ol == "VerificationFailed")
+                                    {
+                                        lol = "badge-danger";
+                                    }
+                                    else if (ol == "Verified")
+                                    {
+                                        lol = "badge-success";
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+
+                                <span id="kycbadge" class="badge @lol">@Model._userProfile.KYC</span>
+                                <div class="text-center">
+                                    <img class="profile-user-img img-fluid img-circle"
+                                         src="@Model._userProfile.Profilepicture"
+                                         alt="User profile picture">
+                                </div>
+                                <h3 class="profile-username text-center">@Model._userProfile.Firstname @Model._userProfile.Lastname</h3>
+                                <p class="text-muted text-center">ID : @Model._userProfile.UserId</p>
+
+
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                        <div class="card card-warning card-outline  ">
+                            <div class="card-header">
+                                <h1 class="card-title">USD</h1>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile">
+                                <!-- About Me Box -->
+                                <div class="social-box facebook">
+                                    <span>@Model._userProfile.USD</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-success card-outline ">
+                            <div class="card-header">
+                                <h1 class="card-title">BGC Token</h1>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile">
+                                <div class="social-box facebook">
+                                    <span>@Model._userProfile.BGC</span>
+                                    <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">1 BGC = 0.001 USD</div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card card-outline card-info">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" href="#lead" data-toggle="tab">Lead</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#profile" data-toggle="tab">Profile</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">Activity Log</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#members" data-toggle="tab">Members</a></li>
+
+                                    <li class="nav-item pl-2">
+                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                            <input type="checkbox" class="custom-control-input" id="chkStatus" />
+                                            <label class="custom-control-label" for="chkStatus" id="chkstatuslabel">
+                                                @((Convert.ToString(UserManager.FindByIdAsync(uid).Result.LockoutEnd) == "") ? "Active" : "Locked" )
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item pl-2">
+                                        
+                                        <div class="custom-control custom-switch custom-switch-on-success">
+                                            <input type="checkbox" class="custom-control-input" id="chkEmailStatus" />
+                                            <label class="custom-control-label" for="chkEmailStatus" id="chkEmailStatusLabel">
+                                                @((Convert.ToString(UserManager.FindByIdAsync(uid).Result.EmailConfirmed) == "True") ? "Verified" : "Not verified" )
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="lead">
+
+                                        <!-- Basic columns -->
+                                        <div class="card">
+                                            <div class="card-header header-elements-inline">
+                                                <h5 class="card-title">Leads</h5>
+                                                <div class="header-elements">
+                                                    <div class="list-icons">
+                                                        <a class="list-icons-item" data-action="collapse"></a>
+                                                        <a class="list-icons-item" data-action="reload"></a>
+                                                        <a class="list-icons-item" data-action="remove"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <div class="chart-container">
+                                                    <div class="chart has-fixed-height" id="columns_basic" _echarts_instance_="ec_1609692772448" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; overflow: hidden; width: 1231px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="1231" height="400" style="position: absolute; left: 0px; top: 0px; width: 1231px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(0, 0, 0, 0.75); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 13px / 20px Roboto, sans-serif; padding: 10px 15px; left: 453px; top: 157px;">May<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#2ec7c9;"></span>Evaporation: 25.6<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#b6a2de;"></span>Precipitation: 58.7</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /basic columns -->
+
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="profile">
+
+                                        @using (Html.BeginForm())
+                                        {
+                                            <!-- /.card-header -->
+                                            <div class="card-body row">
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">User Id</label>
+                                                    <div class="col-sm-9">
+                                                        @Model._userProfile.UserId
+                                                        <input type="hidden" id="hdnsuerid" value="@Model._userProfile.Id">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12 float-right">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">KYC</label>
+                                                    <div class="col-sm-9">
+                                                        <div class="form-group clearfix">
+                                                            <div class="icheck-primary d-inline">
+                                                                <input type="radio" id="radioPrimary1" name="r1" checked value="@Bint.Models.ActivityLogEnum.Pending">
+                                                                <label for="radioPrimary1">
+                                                                    Pending
+                                                                </label>
+                                                            </div>
+                                                            <div class="icheck-primary d-inline">
+                                                                <input type="radio" id="radioPrimary2" name="r1" value="@Bint.Models.ActivityLogEnum.Verified">
+                                                                <label for="radioPrimary2">
+                                                                    Verified
+                                                                </label>
+                                                            </div>
+                                                            <div class="icheck-primary d-inline">
+                                                                <input type="radio" id="radioPrimary3" name="r1" value="@Bint.Models.ActivityLogEnum.VerificationFailed">
+                                                                <label for="radioPrimary3">
+                                                                    Verification Failed
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Email</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtemail" placeholder="Email" value="@Model._userProfile.Email">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Mobile</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtmobile" placeholder="Mobile" value="@Model._userProfile.Mobile">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">First name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtFirstname" placeholder="First name" value="@Model._userProfile.Firstname">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Last name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtlastname" placeholder="Last name" value="@Model._userProfile.Lastname">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Address</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtaddress" placeholder="Address" value="@Model._userProfile.Address">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Bank name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtbankname" placeholder="Bank name" value="@Model._userProfile.Bankname">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Bank Account</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtbankaccount" placeholder="Bank name" value="@Model._userProfile.Bankaccount">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">IFSC Code</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtIFSC" placeholder="IFSC Code" value="@Model._userProfile.Ifsc_code">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    &nbsp; <label for="inputEmail3" class="col-form-label">Account holder name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtaccountholder" placeholder="Account holder name" value="@Model._userProfile.Account_holder_name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">PAN</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtpan" placeholder="PAN" value="@Model._userProfile.Pan">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">UPI Id</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtupi" placeholder="UPI Id" value="@Model._userProfile.Upi_id">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Created on</label>
+                                                    <div class="col-sm-9">
+                                                        @Model._userProfile.Created_on
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Tether</label>
+                                                    <div class="col-sm-9">
+                                                        <center><img src="@Model._userProfile.QRCode" class="img-fluid w-50" /></center>
+                                                        @Model._userProfile.TetherAddress
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Created by</label>
+                                                    <div class="col-sm-9">
+                                                        @Model._userProfile.Created_by
+                                                    </div>
+                                                </div>
+                                         </div>
+
+                                            <div class="card card-outline card-secondary ">
+                                                <div class="card-header">
+                                                    <h1 class="card-title">My Docs</h1>
+                                                    <div class="card-tools">
+                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body p-3">
+                                                    <table id="example1" class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Filename</th>
+                                                                <th>File</th>
+                                                                <th>Uploaded Date</th>
+                                                                @*<th>Status</th>*@
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (DataRow row in Model.UserDocs.Rows)
+                                                            {
+                                                                <tr>
+                                                                    <td>@row["filename"]</td>
+                                                                    <td><a href="@row["docpath"]" download>Download</a></td>
+                                                                    <td>@row["createddate"]</td>
+
+
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="tab-pane" id="activity">
+                                        @await Html.PartialAsync("_ActivityLog", Model._activityLogDashboard)
+
+                                    </div>
+                                    <div class="tab-pane" id="members">
+                                        <div class="card-body p-0">
+                                            <ul class="users-list clearfix">
+                                                @foreach (var item in Model.UserList)
+                                                {
+                                                    var temp = @item.Firstname + ' ' + @item.Lastname;
+                                                    if (temp.Length > 12)
+                                                        temp = temp.Substring(0, 12) + "...";
+                                                    <li>
+                                                        <a class="users-list-name" href="/account/userprofile/@item.Id">
+                                                            <img src="@item.Profilepicture" alt="User Image" class="userimage">
+                                                            <br/>
+                                                            @temp
+
+                                                            <span class="users-list-date">@item.UserId</span>
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                            </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+
+                    </div><!--/. container-fluid -->
+
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+
+<script src="~/js/echarts.min.js"></script>
+<script src="~/js/app.js"></script>
+
+<script src="~/js/columns_basic.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("input:radio[name ='r1']").val(['@ol']);
+
+
+        $("input:radio[name ='r1']").change(function () {
+            var kyc = $("input:radio[name ='r1']:checked").val();
+            var zz = $("#hdnsuerid").val();
+            $.ajax({
+
+                type: "GET",
+                url: "/Admin/setkyc?userid=" + zz + "&kyc="+kyc,
+                async: false,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                success: function (data) {
+
+                    if (data == "Pending") {
+                        $("#kycbadge").text(kyc).removeClass().addClass("badge badge-warning"); toastr.success('KYC verification status changed');
+                    }
+                    else if (data=="Verified") {
+                        $("#kycbadge").text(kyc).removeClass().addClass("badge badge-success"); toastr.success('KYC verification status changed');
+                    }
+                    else if (data == "VerificationFailed")
+                    {
+                        $("#kycbadge").text(kyc).removeClass().addClass("badge badge-danger"); toastr.success('KYC verification status changed');
+                    }
+                    else {
+                        toastr.error('KYC verification status failed');
+                    }
+
+                },
+                error: function (a, b, c) {
+                    //alert(b);
+                    toastr.error(a); return false;
+                }
+
+            });
+        });
+
+            var $select1 = $('#select1'),
+            $select2 = $('#select2'),
+            $options = $select2.find('option');
+
+        $select1.on('change', function () {
+            $select2.html($options.filter('[value="' + this.value + '"]'));
+        }).trigger('change');
+
+        if ($("#chkstatuslabel").text().trim()=="Active") {
+            $("#chkStatus").attr('checked', 'checked');
+        }
+        else {
+            $("#chkStatus").removeAttr('checked');
+        }
+      
+
+        $("#chkStatus").change(function (e) {
+        if ($(this).is(':checked')) {
+                $.ajax({
+
+                    type: "GET",
+                    url: "/Account/SetManualLock?uid="+'@uid'+"&status=false",
+                        async: false,
+                            dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                    data: { },
+                success: function () {
+                    $("#chkstatuslabel").text("Active");
+                    toastr.success('User has been activated')
+                },
+                    error: function (a, b, c) {
+                        toastr.error(a);
+                    toastr.error('Error occurred'); return false;
+                }
+
+            });
+        }
+        else {
+            $.ajax({
+
+                type: "GET",
+              url: "/Account/SetManualLock?uid="+'@uid'+"&status=true",
+                    async: false,
+                        dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                                data: { },
+                            success: function (data) {
+                                $("#chkstatuslabel").text("Locked");
+                                toastr.error('User has been locked')
+                            },
+                error: function (data) {
+                    toastr.error(a);
+                                toastr.error('Error occurred'); return false;
+                            }
+
+                });
+        }
+
+        });
+
+
+        if ($("#chkEmailStatusLabel").text().trim() == "Verified") {
+            $("#chkEmailStatus").attr('checked', 'checked');
+        }
+        else {
+            $("#chkEmailStatus").removeAttr('checked');
+        }
+
+        $("#chkEmailStatus").change(function (e) {
+        if ($(this).is(':checked')) {
+                $.ajax({
+
+                    type: "GET",
+                    url: "/Account/SetManualVerification?uid="+'@uid'+"&status=true",
+                        async: false,
+                            dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                    data: { },
+                success: function () {
+                    $("#chkEmailStatusLabel").text("Verified");
+                    toastr.success('Manual email verification activated')
+                },
+                    error: function (a, b, c) {
+                        toastr.error(a);
+                    toastr.error('Error occurred'); return false;
+                }
+
+            });
+        }
+        else {
+            $.ajax({
+
+                type: "GET",
+                url: "/Account/SetManualVerification?uid="+'@uid'+"&status=false",
+                    async: false,
+                        dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                                data: { },
+                            success: function (data) {
+                                $("#chkEmailStatusLabel").text("Not verified");
+                                toastr.error('Manual email verification suspended')
+                            },
+                error: function (data) {
+                    toastr.error(a);
+                                toastr.error('Error occurred'); return false;
+                            }
+
+                });
+        }
+
+         });
+
+
+        $(".sidebar-control").click(function() {
+
+           // window.dispatchEvent(new Event('resize'));
+            ////$("#columns_basic").resize();
+
+            ////window.dispatchEvent(new Event('resize'));
+
+            ////$(window).trigger('resize');
+
+            //var elem = document.getElementById("columns_basic");
+
+            //elem.dispatchEvent(event);
+        });
+
+    });
+
+</script>

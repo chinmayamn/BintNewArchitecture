@@ -1,0 +1,135 @@
+﻿@model RoleEdit
+@{
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="wrapper">
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header" style="padding-bottom:0px !important">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">
+                            <a class="btn btn-secondary" asp-action="index">Back</a>
+                        </h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/Admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item active">Update Roles</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+        <form method="post">
+        <div class="row">
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                    
+                <div class="card card-outline card-success">
+                    <div class="card-header border-transparent">
+                        @*<div asp-validation-summary="All" class="text-danger"></div>*@
+
+                           
+                        <input type="hidden" name="roleName" value="@Model.Role.Name"/>
+                        <input type="hidden" name="roleId" value="@Model.Role.Id"/>
+
+                        <h3 class="card-title">Add to @Model.Role.Name</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                @if (Model.NonMembers.Count() == 0)
+                                {
+                                    <tr><td colspan="2">All Users Are Members</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (ApplicationUser user in Model.NonMembers)
+                                    {
+                                        <tr>
+                                            <td>@user.UserName</td>
+                                            <td>
+                                                <input type="checkbox" name="AddIds" value="@user.Id">
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                               
+                        </div>
+                    </div>
+
+
+                    <!-- /.card-body -->
+                </div>
+                    
+
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="card card-outline card-success">
+                    <div class="card-header border-transparent">
+                        <h3 class="card-title">Remove From @Model.Role.Name</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                          
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                @if (Model.Members.Count() == 0)
+                                {
+                                    <tr><td colspan="2">No Users Are Members</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (ApplicationUser user in Model.Members)
+                                    {
+                                        <tr>
+                                            <td>@user.UserName</td>
+                                            <td>
+                                                <input type="checkbox" name="DeleteIds" value="@user.Id">
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                <tr>
+                                    <td>
+                                        <button type="submit" class="btn btn-success mb-2">Save</button>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            </table>
+                           
+
+                        </div>
+                    </div>
+
+
+                    <!-- /.card-body -->
+                </div>
+            </div>
+               
+        </div>
+        </form>
+        </section>
+    </div>
+</div>

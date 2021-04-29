@@ -1,0 +1,72 @@
+﻿@model Bint.Models.Payback
+@using System.Data
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h1 class="card-title">USD Payback</h1>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-3">
+        <table id="example2" class="table">
+            <thead>
+                <tr>
+                    
+                    <th>UserId</th>
+                    <th class="text-center">Total Amount</th>
+                    <th class="text-center">Paid back</th>
+                    <th class="text-center">Pending</th>
+                    <th>Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow row in Model.USDPayback.Rows)
+                {
+                    var b = "";
+                    if(Convert.ToInt32(@row["percentage"])<=30)
+                    {
+                        b = "bg-danger";
+                    }
+                    else if(Convert.ToInt32(@row["percentage"]) >=31 && Convert.ToInt32(@row["percentage"]) <=70)
+                      {
+                          b = "bg-warning";
+                      }
+                    else if(Convert.ToInt32(@row["percentage"]) >=71 && Convert.ToInt32(@row["percentage"]) <=99)
+                    {
+                        b = "bg-info";
+                    }
+                    else
+                    {
+                        b = "bg-success";
+                    }
+                  
+                    <tr>
+                        <td>@row["fromuserid"]</td>
+                        <td class="text-right">@row["totalamount"]</td>
+                        <td class="text-right">@row["paid"]</td>
+                        <td class="text-right">@row["pending"]</td>
+                        <td>
+                            
+                            <div class="progress-group mt-1">
+                                <div class="progress progress-sm">
+                                    <div class="progress-bar @b rounded-pill" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: @row["percentage"]%">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                      </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+<script>
+    $(document).ready(function () {
+        $("#example2").DataTable();
+    });
+</script>

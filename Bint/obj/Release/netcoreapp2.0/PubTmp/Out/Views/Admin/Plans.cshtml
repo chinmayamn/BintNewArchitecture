@@ -1,0 +1,650 @@
+﻿
+@{
+  
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Plans</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">Plans</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+
+
+                        <ul class="nav nav-tabs nav-fill " id="plans" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" id="investor-tab" data-toggle="tab" href="#investor" role="tab" aria-controls="investor" aria-selected="true">Investor's Plan</a></li>
+                            <li class="nav-item"><a class="nav-link " id="partner-tab" data-toggle="tab" href="#partner" role="tab" aria-controls="partner" aria-selected="false">Partner's Plan</a></li>
+                            <li class="nav-item"><a class="nav-link " id="client-tab" data-toggle="tab" href="#client" role="tab" aria-controls="client" aria-selected="false">Client's Plan</a></li>
+                        </ul>
+                    <div class="tab-content" id="myplans" style="padding: 5px">
+
+                        <div class="tab-pane fade show active" id="investor" role="tabpanel" aria-labelledby="investor-tab">
+
+                            <div class="row">
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <div class="card card-outline card-info">
+                                        <div class="card-header border-transparent">
+                                            <h3 class="card-title">Annual Return Plan - ARP</h3>
+
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive ">
+                                                <table id="example1" class="table" style="margin: 0px">
+                                                    <thead style="text-align: center">
+                                                        <tr>
+                                                            <th>Plan ID</th>
+                                                            <th colspan="2">Deposit amount</th>
+                                                            <th>Annual Profit</th>
+                                                            <th>Locking Period</th>
+                                                            <th>Partner Commission</th>
+                                                            <th>Action</th>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Minimum</th>
+                                                            <th>Maximum</th>
+                                                            <th></th>
+
+                                                            <th></th>
+
+                                                            <th>BGC rewards on MRP</th>
+                                                            <th></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="text-align: center">
+                                                        <tr>
+                                                            <td class="text-blue text-bold ">
+                                                                ARP110
+                                                            </td>
+                                                            <td>
+                                                                500
+                                                            </td>
+                                                            <td>
+                                                                5000
+                                                            </td>
+                                                            <td>110%</td>
+
+                                                            <td>365 Days</td>
+                                                            <td>1.00%</td>
+                                                            <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-blue text-bold">
+                                                                ARP120
+                                                            </td>
+                                                            <td>
+                                                                5001
+                                                            </td>
+                                                            <td>
+                                                                10000
+                                                            </td>
+                                                            <td>120%</td>
+
+                                                            <td>365 Days</td>
+                                                            <td>1.25%</td>
+
+                                                            <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-blue text-bold">
+                                                                ARP130
+                                                            </td>
+                                                            <td>
+                                                                10001
+                                                            </td>
+                                                            <td>
+                                                                15000
+
+                                                            </td>
+                                                            <td>130%</td>
+
+                                                            <td>365 Days</td>
+                                                            <td>1.50%</td>
+                                                            <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-blue text-bold">
+                                                                ARP140
+                                                            </td>
+                                                            <td>
+                                                                15001
+                                                            </td>
+                                                            <td>
+                                                                20000
+                                                            </td>
+                                                            <td>140%</td>
+
+                                                            <td>365 Days</td>
+                                                            <td>1.75%</td>
+                                                            <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-blue text-bold">
+                                                                ARP150
+                                                            </td>
+                                                            <td>
+                                                                20000
+                                                            </td>
+                                                            <td>
+                                                                25000
+                                                            </td>
+                                                            <td>150%</td>
+
+                                                            <td>365 Days</td>
+                                                            <td>2.00%</td>
+                                                            <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <div class="callout callout-warning">
+                                        <h5>$100000.00</h5>
+                                        <span class="float-right"><a href="#" class="text-blue">View Report</a></span>
+                                        <p>Total Revenue</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @await Html.PartialAsync("_Terms")
+                        </div>
+                        <div class="tab-pane fade" id="partner" role="tabpanel" aria-labelledby="partner-tab">
+                            <div class="row">
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <div class="card card-outline card-info">
+                                        <div class="card-header border-transparent">
+                                            <h3 class="card-title">Monthly Return Plan - MRP</h3>
+                                            
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table id="example1" class="table" style="margin: 0px">
+                                                    <thead style="text-align:center">
+                                                    <tr>
+                                                        <th>Plan ID</th>
+                                                        <th colspan="2">Deposit amount</th>
+                                                        <th>Monthly Profit</th>
+                                                        <th>Locking Period</th>
+                                                        <th colspan="2">Client commission</th>
+                                                        <th>Rewards</th>
+                                                        <th>Action</th>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Minimum</th>
+                                                        <th>Maximum</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th>MPP Plan</th>
+                                                        <th>MEP Plan</th>
+                                                        <th>BGC Token</th>
+                                                        <th></th>
+
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody style="text-align:center">
+                                                    <tr>
+                                                        <td class="text-blue text-bold ">
+                                                            MRP5
+                                                        </td>
+                                                        <td>500</td>
+
+                                                        <td>2500</td>
+                                                        <td>5%</td>
+
+                                                        <td>30 Days</td>
+                                                        <td>1.00%</td>
+                                                        <td>3.00%</td>
+                                                        <td>1.00%</td>
+                                                        <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-blue text-bold">
+                                                            MRP6
+                                                        </td>
+                                                        <td>
+                                                            2501
+                                                        </td>
+                                                        <td>
+                                                            5000
+                                                        </td>
+                                                        <td>6%</td>
+
+                                                        <td>30 Days</td>
+                                                        <td>1.25%</td>
+                                                        <td>4.00%</td>
+                                                        <td>1.25%</td>
+                                                        <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-blue text-bold">
+                                                            MRP7
+                                                        </td>
+                                                        <td>
+                                                            5001
+                                                        </td>
+                                                        <td>
+                                                            10000
+                                                        </td>
+                                                        <td>7%</td>
+
+                                                        <td>30 Days</td>
+                                                        <td>1.50%</td>
+                                                        <td>5.00%</td>
+                                                        <td>1.50%</td>
+                                                        <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-blue text-bold">
+                                                            MRP8
+                                                        </td>
+                                                        <td>
+                                                            10001
+                                                        </td>
+                                                        <td>
+                                                            15000
+                                                        </td>
+                                                        <td>8%</td>
+
+                                                        <td>30 Days</td>
+                                                        <td>1.75%</td>
+                                                        <td>6.00%</td>
+                                                        <td>1.75%</td>
+                                                        <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-blue text-bold">
+                                                            MRP9
+                                                        </td>
+                                                        <td>
+                                                            15001
+                                                        </td>
+                                                        <td>
+                                                            20000
+                                                        </td>
+                                                        <td>9%</td>
+
+                                                        <td>30 Days</td>
+                                                        <td>2.00%</td>
+                                                        <td>7.00%</td>
+                                                        <td>2.00%</td>
+                                                        <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+                                                    </tr>
+
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <div class="callout callout-warning">
+                                        <h5>$134000.00</h5>
+                                        <span class="float-right"><a href="#" class="text-blue">View Report</a></span>
+                                        <p>Total Revenue</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @await Html.PartialAsync("_Terms")
+
+                        </div>
+                        <div class="tab-pane fade" id="client" role="tabpanel" aria-labelledby="client-tab">
+                            <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 pt-4 pb-4 pl-3 pr-3" style="background-color: white;">
+                            <ul class="nav nav-tabs nav-fill " id="myTab" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Monthly Profit Plan - MPP</a></li>
+                                <li class="nav-item"><a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Monthly Exit Plan - MEP</a></li>
+                            </ul>
+                            <div class="tab-content" id="myTab" style="padding: 5px">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row pt-4">
+                                    <div class="col-md-9 col-sm-9 col-xs-9">
+                                        <div class="card card-outline card-success">
+
+                                            <!-- /.card-header -->
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table id="example1" class="table" style="margin: 0px">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Plan</th>
+                                                                <th>Deposit</th>
+                                                                <th>Monthly Profit</th>
+                                                                <th>Locking Period</th>
+                                                                <th>Action</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-blue text-bold">MPP5</td>
+                                                                <td >
+                                                                    500 - 10000
+                                                                </td>
+                                                                <td>5%</td>
+                                                                <td>30 Days</td>
+                                                                <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-blue text-bold">MPP6</td>
+                                                                <td >
+                                                                    10001 - 20000
+                                                                </td>
+                                                                <td>6%</td>
+                                                                <td>30 Days</td>
+                                                                <td> <button type="submit" class="btn btn-sm bg-indigo-300 text-white">Invest</button></td>
+
+
+                                                            </tr>
+                                                        </tbody>
+
+                                                    </table>
+
+                                                </div>
+                                            </div>
+
+
+                                            <!-- /.card-body -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3">
+                                        <div class="callout callout-warning">
+                                            <h5>$578000.00</h5>
+                                            <span class="float-right"><a href="#" class="text-blue">View Report</a></span>
+                                            <p>Total Revenue</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="row pt-4">
+
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <!-- TABLE: LATEST ORDERS -->
+                                    <div class="card card-outline card-success">
+                                        <div class="card-header border-transparent">
+                                            <h3 class="card-title">Monthly Exit Plan - MEP500</h3>
+
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table id="example3" class="table" style="margin: 0px">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-blue text-bold">Month</th>
+                                                        <th>1</th>
+                                                        <th>2</th>
+                                                        <th>3</th>
+                                                        <th>4</th>
+                                                        <th>5</th>
+                                                        <th>6</th>
+                                                        <th>7</th>
+                                                        <th>8</th>
+                                                        <th>9</th>
+                                                        <th>10</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="text-blue text-bold">
+                                                            Deposit
+                                                        </td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                        <td>500</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-blue text-bold">
+                                                            Profit
+                                                        </td>
+                                                        <td>10%</td>
+                                                        <td>20%</td>
+                                                        <td>30%</td>
+                                                        <td>40%</td>
+                                                        <td>50%</td>
+                                                        <td>60%</td>
+                                                        <td>70%</td>
+                                                        <td>80%</td>
+                                                        <td>90%</td>
+                                                        <td>100%</td>
+                                                    </tr>
+                                                    <tr class="text-pink text-bold">
+                                                        <td class="text-blue text-bold">
+                                                            Amount
+                                                        </td>
+                                                        <td>550</td>
+                                                        <td>600</td>
+                                                        <td>650</td>
+                                                        <td>700</td>
+                                                        <td>750</td>
+                                                        <td>800</td>
+                                                        <td>850</td>
+                                                        <td>900</td>
+                                                        <td>950</td>
+                                                        <td>1000</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7">
+                                                            <div class="d-flex align-items-center mb-3 mb-sm-0">
+                                                                <div id="campaigns-donut"></div>
+                                                                <div class="ml-3">
+                                                                    <h5 class="font-weight-semibold mb-0">Group 1 - 7 out of 10</h5>
+                                                                    <span class="badge badge-mark border-success mr-1"></span> <span class="text-muted">Created : May 12, 12:30 am</span>
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <button type="button" class="btn btn-md bg-indigo-300 float-right text-white">Join Now</button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.box-body -->
+
+
+
+                                </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3">
+                                        <div class="callout callout-warning">
+                                            <h5>$4507500.00</h5>
+                                            <span class="float-right"><a href="#" class="text-blue">View Report</a></span>
+                                            <p>Total Revenue</p>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-9 col-sm-9 col-xs-9 mt-4">
+                                        <!-- TABLE: LATEST ORDERS -->
+                                        <div class="card card-outline card-success">
+                                            <div class="card-header border-transparent">
+                                                <h3 class="card-title">Monthly Exit Plan - MEP1000</h3>
+
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table id="example3" class="table" style="margin: 0px">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="text-blue text-bold">Month</th>
+                                                            <th>1</th>
+                                                            <th>2</th>
+                                                            <th>3</th>
+                                                            <th>4</th>
+                                                            <th>5</th>
+                                                            <th>6</th>
+                                                            <th>7</th>
+                                                            <th>8</th>
+                                                            <th>9</th>
+                                                            <th>10</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="text-blue text-bold">
+                                                                Deposit
+                                                            </td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+                                                            <td>1000</td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-blue text-bold">
+                                                                Profit
+                                                            </td>
+                                                            <td>10%</td>
+                                                            <td>20%</td>
+                                                            <td>30%</td>
+                                                            <td>40%</td>
+                                                            <td>50%</td>
+                                                            <td>60%</td>
+                                                            <td>70%</td>
+                                                            <td>80%</td>
+                                                            <td>90%</td>
+                                                            <td>100%</td>
+                                                        </tr>
+                                                        <tr class="text-pink text-bold">
+                                                            <td class="text-blue text-bold">
+                                                                Amount
+                                                            </td>
+                                                            <td>1100</td>
+                                                            <td>1200</td>
+                                                            <td>1300</td>
+                                                            <td>1400</td>
+                                                            <td>1500</td>
+                                                            <td>1600</td>
+                                                            <td>1700</td>
+                                                            <td>1800</td>
+                                                            <td>1900</td>
+                                                            <td>2000</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7">
+                                                                <div class="d-flex align-items-center mb-3 mb-sm-0">
+                                                                    <div id="mycamp-donut"></div>
+                                                                    <div class="ml-3">
+                                                                        <h5 class="font-weight-semibold mb-0">Group 1 - 5 out of 10</h5>
+                                                                        <span class="badge badge-mark border-success mr-1"></span> <span class="text-muted">Created : May 12, 12:30 am</span>
+                                                                    </div>
+                                                                </div>
+
+                                                            </td>
+                                                            <td colspan="4">
+                                                                <button type="button" class="btn btn-md bg-indigo-300 float-right text-white">Join Now</button>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+
+                                                    </table>
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <!-- /.card-body -->
+                                        </div>
+                                        <!-- /.box-body -->
+
+
+
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3"></div>
+                                </div>
+                                </div>
+
+                            </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3"></div>
+                            </div>
+                            @await Html.PartialAsync("_Terms")
+                        </div>
+                    </div>
+
+
+                   
+
+                    </div>
+
+
+                    </div><!--/. container-fluid -->
+
+
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>

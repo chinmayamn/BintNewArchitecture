@@ -1,0 +1,352 @@
+﻿@model Bint.Models.InvestorDashboard
+@{
+
+    Layout = "~/Views/Shared/_InvestorLayout.cshtml";
+}
+
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Investor Dashboard</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/investor/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">Investor Dashboard</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="card card-outline card-info">
+                                <div class="card-header">
+                                    <h1 class="card-title">My Investments</h1>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body p-3">
+                                    <table id="example1" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Plan</th>
+                                            <th>Token</th>
+                                            <th>Deposit</th>
+                                            <th>Return</th>
+                                            <th>Invested on</th>
+                                            <th>Completed term</th>
+                                            <th class="text-center"> Details</th>
+
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Gold</td>
+                                            <td>BTK</td>
+                                            <td>5000</td>
+                                            <td>5500</td>
+
+                                            <td>25/1/2021</td>
+                                            <td>
+                                                <div class="progress-group">
+                                                    <span class="float-right"><b>2</b>/12</span>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar bg-danger" style="width: 20%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center"><a href="#">View</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diamond</td>
+                                            <td>BGC</td>
+                                            <td>5000</td>
+                                            <td>10000</td>
+                                            <td>20/1/2021</td>
+                                            <td>
+                                                <div class="progress-group">
+                                                    <span class="float-right"><b>4</b>/12</span>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar bg-warning" style="width: 40%"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center"><a href="#">View</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Basic</td><td>BTK</td>
+                                            <td>6000</td>
+                                            <td>6600</td>
+                                            
+                                            <td>12/1/2021</td>
+                                            <td>
+                                                <div class="progress-group">
+                                                    <span class="float-right"><b>7</b>/12</span>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar bg-primary" style="width: 70%"></div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                            <td class="text-center"><a href="#">View</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Basic</td>
+                                            <td>BTK</td>
+                                            <td>6000</td>
+                                            <td>6600</td>
+
+                                            <td>12/1/2019</td>
+                                            <td>
+                                                <span class="badge badge-info">Processing</span>
+
+                                            </td>
+                                            <td class="text-center"><a href="#">View</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Silver</td>
+                                            <td>BTK</td>
+                                            <td>6000</td>
+                                            <td>6600</td>
+
+                                            <td>12/1/2019</td>
+                                            <td>
+                                                <span class="badge badge-success">Processed</span>
+                                            </td>
+                                            <td class="text-center"><a href="#">View</a></td>
+                                        </tr>
+                                        </tbody>
+                                     
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="info-box">
+                               
+                                <span class="info-box-icon bg-info elevation-1">
+                                    <a href="/investor/partners">
+                                        <i class="fas fa-users"></i>
+                                        </a>
+                                </span>
+
+                                    <div class="info-box-content">
+                                        <a href="/investor/partners">
+                                            <span class="info-box-text">Partners</span>
+                                            <span class="info-box-number">
+                                               @Model.userCount.PartnerCount
+
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                               
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Eligible partners</span>
+                                    <span class="info-box-number">
+                                        4
+
+                                    </span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-users"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Partner USD</span>
+                                    <span class="info-box-number">
+                                       @Model.TotalUSD
+
+                                    </span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-users"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Total Partner BGC</span>
+                                    <span class="info-box-number">
+                                        @Model.TotalBGC
+
+                                    </span>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <!-- USERS LIST -->
+                            <div class="card ">
+                                <div class="card-header card-outline card-secondary">
+                                    <h3 class="card-title">Latest Partners</h3>
+                                    <div class="card-tools">
+                                     
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body p-0">
+                                    <ul class="users-list clearfix">
+                                        @foreach (var item in Model.userCount.PartnerList)
+                                        {
+                                            var temp = @item.Firstname + ' ' + @item.Lastname;
+                                            if (temp.Length > 12)
+                                                temp = temp.Substring(0, 12) + "...";
+
+                                            <li>
+                                                <a href="/account/userprofile/@item.Id">
+                                                    <img src="@item.Profilepicture" alt="User Image">
+                                                </a>
+                                                <a class="users-list-name" href="/account/userprofile/@item.Id">
+                                                    @temp
+                                                                                                <span class="users-list-date">@item.UserId</span>
+                                                                                            </a>
+                                            </li>
+                                        }
+                                        </ul>
+                                    <!-- /.users-list -->
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer text-center">
+                                    <a href="/investor/partners">View All Partners</a>
+                                </div>
+                                <!-- /.card-footer -->
+                            </div>
+                            <!--/.card -->
+                        </div>
+                        <div class="col-md-6 col-xs-6 col-sm-6">
+                            <div class="card card-secondary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">Partner Lead</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart">
+                                        <canvas id="stackedBarChart" style="min-height: 100px; height: 338px; max-height: 338px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+                </div><!--/. container-fluid -->
+                @await Html.PartialAsync("_InvestorProfile")
+            </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<!-- /.content-wrapper -->
+<script>
+    $(function() {
+        $("#example1").DataTable();
+
+        var areaChartData = {
+            labels  : ['Mohan', 'Kala', 'Kumar', 'Shekhar', 'Arun', 'Soumya'],
+            datasets: [
+                {
+                    label               : 'BGC',
+                    backgroundColor: '#ef5350',
+                    borderColor: '#ef5350',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data                : [28, 48, 40, 19, 86, 27, 90]
+                },
+                {
+                    label               : 'USD',
+                    backgroundColor: '#66bb6a',
+                    borderColor: '#66bb6a',
+                    pointRadius         : false,
+                    pointColor          : 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor    : '#c1c7d1',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data                : [65, 59, 80, 81, 56, 55, 40]
+                }
+            ]
+        }
+        var barChartData = jQuery.extend(true, {}, areaChartData);
+        var temp0 = areaChartData.datasets[0];
+        var temp1 = areaChartData.datasets[1];
+        barChartData.datasets[0] = temp1;
+        barChartData.datasets[1] = temp0;
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+        var stackedBarChartData = jQuery.extend(true, {}, barChartData);
+
+        var stackedBarChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [
+                    {
+                        stacked: true,
+                    }
+                ],
+                yAxes: [
+                    {
+                        stacked: true
+                    }
+                ]
+            }
+        }
+
+        var stackedBarChart = new Chart(stackedBarChartCanvas,
+            {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            });
+    });
+    
+</script>

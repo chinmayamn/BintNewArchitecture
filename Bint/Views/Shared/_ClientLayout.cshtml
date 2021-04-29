@@ -1,0 +1,583 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Identity
+@using Bint.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>BINTEK GLOBAL</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/Content/plugins/fontawesome-free/css/all.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/Content/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/dist/css/adminlte.min.css">
+   
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/Content/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/Content/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+
+    <script src="~/Content/dist/js/adminlte.js"></script>
+    <!-- OPTIONAL SCRIPTS -->
+    <script src="~/Content/dist/js/demo.js"></script>
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="~/Content/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="~/Content/plugins/raphael/raphael.min.js"></script>
+    <script src="~/Content/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+    <script src="~/Content/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/Content/plugins/chart.js/Chart.min.js"></script>
+    <!-- PAGE SCRIPTS -->
+    <link rel="stylesheet" href="~/Content/plugins/Ionicons/css/ionicons.min.css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //   bsCustomFileInput.init();
+            //  $("#example1").DataTable();
+        });</script>
+    <script src="~/Content/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="~/Content/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+    <link rel="stylesheet" href="/Content/plugins/toastr/toastr.min.css">
+    <script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/Content/plugins/toastr/toastr.min.js"></script>
+    <link rel="stylesheet" href="~/Content/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Toastr -->
+    @*<script src="~/Content/dist/js/pages/dashboard2.js"></script>*@
+    <script src="~/js/d3.min.js"></script>
+    <script src="~/js/d3_tooltip.js"></script>
+    <script src="~/js/donuts.js"></script>
+    <link href="~/css/colors.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = window.location.pathname.toLowerCase();
+            $('#dashmenu li a').each(function (k, v) {
+                if ($(this).attr('href').toLowerCase() == url) {
+                    $(this).addClass("active");
+                }
+            });
+
+          
+           const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            var a = '@TempData["error"]';
+            if (a != '')
+                toastr.error(a);
+
+            var b = '@TempData["data"]';
+            if (b != '')
+                toastr.success(b);
+
+
+        });
+
+    </script>
+
+    <style type="text/css">
+        body {
+            font-family: Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.90rem;
+        }
+
+        .content {
+            background-color: #f5f5f5 !important;
+        }
+
+        .btn-tool {
+            color: #555c63;
+        }
+
+        .nav-link.active {
+            color: white !important;
+            background-color: #6c757d !important;
+        }
+
+        .d3-tip {
+            position: absolute;
+            padding: .5rem .75rem;
+            background-color: #000;
+            color: #fff;
+            margin-bottom: -.25rem;
+            font-size: .8125rem;
+            z-index: 1070;
+            border-radius: .1875rem;
+        }
+
+        .breadcrumb {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        /*.sidebar-dark-primary, .brand-link {
+            background-color: rgb(50, 91, 187) !important;
+
+        }
+
+        .nav-treeview > .nav-item > .nav-link.active {
+            background-color: rgba(255,255,255,1) !important;
+        }*/
+
+        .box {
+            position: relative;
+            border-radius: 3px;
+            background: #ffffff;
+            border-top: 3px solid #d2d6de;
+            margin-bottom: 20px;
+            width: 100%;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .info-box-content a {
+            color: black !important;
+        }
+
+        .box.box-primary {
+            border-top-color: #3c8dbc !important;
+        }
+
+        .bg-aqua {
+            background-color: #00c0ef !important;
+        }
+
+        .ion {
+            line-height: 45px !important;
+            font-size: 45px !important;
+        }
+
+        .info-box-new {
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
+            border-radius: 0.25rem;
+            background: #ffffff;
+            display: -ms-flexbox;
+            display: flex;
+            margin-bottom: 1rem;
+            min-height: 80px;
+            padding: 0px;
+            position: relative;
+        }
+
+            .info-box-new .progress {
+                background-color: rgba(0, 0, 0, 0.125);
+                height: 2px;
+                margin: 5px 0;
+            }
+
+                .info-box-new .progress .progress-bar {
+                    background-color: #ffffff;
+                }
+
+            .info-box-new .info-box-icon-new {
+                /*border-radius: 0.25rem;*/
+                -ms-flex-align: center;
+                align-items: center;
+                display: -ms-flexbox;
+                display: flex;
+                font-size: 1.875rem;
+                -ms-flex-pack: center;
+                justify-content: center;
+                text-align: center;
+                width: 90px;
+                height: 90px;
+            }
+
+                .info-box-new .info-box-icon-new > img {
+                    max-width: 100%;
+                }
+
+            .info-box-new .info-box-content-new {
+                -ms-flex: 1;
+                flex: 1;
+                padding: 5px 10px;
+            }
+
+            .info-box-new .info-box-number-new {
+                display: block;
+                font-weight: 700;
+            }
+
+            .info-box-new .progress-description,
+            .info-box-new .info-box-text-new {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+        .info-box .info-box .bg-primary,
+        .info-box .info-box .bg-gradient-primary {
+            color: #ffffff;
+        }
+
+            .info-box .info-box .bg-primary .progress-bar,
+            .info-box .info-box .bg-gradient-primary .progress-bar {
+                background-color: #ffffff;
+            }
+
+        .info-box .info-box .bg-secondary,
+        .info-box .info-box .bg-gradient-secondary {
+            color: #ffffff;
+        }
+
+            .info-box .info-box .bg-secondary .progress-bar,
+            .info-box .info-box .bg-gradient-secondary .progress-bar {
+                background-color: #ffffff;
+            }
+
+        .info-box .info-box .bg-success,
+        .info-box .info-box .bg-gradient-success {
+            color: #ffffff;
+        }
+
+            .info-box .info-box .bg-success .progress-bar,
+            .info-box .info-box .bg-gradient-success .progress-bar {
+                background-color: #ffffff;
+            }
+
+        .info-box .info-box .bg-info,
+        .info-box .info-box .bg-gradient-info {
+            color: #ffffff;
+        }
+
+            .info-box .info-box .bg-info .progress-bar,
+            .info-box .info-box .bg-gradient-info .progress-bar {
+                background-color: #ffffff;
+            }
+
+        .info-box .info-box .bg-warning,
+        .info-box .info-box .bg-gradient-warning {
+            color: #1F2D3D;
+        }
+
+            .info-box .info-box .bg-warning .progress-bar,
+            .info-box .info-box .bg-gradient-warning .progress-bar {
+                background-color: #1F2D3D;
+            }
+
+        .info-box .info-box .bg-danger,
+        .info-box .info-box .bg-gradient-danger {
+            color: #ffffff;
+        }
+
+            .info-box .info-box .bg-danger .progress-bar,
+            .info-box .info-box .bg-gradient-danger .progress-bar {
+                background-color: #ffffff;
+            }
+
+        .info-box .info-box .bg-light,
+        .info-box .info-box .bg-gradient-light {
+            color: #1F2D3D;
+        }
+
+            .info-box .info-box .bg-light .progress-bar,
+            .info-box .info-box .bg-gradient-light .progress-bar {
+                background-color: #1F2D3D;
+            }
+
+        .info-box .info-box .bg-dark,
+        .info-box .info-box .bg-gradient-dark {
+            color: #ffffff;
+        }
+
+            .info-box .info-box .bg-dark .progress-bar,
+            .info-box .info-box .bg-gradient-dark .progress-bar {
+                background-color: #ffffff;
+            }
+
+        .info-box .info-box-more {
+            display: block;
+        }
+
+        .info-box .progress-description {
+            margin: 0;
+        }
+
+        @@media (min-width: 768px) {
+            .col-xl-2 .info-box .progress-description,
+            .col-lg-2 .info-box .progress-description,
+            .col-md-2 .info-box .progress-description {
+                display: none;
+            }
+
+            .col-xl-3 .info-box .progress-description,
+            .col-lg-3 .info-box .progress-description,
+            .col-md-3 .info-box .progress-description {
+                display: none;
+            }
+        }
+
+        @@media (min-width: 992px) {
+            .col-xl-2 .info-box .progress-description,
+            .col-lg-2 .info-box .progress-description,
+            .col-md-2 .info-box .progress-description {
+                font-size: 0.75rem;
+                display: block;
+            }
+
+            .col-xl-3 .info-box .progress-description,
+            .col-lg-3 .info-box .progress-description,
+            .col-md-3 .info-box .progress-description {
+                font-size: 0.75rem;
+                display: block;
+            }
+        }
+
+        @@media (min-width: 1200px) {
+            .col-xl-2 .info-box .progress-description,
+            .col-lg-2 .info-box .progress-description,
+            .col-md-2 .info-box .progress-description {
+                font-size: 1rem;
+                display: block;
+            }
+
+            .col-xl-3 .info-box .progress-description,
+            .col-lg-3 .info-box .progress-description,
+            .col-md-3 .info-box .progress-description {
+                font-size: 1rem;
+                display: block;
+            }
+        }
+
+        #example1 td {
+            padding: 12px !important;
+        }
+
+        #example2 td {
+            padding: 12px !important;
+        }
+
+        #example1 th {
+            padding: 12px !important;
+        }
+
+        #example2 th {
+            padding: 12px !important;
+        }
+
+        .social-box {
+            min-height: 90px;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            background: #fff;
+        }
+
+            .social-box.facebook span {
+                color: #fff;
+                background: #3b5998;
+            }
+
+            .social-box span {
+                display: block;
+                margin: -1px -1px 0;
+                font-size: 40px;
+                line-height: 90px;
+                background: #e9ecef;
+            }
+
+            .social-box ul {
+                display: contents;
+                /*margin: 7px 0 0;*/
+                /*padding: 10px;*/
+                width: 100%;
+                background-color: #f3efef;
+            }
+
+                .social-box ul li {
+                    color: black;
+                    font-size: 24px;
+                    padding: 0 10px 0 0;
+                    text-align: center;
+                    list-style: none;
+                    background-color: #f3efef;
+                    line-height: 40px;
+                    display: contents;
+                }
+
+        .userimage {
+            width: 86px !important;
+            height: 86px !important;
+        }
+
+        .userimagesmall {
+            width: 34px !important;
+            height: 34px !important;
+        }
+
+        .userimagebig {
+            width: 88px !important;
+            height: 88px !important;
+        }
+        .navbar-badge {
+            font-size: 0.75rem !important;
+            font-weight: bold !important;
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/client/myprofile" class="nav-link"> Welcome @UserManager.GetUserAsync(User).Result.Firstname @UserManager.GetUserAsync(User).Result.Lastname </a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/client/myprofile">
+                        <img class="img-circle elevation-2 userimagesmall" alt="User Image" id="img3" src="@UserManager.GetUserAsync(User).Result.Profilepicture"></a>
+                </li>
+
+
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Messages Dropdown Menu -->
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    @await Html.PartialAsync("_Notifications")
+                </li>
+                <li class="nav-item">
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+
+                        <button type="submit" class="btn btn-link navbar-btn navbar-link">
+                            <img src="~/Content/logout.png" typeof="" />
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="/client/Dashboard" class="brand-link">
+                <img src="/content/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">BINTEK GLOBAL</span>
+            </a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <a href="/client/myprofile"> <img id="img4" class="img-circle elevation-2 userimagesmall" alt="User Image" src="@UserManager.GetUserAsync(User).Result.Profilepicture"></a>
+                    </div>
+                    <div class="info">
+                        <a href="/client/myprofile" class="d-block"> @UserManager.GetUserAsync(User).Result.Firstname @UserManager.GetUserAsync(User).Result.Lastname</a>
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="dashmenu">
+
+
+                        <li class="nav-item has-treeview">
+                            <a href="/client/myprofile" class="nav-link">
+                                <i class="nav-icon fas  fa-user"></i>
+                                <p>
+                                    My Profile
+
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="/client/dashboard" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview ">
+                            <a href="/client/plans" class="nav-link">
+                                <i class="nav-icon fas fa-tv"></i>
+                                <p>
+                                    Plans
+
+                                </p>
+                            </a>
+
+                        </li>
+                        <li class="nav-item has-treeview ">
+                            <a href="/client/usd" class="nav-link">
+                                <i class="nav-icon fa fa-dollar-sign"></i>
+                                <p>
+                                    Manage USD
+
+                                </p>
+                            </a>
+
+                        </li>
+                        <li class="nav-item has-treeview ">
+                            <a href="/client/bgc" class="nav-link">
+                                <i class="nav-icon fab fa-btc"></i>
+                                <p>
+                                    Manage BGC
+
+                                </p>
+                            </a>
+
+                        </li>
+                        <li class="nav-item has-treeview ">
+                            <a href="/client/activitylog" class="nav-link">
+                                <i class="nav-icon fa fa-history"></i>
+                                <p>
+                                    Activity Log
+
+                                </p>
+                            </a>
+
+                        </li>
+
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        @RenderBody()
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark elevation-4">
+            <!-- Control sidebar content goes here -->
+
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+        <footer class="main-footer" style="color:black;padding-bottom:1px !important">
+
+            <p class="justify-content-center d-flex">Copyright © BINTEK GLOBAL All rights reserved.</p>
+
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+</body>
+</html>
+@RenderSection("scripts", required: false)

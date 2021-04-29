@@ -1,0 +1,320 @@
+﻿@model Bint.Models.SiteSettingDashboard
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h2>Settings</h2>
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="margin-top:0px !important">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark"></h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">Site Settings</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box-new">
+                            <span class="info-box-icon-new bg-aqua"><i class="fas fa-money-bill-alt"></i></span>
+
+                            <div class="info-box-content-new">
+                                <span class="info-box-text-new">SMS Balance</span>
+                                <span class="info-box-number-new">@Model.SMSBalance</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box-new">
+                            <span class="info-box-icon-new bg-yellow"><i class="fas fa-money-bill-alt"></i></span>
+
+                            <div class="info-box-content-new">
+                                <span class="info-box-text-new">Investor ID Counter</span>
+                                <span class="info-box-number-new">@Model._regId.InvestorId</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box-new">
+                            <span class="info-box-icon-new bg-red"><i class="fas fa-money-bill-alt"></i></span>
+
+                            <div class="info-box-content-new">
+                                <span class="info-box-text-new">Partner ID Counter</span>
+                                <span class="info-box-number-new">@Model._regId.PartnerId</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <!-- fix for small devices only -->
+                    <div class="clearfix visible-sm-block"></div>
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box-new">
+                            <span class="info-box-icon-new bg-green"><i class="fas fa-money-bill-alt"></i></span>
+
+                            <div class="info-box-content-new">
+                                <span class="info-box-text-new">Client ID Counter</span>
+                                <span class="info-box-number-new">@Model._regId.ClientId</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card card-danger card-outline  ">
+                            <div class="card-header">
+                                <h1 class="card-title">Admin USD Deposit Tether</h1>
+                                <div class="card-tools">
+                                    <i class="fas fa-edit" data-toggle="modal" data-user="admin" data-target="#modal-profilepic"></i>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="card-body box-profile bg-gray-dark">
+                                <!-- About Me Box -->
+                                <div>
+                                    <h3 class="text-center">Deposit Tether USD</h3>
+                                    <p class="text-center">by scanning this QR Code</p>
+                                    <img src="@Model.u.AdminQRCode" class="img-fluid" />
+
+                                </div>
+                                <p class="text-center mt-3 mb-1">or use this address below</p>
+                                <div class="alert alert-secondary">
+                                    @Model.u.AdminTetherAddress
+                                </div>
+                                <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
+                                <ul>
+                                    <li>Minimum deposit of 1 USD</li>
+                                    <li>Please deposit only USD on this address</li>
+                                    <li>If you deposit to any other address then it will be lost forever</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card card-warning card-outline  ">
+                            <div class="card-header">
+                                <h1 class="card-title">Investor USD Deposit Tether</h1>
+                                <div class="card-tools">
+                                    <i class="fas fa-edit" data-toggle="modal" data-user="investor" data-target="#modal-profilepic"></i>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile bg-gray-dark">
+                                <!-- About Me Box -->
+                                <div>
+                                    <h3 class="text-center">Deposit Tether USD</h3>
+                                    <p class="text-center">by scanning this QR Code</p>
+                                    <img src="@Model.u.InvestorQRCode" class="img-fluid" />
+
+                                </div>
+                                <p class="text-center mt-3 mb-1">or use this address below</p>
+                                <div class="alert alert-secondary">
+                                   @Model.u.InvestorTetherAddress
+                                </div>
+                                <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
+                                <ul>
+                                    <li>Minimum deposit of 1 USD</li>
+                                    <li>Please deposit only USD on this address</li>
+                                    <li>If you deposit to any other address then it will be lost forever</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card card-info card-outline  ">
+                            <div class="card-header">
+                                <h1 class="card-title">Partner USD Deposit Tether</h1>
+                                <div class="card-tools">
+                                    <i class="fas fa-edit" data-toggle="modal" data-user="partner" data-target="#modal-profilepic"></i>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile bg-gray-dark">
+                                <!-- About Me Box -->
+                                <div>
+                                    <h3 class="text-center">Deposit Tether USD</h3>
+                                    <p class="text-center">by scanning this QR Code</p>
+                                    <img src="@Model.u.PartnerQRCode" class="img-fluid" />
+
+                                </div>
+                                <p class="text-center mt-3 mb-1">or use this address below</p>
+                                <div class="alert alert-secondary">
+                                    @Model.u.PartnerTetherAddress
+                                </div>
+                                <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
+                                <ul>
+                                    <li>Minimum deposit of 1 USD</li>
+                                    <li>Please deposit only USD on this address</li>
+                                    <li>If you deposit to any other address then it will be lost forever</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="card card-success card-outline  ">
+                            <div class="card-header">
+                                <h1 class="card-title">Client USD Deposit Tether</h1>
+                                <div class="card-tools">
+                                    <i class="fas fa-edit" data-toggle="modal" data-user="client" data-target="#modal-profilepic"></i>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile bg-gray-dark">
+                                <!-- About Me Box -->
+                                <div>
+                                    <h3 class="text-center">Deposit Tether USD</h3>
+                                    <p class="text-center">by scanning this QR Code</p>
+                                    <img src="@Model.u.ClientQRCode" class="img-fluid" />
+
+                                </div>
+                                <p class="text-center mt-3 mb-1">or use this address below</p>
+                                <div class="alert alert-secondary">
+                                   @Model.u.ClientTetherAddress
+                                </div>
+                                <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
+                                <ul>
+                                    <li>Minimum deposit of 1 USD</li>
+                                    <li>Please deposit only USD on this address</li>
+                                    <li>If you deposit to any other address then it will be lost forever</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+
+                </div>
+            </div><!--/. container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<div class="modal fade" id="modal-profilepic">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="admin" asp-action="TetherUpdate" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">USD Tether Address</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Tether Address</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txtTether" name="txtTether" placeholder="Tether Address">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">File</label>
+                        <input type="file" id="file1" name="formFile" />
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Role</label>
+                        <select id="ddlRole" name="role">
+                            <option value="Select">Select</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Investor">Investor</option>
+                            <option value="Partner">Partner</option>
+                            <option value="Client">Client</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="alert alert-default-primary ml-2 mr-2">
+                    <ol>
+                        <li>Only .jpeg, .jpg, .png files are allowed to upload</li>
+                        <li>Maximum size of file is 1MB</li>
+                    </ol>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-success" id="btnTether">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script>
+    $(document).ready(function () {
+
+        $("#btnTether").click(function (event) {
+            if ($("#txtTether").val() == "") {
+                toastr.error("Tether address is required"); return false; event.preventDefault();
+            }
+            if ($("#ddlRole").val() == "Select") {
+                toastr.error("Select role"); event.preventDefault();
+            }
+            if ($('#file1').val() == '') {
+                toastr.error('No file selected for upload'); return false; event.preventDefault();
+            }
+            var formFile = new FormData();
+            var file = $('#file1')[0];
+
+            var s = file.files[0].type;
+            if (!s.indexOf("image") == 0) {
+                toastr.error('Upload valid image file'); return false; event.preventDefault();
+            }
+           
+            
+        });
+
+   // $('#modal-profilepic').on('show.bs.modal', function(e) {
+
+   // //get data-id attribute of the clicked element
+   //      var bookId = $(e.relatedTarget).data('user');
+       
+   // //populate the textbox
+   //// $(e.currentTarget).find('input[name="bookId"]').val(bookId);
+   // });
+});
+</script>

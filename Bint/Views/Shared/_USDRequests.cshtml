@@ -1,0 +1,144 @@
+﻿@model Bint.Models.USDDashboard
+@using System.Data
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h1 class="card-title">USD Requests</h1>
+        <div class="card-tools">
+
+            @foreach (DataRow row in Model._Stats.Rows)
+            {<span class="badge badge-secondary">
+
+                    @row["usdrequests"] USD requests to approve
+                </span>
+            }
+
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-3">
+        <table id="example2" class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th class="text-center">Amount</th>
+                    <th>Requested Date</th>
+                    <th>Transferred Date</th>
+                    <th>From UserId</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow row in Model._transferUSD.Rows)
+                {
+                    var a = ""; var b = "";
+                    if (@row["status"].ToString() == "Requested")
+                    {
+                        a = "badge-warning";
+                    }
+                    else if (@row["status"].ToString() == "Transferred")
+                    { a = "badge-info"; b = "disabled"; }
+                    else if (@row["status"].ToString() == "Withdraw")
+                    { a = "bg-gray-light"; b = "disabled"; }
+                    else if (@row["status"].ToString() == "Deposit")
+                    { a = "bg-gradient-olive"; b = "disabled"; }
+                    else
+                    { a = "badge-danger"; b = "disabled"; }
+                    <tr>
+                        <td>@row["id"]</td>
+                        <td class="text-danger-400 text-bold text-right">@row["amount"]</td>
+                        <td>@row["requesteddate"]</td>
+                        <td>@row["transferdate"]</td>
+                        <td>@row["fromuserid"]</td>
+                        <td><span class="badge @a">@row["status"]</span></td>
+                        <td>
+                            <div class="form-group">
+                                <select class="custom-select" id="ddlstatus_@row["id"]" @b>
+                                    <option value="Select">Select</option>
+                                    <option value="@row["id"]">Transfer</option>
+                                    <option value="@row["id"]">Reject</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+<script>
+    $("#example2").on("change",".custom-select",function(event) {
+            var s = $(this).find("option:selected").text();
+            var id = $(this).val();
+            if (s == "Transfer") {
+                if (confirm('Are you sure to transfer USD ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/partner/transferusd",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "act": "Transfer"
+                        },
+                        success: function (data) {
+
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else if (s == "Reject") {
+                if (confirm('Are you sure to reject USD ?')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/partner/transferusd",
+                        async: false,
+                        dataType: "text json",
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            "id": id, "act": "Reject"
+                        },
+                        success: function (data) {
+                            if (data == "success") {
+                                window.location.reload(true);
+                            }
+                            else {
+                                toastr.error(data);
+                            }
+                        },
+                        error: function (a, b, c) {
+
+                            toastr.error("Error occurred");
+                        }
+                    });
+                }
+                else {
+                    $(this).val("Select").change();
+                }
+            }
+            else {
+
+            }
+
+        });
+</script>

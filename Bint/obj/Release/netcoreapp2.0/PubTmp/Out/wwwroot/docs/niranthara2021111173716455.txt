@@ -1,0 +1,8 @@
+replace logo
+banner images to new image
+product images also change
+menu - instore option , 3 tabs and json table
+
+contact us stripe
+
+customers stripe

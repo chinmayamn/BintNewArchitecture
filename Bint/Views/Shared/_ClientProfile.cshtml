@@ -1,0 +1,83 @@
+﻿@inject UserManager<ApplicationUser> UserManager
+@{ 
+    var u = @UserManager.GetUserAsync(User).Result;
+    var ol = u.KYC;
+    var lol = "";
+    if (ol == "Pending")
+    {
+        lol = "badge-warning";
+    }
+    else if (ol == "VerificationFailed")
+    {
+        lol = "badge-danger";
+    }
+    else if (ol == "Verified")
+    {
+        lol = "badge-success";
+    }
+    else
+    {
+
+    }
+}
+<div class="col-md-3 ">
+
+
+    <div class="card card-info card-outline">
+        <div class="card-body box-profile">
+            <span class="badge @lol">@u.KYC</span>
+            <div class="text-center">
+                <img class="profile-user-img img-fluid img-circle userimagebig"
+                     src="@u.Profilepicture"
+                     alt="User profile picture">
+            </div>
+            <h3 class="profile-username text-center">@u.Firstname @u.Lastname</h3>
+            <p class="text-muted text-center">ID : @u.UserId</p>
+            <p class="text-muted text-center pr-5">Partner ID : @u.Created_by</p>
+
+            <a href="/client/myprofile" class="btn btn-info btn-block text-white"><b>Manage Profile</b></a>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <div class="card card-warning card-outline  ">
+        <div class="card-header">
+            <h1 class="card-title">USD Wallet</h1>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body box-profile">
+            <!-- About Me Box -->
+            <div class="social-box facebook">
+                <span><i class="fa fa-dollar-sign"></i> @u.USD</span>
+                @*<div style="background-color: #f3efef; line-height: 40px">1$ = 1BGC </div>*@
+
+            </div>
+            <a href="/client/usd" class="btn btn-warning btn-block text-white"><b>Manage USD</b></a>
+        </div>
+    </div>
+    <div class="card card-success card-outline ">
+        <div class="card-header">
+            <h1 class="card-title">BGC Wallet</h1>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body box-profile">
+            <div class="social-box facebook">
+                <span><i class="fab fa-btc"></i>  @u.BGC</span>
+                <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">1 BGC = 0.001 USD</div>
+
+            </div>
+            <a href="/client/bgc" class="btn btn-success btn-block text-white"><b>Manage BGC</b></a>
+        </div>
+    </div>
+
+
+</div>

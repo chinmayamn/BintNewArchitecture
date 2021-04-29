@@ -1,0 +1,400 @@
+﻿@inject UserManager<ApplicationUser> UserManager
+@model ResetPasswordViewModel
+@{
+
+    Layout = "~/Views/Shared/_InvestorLayout.cshtml";
+}
+<link rel="stylesheet" href="/js/components.min.css">
+
+<style>
+    .social-box {
+        min-height: 90px;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        background: #fff;
+    }
+
+        .social-box.facebook span {
+            color: #fff;
+            background: #3b5998;
+        }
+
+        .social-box span {
+            display: block;
+            margin: -1px -1px 0;
+            font-size: 40px;
+            line-height: 90px;
+            background: #e9ecef;
+        }
+
+        .social-box ul {
+            display: contents;
+            /*margin: 7px 0 0;*/
+            /*padding: 10px;*/
+            width: 100%;
+            background-color: #f3efef;
+        }
+
+            .social-box ul li {
+                color: black;
+                font-size: 24px;
+                padding: 0 10px 0 0;
+                text-align: center;
+                list-style: none;
+                background-color: #f3efef;
+                line-height: 40px;
+                display: contents;
+            }
+</style>
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">Partner Detail</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/investor/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">Partner Detail</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3 ">
+                        <div class="card card-info card-outline">
+                            <div class="card-body box-profile">
+                                <span class="badge badge-success">Verified</span>
+                                <div class="text-center">
+                                    <img class="profile-user-img img-fluid img-circle"
+                                         src="@UserManager.GetUserAsync(User).Result.Profilepicture"
+                                         alt="User profile picture">
+                                </div>
+                                <h3 class="profile-username text-center">@UserManager.GetUserAsync(User).Result.Firstname @UserManager.GetUserAsync(User).Result.Lastname</h3>
+                                <p class="text-muted text-center">ID : I0002</p>
+
+
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                        <div class="card card-warning card-outline  ">
+                            <div class="card-header">
+                                <h1 class="card-title">BGC Token</h1>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile">
+                                <!-- About Me Box -->
+                                <div class="social-box facebook">
+                                    <span>1000</span>
+                                    <div style="background-color: #f3efef; line-height: 40px">1$ = 1BGC </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card card-danger card-outline ">
+                            <div class="card-header">
+                                <h1 class="card-title">BTK Token</h1>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body box-profile">
+                                <div class="social-box facebook">
+                                    <span>700</span>
+                                    <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">10000 BGC = 1 BTK</div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a class="nav-link active" href="#lead" data-toggle="tab">Lead</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#profile" data-toggle="tab">Profile</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+                                    <li class="nav-item pl-2">
+                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success pt-2">
+                                            <input type="checkbox" class="custom-control-input" id="chkStatus" checked />
+                                            <label class="custom-control-label" for="chkStatus" id="chkstatuslabel">Active</label>
+                                        </div>
+                                    </li>
+
+                                </ul>
+
+
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="lead">
+
+                                        <!-- Basic columns -->
+                                        <div class="card">
+                                            <div class="card-header header-elements-inline">
+                                                <h5 class="card-title">Leads</h5>
+                                                <div class="header-elements">
+                                                    <div class="list-icons">
+                                                        <a class="list-icons-item" data-action="collapse"></a>
+                                                        <a class="list-icons-item" data-action="reload"></a>
+                                                        <a class="list-icons-item" data-action="remove"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <div class="chart-container">
+                                                    <div class="chart has-fixed-height" id="columns_basic" _echarts_instance_="ec_1609692772448" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; overflow: hidden; width: 1231px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="1231" height="400" style="position: absolute; left: 0px; top: 0px; width: 1231px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(0, 0, 0, 0.75); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 13px / 20px Roboto, sans-serif; padding: 10px 15px; left: 453px; top: 157px;">May<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#2ec7c9;"></span>Evaporation: 25.6<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#b6a2de;"></span>Precipitation: 58.7</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /basic columns -->
+
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="profile">
+
+                                        @using (Html.BeginForm())
+                                        {
+                                            <!-- /.card-header -->
+                                            <div class="card-body row">
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+
+                                                    <span class="badge badge-success float-right">Verified</span>
+                                                    <span class="badge badge-danger float-right">Verfication failed</span>
+                                                    <span class="badge badge-warning float-right">Pending</span>
+                                                    <span class="badge badge-info float-right">Processing</span>
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">User Id</label>
+                                                    <div class="col-sm-9">
+                                                        I0002
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12 float-right">
+                                                    <button type="button" class="btn bg-indigo-300 text-white float-right" data-toggle="modal" data-target="#modal-kycdocs">
+                                                        KYC Docs
+                                                    </button>
+                                                    <button type="button" class="btn bg-indigo-300 text-white float-right mr-1" data-toggle="modal" data-target="#modal-profilepic">
+                                                        Change Picture
+                                                    </button>
+
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Mobile</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtmobile" placeholder="Mobile">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Email</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtemail" placeholder="Email">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">First name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtFirstname" placeholder="First name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Last name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtlastname" placeholder="Last name">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Address</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtaddress" placeholder="Address">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Bank name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtbankname" placeholder="Bank name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">IFSC Code</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtIFSC" placeholder="IFSC Code">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    &nbsp; <label for="inputEmail3" class="col-form-label">Account holder name</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtaccountholder" placeholder="Account holder name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">PAN</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtpan" placeholder="PAN">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label">UPI Id</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="txtupi" placeholder="UPI Id">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Created on</label>
+                                                    <div class="col-sm-9">
+                                                        12/2/2021
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Created by</label>
+                                                    <div class="col-sm-9">
+                                                        Chaitra
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label"></label>
+                                                    <div class="col-sm-9">
+                                                        <button type="submit" class="btn bg-indigo-300 text-white">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="tab-pane" id="settings">
+                                        <form method="post">
+                                            <input asp-for="Code" type="hidden" />
+                                            <div class="form-group">
+                                                <label asp-for="Email"></label>
+                                                <input asp-for="Email" class="form-control" />
+                                                <span asp-validation-for="Email" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="Password"></label>
+                                                <input asp-for="Password" class="form-control" />
+                                                <span asp-validation-for="Password" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="ConfirmPassword"></label>
+                                                <input asp-for="ConfirmPassword" class="form-control" />
+                                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            </div>
+                                            <button type="submit" class="btn bg-indigo-300 text-white float-right">Reset</button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+
+                    </div><!--/. container-fluid -->
+
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+<div class="modal fade" id="modal-kycdocs">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="manage" asp-action="uploaddocs" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">KYC Docs</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <input type="file" id="file2" name="formFile" />
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-success" id="btnFileUpload">Upload</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-profilepic">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="investor" asp-action="profilepic" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">Profile Pic</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <input type="file" id="file1" name="formFile" />
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-success" id="btnProfilePic">Change Pic</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script src="~/js/echarts.min.js"></script>
+<script src="~/js/app.js"></script>
+
+<script src="~/js/columns_basic.js"></script>
+<script>
+    $(document).ready(function() {
+
+        $(".sidebar-control").click(function() {
+
+           // window.dispatchEvent(new Event('resize'));
+            ////$("#columns_basic").resize();
+
+            ////window.dispatchEvent(new Event('resize'));
+
+            ////$(window).trigger('resize');
+
+            //var elem = document.getElementById("columns_basic"); 
+
+            //elem.dispatchEvent(event);
+        });
+
+    });
+
+</script>

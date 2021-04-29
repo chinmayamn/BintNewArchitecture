@@ -1,0 +1,63 @@
+﻿<a class="nav-link" data-toggle="dropdown" href="#">
+    <i class="far fa-bell fa-2x"></i>
+    <span class="badge badge-info navbar-badge" id="a1"></span>
+</a>
+<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+    <span class="dropdown-item dropdown-header"><span id="a2"></span> Notifications</span>
+
+    <div class="dropdown-divider"></div>
+    <a href="#" class="dropdown-item">
+        <i class="nav-icon fa fa-dollar-sign mr-4"></i><span id="i1"></span>  
+
+    </a>
+
+    <div class="dropdown-divider"></div>
+    <a href="#" class="dropdown-item">
+        <i class="fas fa-money-bill-alt mr-2"></i> <span id="i2"></span> 
+
+    </a>
+
+    <div class="dropdown-divider"></div>
+    <a href="#" class="dropdown-item">
+        <i class="fas fas fa-hand-holding-usd mr-2"></i> <span id="i3"></span> 
+
+    </a>
+
+   
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/Manage/GetAlerts",
+            async: false,
+            dataType: "text json",
+            contentType: "application/json;charset=utf-8",
+            data: {},
+            success: function (data) {
+               
+                var f = parseInt(data.USDRequested);
+                var g = parseInt(data.USDDepositRequest);
+                var h = parseInt(data.USDWithdrawRequest);
+                var i = f + g + h;
+
+                $("#i1").text(data.USDRequested);
+                $("#i2").text(data.USDDepositRequest);
+                $("#i3").text(data.USDWithdrawRequest);
+                $("#a1").text(i);
+                $("#a2").text(i);
+
+                $("#admcnt").text(data.AdminUsers);
+                $("#ivstcnt").text(data.InvestorUsers);
+                $("#prtncnt").text(data.PartnerUsers);
+                $("#clicnt").text(data.ClientUsers);
+                $("#loccnt").text(data.LockedUsers);
+                $("#usercnt").text(data.UsersCreated);
+            },
+            error: function (a, b, c) {
+                toastr.error("Error occurred");
+            }
+        });
+    });
+</script>

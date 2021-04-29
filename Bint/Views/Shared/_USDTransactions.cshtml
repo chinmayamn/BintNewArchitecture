@@ -1,0 +1,85 @@
+﻿@model Bint.Models.USDDashboard
+@using System.Data
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h1 class="card-title">USD Transactions</h1>
+        <div class="card-tools">
+            @foreach (DataRow row in Model._Stats.Rows)
+            {<span class="badge badge-secondary">
+
+                 @row["usdrequested"] USD requests sent
+             </span>
+
+            }
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-3">
+        <table id="example1" class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th class="text-center">Amount</th>
+                <th>Requested Date</th>
+                <th>Transfer Date</th>
+                <th>UserId</th>
+                <th>Status</th>
+                <th class="text-center">USD Wallet</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (DataRow row in Model._requestUSD.Rows)
+            {
+
+                var a = ""; var b = "";
+                if (@row["status"].ToString() == "Requested")
+                { a = "badge-warning"; }
+                else if (@row["status"].ToString() == "Transferred")
+                { a = "badge-info"; b = "fa fa-arrow-down text-red mr-1"; }
+                else if (@row["status"].ToString() == "Debit")
+                { a = "badge-secondary"; b = "fa fa-arrow-down text-red mr-1"; }
+                else if (@row["status"].ToString() == "Credit")
+                { a = "bg-fuchsia"; b = "fa fa-arrow-up text-green mr-1"; }
+                else if (@row["status"].ToString() == "Received")
+                { a = "bg-gradient-green"; b = "fa fa-arrow-up text-green mr-1"; }
+                else if (@row["status"].ToString() == "Deposit")
+                { a = "bg-gradient-olive"; b = "fa fa-arrow-up text-green mr-1"; }
+                else if (@row["status"].ToString() == "Withdraw")
+                { a = "bg-gray-light"; b = "fa fa-arrow-down text-red mr-1"; }
+                else
+                { a = "badge-danger"; }
+                <tr>
+                    <td>@row["id"]</td>
+                    <td class="text-danger-400 text-bold text-right ">@row["amount"]</td>
+                    <td>@row["requesteddate"]</td>
+                    <td>@row["transferdate"]</td>
+                    <td>@row["userid"]</td>
+                    <td><span class="badge @a">@row["status"]</span></td>
+                    <td class="text-brown-600 text-bold text-right"  >
+                        <i class="@b" style="float:left !important"></i>
+                        @(Convert.ToString(@row["totalamount"]) == "0.00" ? "0.00" : @row["totalamount"])
+                    </td>
+                </tr>
+            }
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+<script type="text/javascript">
+    $("#example1").DataTable({
+            "order": [],
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+    
+</script>

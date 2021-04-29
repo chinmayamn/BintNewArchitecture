@@ -1,0 +1,194 @@
+﻿@model Bint.Models.CustomerUserCreate
+@{
+
+    Layout = "~/Views/Shared/_InvestorLayout.cshtml";
+}
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">My Partners</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/investor/dashboard"><i class="fas fa-home mr-2"></i>Home</a></li>
+                            <li class="breadcrumb-item active">My Partners</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="card card-outline card-info">
+                                    <div class="card-header">
+
+                                        @await Html.PartialAsync("_Quickuser", Model.reg)
+
+                                        <a href="/Account/Register" class="btn btn-secondary">Create User</a>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-3">
+                                        <table id="example1" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Partner ID</th>
+                                                    <th>Name</th>
+                                                    <th>Created On</th>
+                                                    <th>Mobile</th>
+                                                    <th>Status</th>
+                                                    <th>Lead</th>
+                                                    <th class="text-center"> Details</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.appUser)
+                                                {
+                                                    <tr>
+                                                        <td>@item.UserId</td>
+                                                        <td>@item.Firstname</td>
+                                                        <td>@item.Created_on</td>
+                                                        <td>@item.Mobile</td>
+
+                                                        <td><span class="badge badge-success">@item.Status</span></td>
+                                                        <td></td>
+                                                        <td class="text-center">
+                                                            <form asp-action="deleteuser" method="post" asp-route-id=@item.Id>
+                                                                <a class="btn btn-info btn-sm" href="/account/userprofile/@item.Id" title="Edit">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                                </a>
+                                                                <button type="submit" class="btn btn-danger btn-sm" title="Delete" id="btnDeleteUser_@item.Id">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="card card-secondary card-outline">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Partner Lead</h3>
+
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <canvas id="stackedBarChart" style="min-height: 100px; height: 338px; max-height: 338px; max-width: 100%;"></canvas>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--/. container-fluid -->
+                        @await Html.PartialAsync("_InvestorProfile")
+                    </div>
+                </div>
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#example1").DataTable();
+        $("[id^=btnDeleteUser_]").click(function (event) {
+            if (confirm('Do you want to delete user ?')) {
+                return true;
+            }
+            else {
+                return false; event.preventDefault();
+            }
+        });
+
+        var areaChartData = {
+            labels: ['Mohan', 'Kala', 'Kumar', 'Shekhar', 'Arun', 'Soumya'],
+            datasets: [
+                {
+                    label: 'BGC',
+                    backgroundColor: '#ef5350',
+                    borderColor: '#ef5350',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: [28, 48, 40, 19, 86, 27, 90]
+                },
+                {
+                    label: 'USD',
+                    backgroundColor: '#66bb6a',
+                    borderColor: '#66bb6a',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40]
+                }
+            ]
+        }
+        var barChartData = jQuery.extend(true, {}, areaChartData);
+        var temp0 = areaChartData.datasets[0];
+        var temp1 = areaChartData.datasets[1];
+        barChartData.datasets[0] = temp1;
+        barChartData.datasets[1] = temp0;
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+        var stackedBarChartData = jQuery.extend(true, {}, barChartData);
+
+        var stackedBarChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [
+                    {
+                        stacked: true,
+                    }
+                ],
+                yAxes: [
+                    {
+                        stacked: true
+                    }
+                ]
+            }
+        }
+
+        var stackedBarChart = new Chart(stackedBarChartCanvas,
+            {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            });
+    });
+</script>

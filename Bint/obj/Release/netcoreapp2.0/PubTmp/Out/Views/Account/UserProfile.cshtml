@@ -1,0 +1,18 @@
+﻿
+@{
+    string u = Convert.ToString(ViewData["layout"]).ToLower();
+    if (u == "admin")
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (u == "investor")
+    {
+        Layout = "~/Views/Shared/_InvestorLayout.cshtml";
+    }
+    else if (u == "partner")
+    {
+        Layout = "~/Views/Shared/_PartnerLayout.cshtml";
+    }
+    else { }
+}
+

@@ -1,0 +1,12 @@
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\bin\Release\netcoreapp2.0\Bint.deps.json
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\bin\Release\netcoreapp2.0\Bint.runtimeconfig.json
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\bin\Release\netcoreapp2.0\Bint.runtimeconfig.dev.json
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\bin\Release\netcoreapp2.0\Bint.dll
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\bin\Release\netcoreapp2.0\Bint.pdb
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\Bint.csprojAssemblyReference.cache
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\Bint.csproj.CoreCompileInputs.cache
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\UserSecretsAssemblyInfo.cs
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\Bint.AssemblyInfoInputs.cache
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\Bint.AssemblyInfo.cs
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\Bint.dll
+C:\Users\narasimhamurthy_chin\source\repos\Bint\Bint\obj\Release\netcoreapp2.0\Bint.pdb
