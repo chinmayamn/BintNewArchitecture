@@ -22,15 +22,15 @@ namespace Bint.Models
         public string To { get; set; }
         public string Subject { get; set; }
         public string EmailMessageBody { get; set; }
-        public string SMSMessageBody { get; set; }
+        public string SmsMessageBody { get; set; }
         public string MobileNumber { get; set; }
 
-        public void SendMessage(Message _message)
+        public void SendMessage(Message message)
         {
             try
             {
-                SendEmail(_message);
-                SendSMS(_message);
+                SendEmail(message);
+                SendSMS(message);
 
             }
             catch (Exception e)
@@ -39,9 +39,9 @@ namespace Bint.Models
             }
            
         }
-        public void SendEmail(Message _message)
+        public void SendEmail(Message message)
         {
-                  string mto = _message.To;
+                  string mto = message.To;
                 string mFrom = "support@bintekglobal.com";
 
                 try
@@ -67,16 +67,16 @@ namespace Bint.Models
                     //{
                       
                     //}
-                _logger.LogError("Subject : "+ _message.Subject+" From : "+ _message.From + " To : "+ _message.To+" Message : "+ _message.EmailMessageBody);
+                _logger.LogError("Subject : "+ message.Subject+" From : "+ message.From + " To : "+ message.To+" Message : "+ message.EmailMessageBody);
 
-            }
+                }
                 catch (Exception e)
                 {
                  _logger.LogError(e.ToString());
                 }
         }
 
-        public string SendSMS(Message _message)
+        public string SendSMS(Message message)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace Bint.Models
                 //    result = System.Text.Encoding.UTF8.GetString(response);
 
                 //}
-                _logger.LogError("Mobile number : " + _message.MobileNumber + " Message : " + _message.SMSMessageBody);
+                _logger.LogError("Mobile number : " + message.MobileNumber + " Message : " + message.SmsMessageBody);
                 return result;
             }
             catch (Exception e)

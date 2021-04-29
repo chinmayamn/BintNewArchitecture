@@ -33,18 +33,18 @@ namespace Bint.Models.AccountViewModels
         public string Lastname { get; set; }
       
         public string Address { get; set; }
-        public string Bankname { get; set; }
-        public string Bankaccount { get; set; }
-        public string Ifsc_code { get; set; }
-        public string Account_holder_name { get; set; }
+        public string BankName { get; set; }
+        public string BankAccount { get; set; }
+        public string IfscCode { get; set; }
+        public string AccountHolderName { get; set; }
 
-        public DateTime Created_on { get; set; }
-        public string Created_by { get; set; }
-        public string Created_id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedId { get; set; }
         public string Pan { get; set; }
-        public string Upi_id { get; set; }
+        public string UpiId { get; set; }
         public string Status { get; set; }
-        public string Profilepicture { get; set; }
+        public string ProfilePicture { get; set; }
 
     }
 }

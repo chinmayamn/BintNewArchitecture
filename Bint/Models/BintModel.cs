@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Data.SqlClient;
 using System.Data;
-using System.Configuration;
+using System.Linq;
 namespace Bint.Models
 {
-    
+
     public class RoleEdit
     {
         public IdentityRole Role { get; set; }
@@ -30,9 +28,9 @@ namespace Bint.Models
 
     public class UserLogin //no fine tuning required
     {
-        public LoginViewModel loginviewmodel { get; set; }
+        public LoginViewModel LoginViewModel { get; set; }
      
-        public MobileLoginViewModel mobileloginviewmodel { get; set; }
+        public MobileLoginViewModel MobileLoginViewModel { get; set; }
 
     }
    
@@ -48,7 +46,7 @@ namespace Bint.Models
     }
     public class ActivityLogDashboard
     {
-        public DataTable activityLogTable { get; set; }
+        public DataTable ActivityLogTable { get; set; }
     }
     public class UserCount
     {
@@ -59,7 +57,7 @@ namespace Bint.Models
         public int PartnerCount { get; set; }
 
         public int PendingAccessCount { get; set; }
-        public int PendingKYCCount { get; set; }
+        public int PendingKycCount { get; set; }
         public IEnumerable<ApplicationUser> AdminList { get; set; }
         public IEnumerable<ApplicationUser> InvestorList { get; set; }
         public IEnumerable<ApplicationUser> ClientList { get; set; }
@@ -69,73 +67,73 @@ namespace Bint.Models
     }
     public class AdminDashboard
     {
-        public UserCount userCount { get; set; }
+        public UserCount UserCount { get; set; }
 
-        public decimal TotalUSD { get; set; }
-        public decimal TotalBGC { get; set; }
+        public decimal TotalUsd { get; set; }
+        public decimal TotalBgc { get; set; }
         public DataTable AdminRequestDashboard { get; set; }
-        public Dictionary<string,string> _USDInvestment { get; set; }
-        public Payback _payback { get; set; }
-        public DataSet _USDInvestmentMonthwise { get; set; }
+        public Dictionary<string,string> UsdInvestment { get; set; }
+        public Payback Payback { get; set; }
+        public DataSet UsdInvestmentMonthWise { get; set; }
 
     }
 
     public class SiteSettingDashboard
     {
-        public string SMSBalance { get; set; }
-        public RegId _regId { get; set; }
-        public ApplicationUser u { get; set; }
+        public string SmsBalance { get; set; }
+        public RegId RegId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
     }
 
     public class SuperAdminDashboard
     {
-        public UserCount userCount { get; set; }
+        public UserCount UserCount { get; set; }
     }
     public class InvestorDashboard
     {
-        public UserCount userCount { get; set; }
-        public decimal TotalUSD { get; set; }
-        public decimal TotalBGC { get; set; }
+        public UserCount UserCount { get; set; }
+        public decimal TotalUsd { get; set; }
+        public decimal TotalBgc { get; set; }
 
-        public Payback _payback { get; set; }
+        public Payback Payback { get; set; }
     }
     public class PartnerDashboard
     {
-      public Payback _payback { get; set; }
+      public Payback Payback { get; set; }
     }
     public class ClientDashboard
     {
-        public Payback _payback { get; set; }
+        public Payback Payback { get; set; }
     }
     public class Payback
     {
-        public DataTable USDPayback { get; set; }
-        public DataTable USDPaybackUser { get; set; }
+        public DataTable UsdPayback { get; set; }
+        public DataTable UsdPaybackUser { get; set; }
     }
     public class SavedStatsDashboard
     {
-        public IQueryable<CaptureDeviceData> _OS { get; set; }
-        public IQueryable<CaptureDeviceData> _DeviceName { get; set; }
-        public IQueryable<CaptureDeviceData> _Browser { get; set; }
-        public IQueryable<CaptureDeviceData> _WifiMobile { get; set; }
-        public IQueryable<CaptureDeviceData> _BrandName { get; set; }
-        public IQueryable<CaptureDeviceData> _URole { get; set; }
-        public IQueryable<CaptureDeviceData> _PublicIp { get; set; }
+        public IQueryable<CaptureDeviceData> Os { get; set; }
+        public IQueryable<CaptureDeviceData> DeviceName { get; set; }
+        public IQueryable<CaptureDeviceData> Browser { get; set; }
+        public IQueryable<CaptureDeviceData> WifiMobile { get; set; }
+        public IQueryable<CaptureDeviceData> BrandName { get; set; }
+        public IQueryable<CaptureDeviceData> URole { get; set; }
+        public IQueryable<CaptureDeviceData> PublicIp { get; set; }
     }
     public class RestrictedAccessDashboard
     {
-        public IEnumerable<RestrictedAccess> _restrictedaccess { get; set; }
+        public IEnumerable<RestrictedAccess> RestrictedAccess { get; set; }
     }
-    public class USDDashboard
+    public class UsdDashboard
     {
-        public DataTable _requestUSD { get; set; }
-        public DataTable _transferUSD { get; set; }
-        public DataTable _Stats { get; set; }
-        public string _qrcode { get; set; }
-        public string _tether { get; set; }
-        public DataTable _withdrawUSD { get; set; }
-        public DataTable _depositUSD { get; set; }
+        public DataTable RequestUsd { get; set; }
+        public DataTable TransferUsd { get; set; }
+        public DataTable Stats { get; set; }
+        public string QrCode { get; set; }
+        public string Tether { get; set; }
+        public DataTable WithdrawUsd { get; set; }
+        public DataTable DepositUsd { get; set; }
 
     }
     public class Doc
@@ -144,23 +142,23 @@ namespace Bint.Models
         public int Id { get; set; }
         public string Userid { get; set; }
         public string Filename { get; set; }
-        public string Docpath { get; set; }
+        public string DocPath { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Status { get; set; }
         public string Reason { get; set; }
     }
     public class CustomerUserCreate
     {
-        public IEnumerable<ApplicationUser> appUser { get; set; }
-        public RegisterViewModel reg { get; set; }
+        public IEnumerable<ApplicationUser> AppUser { get; set; }
+        public RegisterViewModel Reg { get; set; }
 
-        public List<IdentityRole> urole { get; set; }
+        public List<IdentityRole> URole { get; set; }
 
     }
 
     public class SuperAdmin
     {
-        public IList<ApplicationUser> loggedInUser { get; set; }
+        public IList<ApplicationUser> LoggedInUser { get; set; }
     }
 
     public class ErrorLog
@@ -176,54 +174,54 @@ namespace Bint.Models
     public class CaptureDeviceData
     {
         [Key]
-        public int id { get; set; }
-        public string userid { get; set; }
+        public int Id { get; set; }
+        public string UserId { get; set; }
         public DateTime LoginTime { get; set; }
         public DateTime LogoutTime { get; set; }
-        public string OSName { get; set; }
-        public string OSVersion { get; set; }
-        public string OSPlatform { get; set; }
+        public string OsName { get; set; }
+        public string OsVersion { get; set; }
+        public string OsPlatform { get; set; }
         public string BrowserName { get; set; }
         public string BrowserVersion { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string Brand { get; set; }
         public string BrandName { get; set; }
-        public string IPv4 { get; set; }
+        public string Ipv4 { get; set; }
 
-        public string IPv6 { get; set; }
+        public string Ipv6 { get; set; }
         public string Useragent { get; set; }
 
         public string PublicIp { get; set; }
        
-        public string urole { get; set; }
+        public string URole { get; set; }
 
     }
 
     public class RestrictedAccess
     {
         [Key]
-        public int id { get; set; }
-        public string userid { get; set; }
+        public int Id { get; set; }
+        public string UserId { get; set; }
         public DateTime ErrorTime { get; set; }
     
-        public string OSName { get; set; }
-        public string OSVersion { get; set; }
-        public string OSPlatform { get; set; }
+        public string OsName { get; set; }
+        public string OsVersion { get; set; }
+        public string OsPlatform { get; set; }
         public string BrowserName { get; set; }
         public string BrowserVersion { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string Brand { get; set; }
         public string BrandName { get; set; }
-        public string IPv4 { get; set; }
+        public string Ipv4 { get; set; }
 
-        public string IPv6 { get; set; }
+        public string Ipv6 { get; set; }
         public string Useragent { get; set; }
 
         public string PublicIp { get; set; }
 
-        public string urole { get; set; }
+        public string Urole { get; set; }
         public string ReturnUrl { get; set; }
         public string Verified { get; set; }
 
@@ -238,7 +236,7 @@ namespace Bint.Models
         public string PartnerId { get; set; }
         public string ClientId { get; set; }
     }
-    public class TransferUSD
+    public class TransferUsd
     {
         public int Id { get; set; }
         public string Userid { get; set; }
@@ -255,13 +253,13 @@ namespace Bint.Models
     }
     public class AdminUserProfileDashboard
     {
-        public ApplicationUser _userProfile { get; set; }
-        public ActivityLogDashboard _activityLogDashboard { get; set; }
+        public ApplicationUser UserProfile { get; set; }
+        public ActivityLogDashboard ActivityLogDashboard { get; set; }
         public DataTable UserDocs { get; set; }
         public IEnumerable<ApplicationUser> UserList { get; set; }
 
     }
-    public enum TransferUSDStatusEnum
+    public enum TransferUsdStatusEnum
     {
         Requested, Transferred, Rejected, Debit, Credit,Received,Deposit,Withdraw,Accepted
     }
@@ -269,7 +267,7 @@ namespace Bint.Models
     {
         public DataTable UserDocs { get; set; }
     }
-    public enum KYCDocsStatusEnum
+    public enum KycDocsStatusEnum
     {
         Accepted, Pending, Rejected
     }
@@ -279,14 +277,14 @@ namespace Bint.Models
     //}
     public enum ActivityLogEnum
     {
-        Person,USD,BGC,TransferUSD,ReceiveUSD,RequestUSD,Plan,Reject,Debit,Credit,DeletePerson,Pending,VerificationFailed,Verified,DepositUSD,WithdrawUSD,ConfirmDepositUSD,ConfirmWithdrawUSD
+        Person,Usd,Bgc,TransferUsd,ReceiveUsd,RequestUsd,Plan,Reject,Debit,Credit,DeletePerson,Pending,VerificationFailed,Verified,DepositUsd,WithdrawUsd,ConfirmDepositUsd,ConfirmWithdrawUsd
     }
     
     public class DepositWithdraw
     { 
         [Key]
         public int Id { get; set; }
-        public string USDAction { get; set; }
+        public string UsdAction { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public string UserId { get; set; }
