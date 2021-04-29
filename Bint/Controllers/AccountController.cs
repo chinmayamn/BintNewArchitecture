@@ -1,25 +1,25 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Bint.Data;
 using Bint.Models;
 using Bint.Models.AccountViewModels;
 using Bint.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System.Net;
-using System.Net.Sockets;
 using DeviceDetectorNET;
-using DeviceDetectorNET.Parser;
 using DeviceDetectorNET.Cache;
-using Bint.Data;
-using System.IO;
+using DeviceDetectorNET.Parser;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Bint.Controllers
 {
@@ -28,16 +28,17 @@ namespace Bint.Controllers
     public class AccountController : Controller
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger<AccountController> _logger;
-        private readonly IHttpContextAccessor _request;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
+        private readonly DBFunc _dbf;
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger<AccountController> _logger;
         private readonly IMessage _message;
-        readonly DBFunc _dbf;
+        private readonly IHttpContextAccessor _request;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -61,8 +62,7 @@ namespace Bint.Controllers
             _dbf = new DBFunc(_logger);
         }
 
-        [TempData]
-        public string ErrorMessage { get; set; }
+        [TempData] public string ErrorMessage { get; set; }
 
         [HttpGet]
         [AllowAnonymous]
@@ -70,9 +70,9 @@ namespace Bint.Controllers
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            
+
             ViewData["ReturnUrl"] = returnUrl;
-      
+
             return View();
         }
 
@@ -91,133 +91,133 @@ namespace Bint.Controllers
                 {
                     // This doesn't count login failures towards account lockout
                     // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                    var result = await _signInManager.PasswordSignInAsync(model.loginviewmodel.Email, model.loginviewmodel.Password, model.loginviewmodel.RememberMe, lockoutOnFailure: true);
+                    var result = await _signInManager.PasswordSignInAsync(model.loginviewmodel.Email,
+                        model.loginviewmodel.Password, model.loginviewmodel.RememberMe, lockoutOnFailure: true);
                     if (result.Succeeded)
                     {
                         // Resolve the user via their email
                         var user = await _userManager.FindByEmailAsync(model.loginviewmodel.Email);
 
-                        if (!(user.EmailConfirmed))
+                        if (!user.EmailConfirmed)
                         {
-                            TempData["error"] = "User account has not been confirm. Check registered email for confirmation";
-                            _logger.LogError("User account has not been confirm. Check registered email for confirmation {user}",user);
+                            TempData["error"] =
+                                "User account has not been confirm. Check registered email for confirmation";
+                            _logger.LogError(
+                                "User account has not been confirm. Check registered email for confirmation {user}",
+                                user);
                             return View("login");
                         }
-                        else
-                        { 
-                            // Get the roles for the user
-                            var roles = await _userManager.GetRolesAsync(user);
 
-                            string uagent = _request.HttpContext.Request.Headers["User-Agent"];
+                        // Get the roles for the user
+                        var roles = await _userManager.GetRolesAsync(user);
 
-                            string ipv4 = "";
-                            string ipv6 = "";
-                            string pip = "";
+                        string uagent = _request.HttpContext.Request.Headers["User-Agent"];
 
-                            IPAddress remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
-                            pip = remoteIpAddress.ToString();
+                        var ipv4 = "";
+                        var ipv6 = "";
+                        var pip = "";
 
-                            //normally will get wifi router ip. for mobile it will throw socket exception
-                            try
+                        var remoteIpAddress =
+                            _request.HttpContext.Connection
+                                .RemoteIpAddress; //major important one, gets public ip address
+                        pip = remoteIpAddress.ToString();
+
+                        //normally will get wifi router ip. for mobile it will throw socket exception
+                        try
+                        {
+                            if (Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
                             {
-                                if (System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
-                                {
-                                    if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                                if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
                                     // for mobiles normally ipv6 will not be there
-                                    {
-
-                                        remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList
-                                            .First(x => x.AddressFamily ==
-                                                        System.Net.Sockets.AddressFamily.InterNetwork);
-                                        ipv6 = remoteIpAddress.ToString();
-
-                                    }
+                                {
+                                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+                                        .First(x => x.AddressFamily ==
+                                                    AddressFamily.InterNetwork);
+                                    ipv6 = remoteIpAddress.ToString();
+                                }
 
 
-                                    if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) //
-                                    {
-
-                                        remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Last(x =>
-                                            x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
-                                        ipv4 = remoteIpAddress.ToString();
-                                    }
+                                if (remoteIpAddress.AddressFamily == AddressFamily.InterNetwork) //
+                                {
+                                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList.Last(x =>
+                                        x.AddressFamily == AddressFamily.InterNetwork);
+                                    ipv4 = remoteIpAddress.ToString();
                                 }
                             }
-                            catch (SocketException socket)
-                            {
-                                _logger.LogError(socket.ToString(), "Connected through mobile data, no dns {socket}", socket);
-                            }
-
-
-
-                            DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
-                            var dd = new DeviceDetector(uagent);
-                            dd.SetCache(new DictionaryCache());
-                            dd.DiscardBotInformation();
-                            dd.SkipBotDetection();
-                            dd.Parse();
-
-                            CaptureDeviceData cd = new CaptureDeviceData();
-                            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-
-                            cd.OsName = dd.GetOs().Match.Name;
-                            cd.OsVersion = dd.GetOs().Match.Version;
-                            cd.OsPlatform = dd.GetOs().Match.Platform.ToString();
-                            cd.BrowserName = dd.GetBrowserClient().Match.Name;
-                            cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
-                            cd.DeviceName = dd.GetDeviceName().ToString();
-                            cd.DeviceModel = dd.GetModel().ToString();
-                            cd.Brand = dd.GetBrand().ToString();
-                            cd.BrandName = dd.GetBrandName().ToString();
-                            cd.Useragent = uagent;
-                            cd.URole = roles[0];
-                            cd.UserId = user.Id;
-                            cd.LoginTime = indianTime;
-                            cd.PublicIp = pip;
-                            cd.Ipv4 = ipv4;
-                            cd.Ipv6 = ipv6;
-
-                            _context._captureDeviceData.Add(cd);
-                            _context.SaveChanges();
-
-
-                            if (roles[0].ToLower() == "admin")
-                                return RedirectToAction(nameof(AdminController.Dashboard), "Admin");
-                            else if (roles[0].ToLower() == "investor")
-                                return RedirectToAction(nameof(InvestorController.Dashboard), "Investor");
-                            else if (roles[0].ToLower() == "client")
-                                return RedirectToAction(nameof(ClientController.Dashboard), "Client");
-                            else if (roles[0].ToLower() == "partner")
-                                return RedirectToAction(nameof(PartnerController.Dashboard), "Partner");
-                            else
-                                return RedirectToLocal(returnUrl);
                         }
-                        
+                        catch (SocketException socket)
+                        {
+                            _logger.LogError(socket.ToString(), "Connected through mobile data, no dns {socket}",
+                                socket);
+                        }
+
+
+                        DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
+                        var dd = new DeviceDetector(uagent);
+                        dd.SetCache(new DictionaryCache());
+                        dd.DiscardBotInformation();
+                        dd.SkipBotDetection();
+                        dd.Parse();
+
+                        var cd = new CaptureDeviceData();
+                        var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+
+                        cd.OsName = dd.GetOs().Match.Name;
+                        cd.OsVersion = dd.GetOs().Match.Version;
+                        cd.OsPlatform = dd.GetOs().Match.Platform;
+                        cd.BrowserName = dd.GetBrowserClient().Match.Name;
+                        cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
+                        cd.DeviceName = dd.GetDeviceName();
+                        cd.DeviceModel = dd.GetModel();
+                        cd.Brand = dd.GetBrand();
+                        cd.BrandName = dd.GetBrandName();
+                        cd.Useragent = uagent;
+                        cd.URole = roles[0];
+                        cd.UserId = user.Id;
+                        cd.LoginTime = indianTime;
+                        cd.PublicIp = pip;
+                        cd.Ipv4 = ipv4;
+                        cd.Ipv6 = ipv6;
+
+                        _context._captureDeviceData.Add(cd);
+                        _context.SaveChanges();
+
+
+                        if (roles[0].ToLower() == "admin")
+                            return RedirectToAction(nameof(AdminController.Dashboard), "Admin");
+                        if (roles[0].ToLower() == "investor")
+                            return RedirectToAction(nameof(InvestorController.Dashboard), "Investor");
+                        if (roles[0].ToLower() == "client")
+                            return RedirectToAction(nameof(ClientController.Dashboard), "Client");
+                        if (roles[0].ToLower() == "partner")
+                            return RedirectToAction(nameof(PartnerController.Dashboard), "Partner");
+                        return RedirectToLocal(returnUrl);
                     }
+
                     if (result.RequiresTwoFactor)
-                    {
-                        return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.loginviewmodel.RememberMe });
-                    }
+                        return RedirectToAction(nameof(LoginWith2fa), new {returnUrl, model.loginviewmodel.RememberMe});
                     if (result.IsLockedOut)
                     {
                         TempData["error"] = "User account has been locked out. Contact administrator";
                         _logger.LogError("User account has been locked out, wrong password {User}", User);
                         return View("login");
                     }
-                    else
-                    {
-                        TempData["error"] = "Invalid username and password";
-                        _logger.LogError("Invalid username and password {model.loginviewmodel.Email}{model.loginviewmodel.Password}", model.loginviewmodel.Email, model.loginviewmodel.Password);
-                        return View("login");
-                    }
 
+                    TempData["error"] = "Invalid username and password";
+                    _logger.LogError(
+                        "Invalid username and password {model.loginviewmodel.Email}{model.loginviewmodel.Password}",
+                        model.loginviewmodel.Email, model.loginviewmodel.Password);
+                    return View("login");
                 }
+
                 return View("login");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["error"] = "An error occurred";
-                _logger.LogError(ex.ToString(), "Invalid model for login {model.loginviewmodel.Email}{model.loginviewmodel.Password}", model.loginviewmodel.Email, model.loginviewmodel.Password);
+                _logger.LogError(ex.ToString(),
+                    "Invalid model for login {model.loginviewmodel.Email}{model.loginviewmodel.Password}",
+                    model.loginviewmodel.Email, model.loginviewmodel.Password);
                 return View("login");
             }
         }
@@ -229,12 +229,9 @@ namespace Bint.Controllers
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
-            }
+            if (user == null) throw new ApplicationException("Unable to load two-factor authentication user.");
 
-            var model = new LoginWith2faViewModel { RememberMe = rememberMe };
+            var model = new LoginWith2faViewModel {RememberMe = rememberMe};
             ViewData["ReturnUrl"] = returnUrl;
 
             return View(model);
@@ -243,39 +240,36 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe,
+            string returnUrl = null)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            if (!ModelState.IsValid) return View(model);
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
-            {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+            var result =
+                await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe,
+                    model.RememberMachine);
 
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID {UserId} logged in with 2fa.{user.Id}", user.Id);
                 return RedirectToLocal(returnUrl);
             }
-            else if (result.IsLockedOut)
+
+            if (result.IsLockedOut)
             {
                 _logger.LogWarning("User with ID {UserId} account locked out.{user.Id}", user.Id);
                 return RedirectToAction(nameof(Lockout));
             }
-            else
-            {
-                _logger.LogWarning("Invalid authenticator code entered for user with ID {UserId}.", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
-                return View();
-            }
+
+            _logger.LogWarning("Invalid authenticator code entered for user with ID {UserId}.", user.Id);
+            ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            return View();
         }
 
         [HttpGet]
@@ -284,10 +278,7 @@ namespace Bint.Controllers
         {
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
-            }
+            if (user == null) throw new ApplicationException("Unable to load two-factor authentication user.");
 
             ViewData["ReturnUrl"] = returnUrl;
 
@@ -297,39 +288,28 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model, string returnUrl = null)
+        public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model,
+            string returnUrl = null)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            if (!ModelState.IsValid) return View(model);
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
-            }
+            if (user == null) throw new ApplicationException("Unable to load two-factor authentication user.");
 
             var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
 
             var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
-            if (result.Succeeded)
-            {
-             
-                return RedirectToLocal(returnUrl);
-            }
+            if (result.Succeeded) return RedirectToLocal(returnUrl);
             if (result.IsLockedOut)
             {
                 _logger.LogWarning("User with ID {UserId} account locked out.{user.Id}", user.Id);
                 return RedirectToAction(nameof(Lockout));
             }
-            else
-            {
-                _logger.LogWarning("Invalid recovery code entered for user with ID {user.Id}", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-                return View();
-            }
+
+            _logger.LogWarning("Invalid recovery code entered for user with ID {user.Id}", user.Id);
+            ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+            return View();
         }
 
         [HttpGet]
@@ -345,12 +325,19 @@ namespace Bint.Controllers
         public IActionResult Error(int statusCode)
         {
             var statusCodeData = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            switch(statusCode)
+            switch (statusCode)
             {
-                case 404:_logger.LogError(statusCodeData.OriginalPath);break;
-                case 400:_logger.LogError(statusCodeData.OriginalPath);break;
-                case 500:_logger.LogError(statusCodeData.OriginalPath);break;
+                case 404:
+                    _logger.LogError(statusCodeData.OriginalPath);
+                    break;
+                case 400:
+                    _logger.LogError(statusCodeData.OriginalPath);
+                    break;
+                case 500:
+                    _logger.LogError(statusCodeData.OriginalPath);
+                    break;
             }
+
             return View();
         }
 
@@ -367,14 +354,14 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null,string quick=null)
+        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null, string quick = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
                 var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
                 user.Firstname = model.Firstname;
                 user.Lastname = model.Lastname;
                 user.Mobile = model.Mobile;
@@ -389,9 +376,9 @@ namespace Bint.Controllers
                 user.CreatedBy = _userManager.GetUserAsync(User).Result.UserId;
                 user.Kyc = ActivityLogEnum.Pending.ToString();
 
-                if (model.ProfilePicture ==null)
+                if (model.ProfilePicture == null)
                     user.ProfilePicture = "/content/avatar.png";
-                
+
                 user.CreatedOn = indianTime;
                 user.CreatedId = _userManager.GetUserId(User);
 
@@ -409,36 +396,48 @@ namespace Bint.Controllers
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);  
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                    IdentityRole role = await _roleManager.FindByIdAsync(f);  //get user role and add to his account
-                    await _userManager.AddToRoleAsync(user,role.Name);
+                    var role = await _roleManager.FindByIdAsync(f); //get user role and add to his account
+                    await _userManager.AddToRoleAsync(user, role.Name);
                     //  await _signInManager.SignInAsync(user, isPersistent: false);    // disabled user signing after registering
 
                     var z = _context.regId.First();
                     int z1;
                     if (role.Name == "Admin")
                     {
-                        z1 = Convert.ToInt32(z.AdminId); z1 = z1 + 1; user.UserId = "A" + z1.ToString("D4"); z.AdminId =z1.ToString("D4");
+                        z1 = Convert.ToInt32(z.AdminId);
+                        z1 = z1 + 1;
+                        user.UserId = "A" + z1.ToString("D4");
+                        z.AdminId = z1.ToString("D4");
                     }
                     else if (role.Name == "Partner")
                     {
-                        z1 = Convert.ToInt32(z.PartnerId); z1 = z1 + 1; user.UserId = "P" + z1.ToString("D4"); z.PartnerId =z1.ToString("D4");
+                        z1 = Convert.ToInt32(z.PartnerId);
+                        z1 = z1 + 1;
+                        user.UserId = "P" + z1.ToString("D4");
+                        z.PartnerId = z1.ToString("D4");
                     }
                     else if (role.Name == "Investor")
                     {
-                        z1 = Convert.ToInt32(z.InvestorId); z1 = z1 + 1; user.UserId = "I" + z1.ToString("D4"); z.InvestorId =z1.ToString("D4");
+                        z1 = Convert.ToInt32(z.InvestorId);
+                        z1 = z1 + 1;
+                        user.UserId = "I" + z1.ToString("D4");
+                        z.InvestorId = z1.ToString("D4");
                     }
                     else if (role.Name == "Client")
                     {
-                        z1 = Convert.ToInt32(z.ClientId); z1 = z1 + 1; user.UserId = "C" + z1.ToString("D4"); z.ClientId =z1.ToString("D4");
+                        z1 = Convert.ToInt32(z.ClientId);
+                        z1 = z1 + 1;
+                        user.UserId = "C" + z1.ToString("D4");
+                        z.ClientId = z1.ToString("D4");
                     }
-                
+
                     _context.SaveChanges();
                     //update reg id
                     await _userManager.UpdateAsync(user);
 
-                    ActivityLog activityLog = new ActivityLog
+                    var activityLog = new ActivityLog
                     {
                         Userid = user.CreatedBy,
                         ActivityType = ActivityLogEnum.Person.ToString(),
@@ -451,33 +450,37 @@ namespace Bint.Controllers
                     TempData["data"] = "User has been created successfully";
                     return RedirectToLocal(returnUrl);
                 }
-                AddErrors(result); TempData["data"] = "Error occurred while creating user";_logger.LogError("Error occurred while creating user");
+
+                AddErrors(result);
+                TempData["data"] = "Error occurred while creating user";
+                _logger.LogError("Error occurred while creating user");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-      [HttpGet]
-      [ActionName("Logout")]
+        [HttpGet]
+        [ActionName("Logout")]
         public IActionResult Logouts()
         {
             return View("logout");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            
-            IPAddress remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
-            string pip = remoteIpAddress.ToString();
+            var remoteIpAddress =
+                _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
+            var pip = remoteIpAddress.ToString();
             var id = _userManager.GetUserId(User);
-            var stu = _context._captureDeviceData.Where(j => (j.UserId == id) && (j.PublicIp == pip)).LastOrDefault();
-            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+            var stu = _context._captureDeviceData.Where(j => j.UserId == id && j.PublicIp == pip).LastOrDefault();
+            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
             stu.LogoutTime = indianTime;
             _context.SaveChanges();
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(AccountController.Login), "Account");
+            return RedirectToAction(nameof(Login), "Account");
         }
 
         [HttpPost]
@@ -486,7 +489,7 @@ namespace Bint.Controllers
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new {returnUrl});
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
@@ -500,57 +503,48 @@ namespace Bint.Controllers
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToAction(nameof(Login));
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
+            if (info == null) return RedirectToAction(nameof(Login));
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            if (result.Succeeded)
-            {
-                return RedirectToLocal(returnUrl);
-            }
-            if (result.IsLockedOut)
-            {
-                return RedirectToAction(nameof(Lockout));
-            }
-            else
-            {
-                // If the user does not have an account, then ask the user to create an account.
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
-            }
+            var result =
+                await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
+            if (result.Succeeded) return RedirectToLocal(returnUrl);
+            if (result.IsLockedOut) return RedirectToAction(nameof(Lockout));
+
+            // If the user does not have an account, then ask the user to create an account.
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["LoginProvider"] = info.LoginProvider;
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            return View("ExternalLogin", new ExternalLoginViewModel {Email = email});
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model,
+            string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
                 var info = await _signInManager.GetExternalLoginInfoAsync();
                 if (info == null)
-                {
                     throw new ApplicationException("Error loading external login information during confirmation.");
-                }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                       
+                        await _signInManager.SignInAsync(user, false);
+
                         return RedirectToLocal(returnUrl);
                     }
                 }
+
                 AddErrors(result);
             }
 
@@ -562,15 +556,9 @@ namespace Bint.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null)
-            {
-                return RedirectToAction(nameof(AccountController.Login), "Home");
-            }
+            if (userId == null || code == null) return RedirectToAction(nameof(Login), "Home");
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{userId}'.");
-            }
+            if (user == null) throw new ApplicationException($"Unable to load user with ID '{userId}'.");
             var result = await _userManager.ConfirmEmailAsync(user, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
@@ -584,11 +572,12 @@ namespace Bint.Controllers
 
 
         [HttpGet]
-        public IActionResult SaveProfile(string id,string firstname,string lastname,string mobile, string address, string bankName, string ifsc, string accountHolder, string pan, string upi,string bankAccount )
+        public IActionResult SaveProfile(string id, string firstname, string lastname, string mobile, string address,
+            string bankName, string ifsc, string accountHolder, string pan, string upi, string bankAccount)
         {
             try
             {
-                ApplicationUser appuser = _userManager.FindByIdAsync(id).Result;
+                var appuser = _userManager.FindByIdAsync(id).Result;
                 appuser.Firstname = firstname;
                 appuser.Lastname = lastname;
                 appuser.Mobile = mobile;
@@ -600,19 +589,19 @@ namespace Bint.Controllers
                 appuser.UpiId = upi;
                 appuser.BankAccount = bankAccount;
 
-                var result =  _userManager.UpdateAsync(appuser).Result;
+                var result = _userManager.UpdateAsync(appuser).Result;
                 if (result.Succeeded)
-                              return Json("success");
-               
+                    return Json("success");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                _logger.LogError(e.ToString(),"User update failed");
+                _logger.LogError(e.ToString(), "User update failed");
                 return Json("User update failed");
             }
-            return Json("");
 
+            return Json("");
         }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -628,10 +617,12 @@ namespace Bint.Controllers
                     _logger.LogError("Cant find account for this user {model.Email}", model.Email);
                     return RedirectToAction(nameof(Login));
                 }
-                if(!(await _userManager.IsEmailConfirmedAsync(user)))
+
+                if (!await _userManager.IsEmailConfirmedAsync(user))
                 {
                     TempData["error"] = "Account not verified, check your email for confirm email";
-                    _logger.LogError("Account not verified, check your email for confirm email {model.Email}", model.Email);
+                    _logger.LogError("Account not verified, check your email for confirm email {model.Email}",
+                        model.Email);
                     return RedirectToAction(nameof(Login));
                 }
 
@@ -640,7 +631,7 @@ namespace Bint.Controllers
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                    $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
                 TempData["data"] = "Please check your email to reset your password";
                 return RedirectToAction(nameof(Login));
             }
@@ -660,11 +651,8 @@ namespace Bint.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            if (code == null)
-            {
-                throw new ApplicationException("A code must be supplied for password reset.");
-            }
-            var model = new ResetPasswordViewModel { Code = code };
+            if (code == null) throw new ApplicationException("A code must be supplied for password reset.");
+            var model = new ResetPasswordViewModel {Code = code};
             return View(model);
         }
 
@@ -673,21 +661,13 @@ namespace Bint.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            if (!ModelState.IsValid) return View(model);
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-            {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
-            }
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(ResetPasswordConfirmation));
-            }
+            if (result.Succeeded) return RedirectToAction(nameof(ResetPasswordConfirmation));
             AddErrors(result);
             return View();
         }
@@ -703,50 +683,46 @@ namespace Bint.Controllers
         public async Task<IActionResult> AccessDenied()
         {
             string uagent = _request.HttpContext.Request.Headers["User-Agent"];
-            string rurl = "";
-            if(HttpContext.Request.Query["returnurl"].ToString() !="")
-            {
+            var rurl = "";
+            if (HttpContext.Request.Query["returnurl"].ToString() != "")
                 rurl = HttpContext.Request.Query["returnurl"].ToString();
-            }
 
             var id = "";
             var crole = "";
-            if(_userManager.GetUserId(User) !="")
+            if (_userManager.GetUserId(User) != "")
             {
-               
                 id = _userManager.GetUserId(User);
                 var user = await _userManager.FindByIdAsync(id);
                 var roles = await _userManager.GetRolesAsync(user);
                 crole = roles[0];
             }
 
-            string ipv4 = "";
-            string ipv6 = "";
-            string pip = "";
+            var ipv4 = "";
+            var ipv6 = "";
+            var pip = "";
 
-            IPAddress remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
+            var remoteIpAddress =
+                _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
             pip = remoteIpAddress.ToString();
 
             //normally will get wifi router ip
-            if (System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
+            if (Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
             {
-                if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) //
+                if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6) //
                 {
-
-                    remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+                        .First(x => x.AddressFamily == AddressFamily.InterNetwork);
                     ipv6 = remoteIpAddress.ToString();
                 }
 
 
-
-                if (remoteIpAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) //
+                if (remoteIpAddress.AddressFamily == AddressFamily.InterNetwork) //
                 {
-
-                    remoteIpAddress = System.Net.Dns.GetHostEntry(remoteIpAddress).AddressList.Last(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+                        .Last(x => x.AddressFamily == AddressFamily.InterNetwork);
                     ipv4 = remoteIpAddress.ToString();
                 }
             }
-
 
 
             DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
@@ -758,15 +734,15 @@ namespace Bint.Controllers
 
             var cd = new RestrictedAccess();
             var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-            cd.OsName = dd.GetOs().Match.Name.ToString();
-            cd.OsVersion = dd.GetOs().Match.Version.ToString();
-            cd.OsPlatform = dd.GetOs().Match.Platform.ToString();
+            cd.OsName = dd.GetOs().Match.Name;
+            cd.OsVersion = dd.GetOs().Match.Version;
+            cd.OsPlatform = dd.GetOs().Match.Platform;
             cd.BrowserName = dd.GetBrowserClient().Match.Name;
             cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
-            cd.DeviceName = dd.GetDeviceName().ToString();
-            cd.DeviceModel = dd.GetModel().ToString();
-            cd.Brand = dd.GetBrand().ToString();
-            cd.BrandName = dd.GetBrandName().ToString();
+            cd.DeviceName = dd.GetDeviceName();
+            cd.DeviceModel = dd.GetModel();
+            cd.Brand = dd.GetBrand();
+            cd.BrandName = dd.GetBrandName();
             cd.Useragent = uagent;
             cd.Urole = crole;
             cd.UserId = id;
@@ -778,7 +754,7 @@ namespace Bint.Controllers
             cd.ReturnUrl = rurl;
             _context._restrictedAccess.Add(cd);
             _context.SaveChanges();
-            await _signInManager.SignOutAsync();//remove session variables
+            await _signInManager.SignOutAsync(); //remove session variables
             _logger.LogError("Access denied {rurl}", rurl);
             return View();
         }
@@ -788,21 +764,19 @@ namespace Bint.Controllers
         {
             try
             {
-                ApplicationUser u = await _userManager.FindByIdAsync(uid);
-                 
+                var u = await _userManager.FindByIdAsync(uid);
+
                 await _userManager.SetLockoutEnabledAsync(u, true);
-                if(status)
-                   await _userManager.SetLockoutEndDateAsync(u, DateTimeOffset.MaxValue);
+                if (status)
+                    await _userManager.SetLockoutEndDateAsync(u, DateTimeOffset.MaxValue);
                 else
                     await _userManager.SetLockoutEndDateAsync(u, null);
-                return Json(new { data = "success" });
+                return Json(new {data = "success"});
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json("");
             }
-            
-            
         }
 
         [HttpGet]
@@ -810,33 +784,33 @@ namespace Bint.Controllers
         {
             try
             {
-                ApplicationUser u = await _userManager.FindByIdAsync(uid);
+                var u = await _userManager.FindByIdAsync(uid);
 
-             //   await _userManager.SetLockoutEnabledAsync(u, true);
-                if(status)
+                //   await _userManager.SetLockoutEnabledAsync(u, true);
+                if (status)
                     u.EmailConfirmed = true;
-                else    u.EmailConfirmed = false;
+                else u.EmailConfirmed = false;
 
                 await _userManager.UpdateAsync(u);
-                return Json(new { data = "success" });
+                return Json(new {data = "success"});
             }
             catch (Exception ex)
             {
                 return Json("");
             }
-
-
         }
+
         [HttpGet]
         [Route("/account/DeleteDocs")]
         public IActionResult DeleteDocs(int id)
         {
             try
             {
-                Doc s = _context.Doc.First(x => x.Id == id);
-                var z = Directory.GetCurrentDirectory(); var t = "";
+                var s = _context.Doc.First(x => x.Id == id);
+                var z = Directory.GetCurrentDirectory();
+                var t = "";
                 t = z + "\\wwwroot" + s.DocPath.Replace("/", "\\");
-                var fileInfo = new System.IO.FileInfo(t);
+                var fileInfo = new FileInfo(t);
                 if (fileInfo.Exists)
                     fileInfo.Delete();
                 _context.Doc.Remove(s);
@@ -877,31 +851,22 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
-            return View();
 
+            return View();
         }
 
         #region Helpers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
-            {
                 return Redirect(returnUrl);
-            }
-            else
-            {   
-              
-                return RedirectToAction(nameof(ClientController.Index), "Client");
-            }
+            return RedirectToAction(nameof(ClientController.Index), "Client");
         }
 
         #endregion
