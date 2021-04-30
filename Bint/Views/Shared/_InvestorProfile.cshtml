@@ -1,7 +1,7 @@
-﻿@inject UserManager<ApplicationUser> UserManager
+﻿@inject UserManager<ApplicationUser> _userManager
 @{
-    var u = @UserManager.GetUserAsync(User).Result;
-    var ol = u.KYC;
+    var u = @_userManager.GetUserAsync(User).Result;
+    var ol = u.Kyc;
     var lol = "";
     if (ol == "Pending")
     {
@@ -63,15 +63,15 @@
 <div class="col-md-3 ">
     <div class="card card-info card-outline">
         <div class="card-body box-profile">
-            <span class="badge @lol">@u.KYC</span>
+            <span class="badge @lol">@u.Kyc</span>
             <div class="text-center">
                 <img class="profile-user-img img-fluid img-circle userimagebig"
-                     src="@u.Profilepicture"
+                     src="@u.ProfilePicture"
                      alt="User profile picture">
             </div>
             <h3 class="profile-username text-center">@u.Firstname @u.Lastname</h3>
             <p class="text-muted text-center">ID : @u.UserId</p>
-            <p class="text-muted text-center pr-4">Admin ID : @u.Created_by&nbsp;&nbsp; &nbsp; </p>
+            <p class="text-muted text-center pr-4">Admin ID : @u.CreatedBy&nbsp;&nbsp; &nbsp; </p>
 
             <a href="/Investor/myprofile" class="btn btn-info btn-block text-white"><b>Manage Profile</b></a>
         </div>
@@ -91,11 +91,11 @@
         <div class="card-body box-profile">
             <!-- About Me Box -->
             <div class="social-box facebook">
-                <span><i class="fa fa-dollar-sign"></i> @u.USD</span>
+                <span><i class="fa fa-dollar-sign"></i> @u.Usd</span>
 
 
             </div>
-            <a href="/investor/usd" class="btn btn-warning btn-block text-white"><b>Manage USD</b></a>
+            <a href="/investor/usd" class="btn btn-warning btn-block text-white"><b>Manage Usd</b></a>
         </div>
     </div>
 
@@ -110,11 +110,11 @@
         </div>
         <div class="card-body box-profile">
             <div class="social-box facebook">
-                <span><i class="fab fa-btc"></i> @u.BGC</span>
-                <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">1 BGC = 0.001 USD</div>
+                <span><i class="fab fa-btc"></i> @u.Bgc</span>
+                <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">1 Bgc = 0.001 Usd</div>
 
             </div>
-            <a href="/investor/bgc" class="btn btn-success btn-block text-white"><b>Manage BGC</b></a>
+            <a href="/investor/bgc" class="btn btn-success btn-block text-white"><b>Manage Bgc</b></a>
         </div>
     </div>
 
