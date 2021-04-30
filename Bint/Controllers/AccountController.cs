@@ -773,7 +773,7 @@ namespace Bint.Controllers
                     await _userManager.SetLockoutEndDateAsync(u, null);
                 return Json(new {data = "success"});
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json("");
             }
@@ -794,7 +794,7 @@ namespace Bint.Controllers
                 await _userManager.UpdateAsync(u);
                 return Json(new {data = "success"});
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json("");
             }

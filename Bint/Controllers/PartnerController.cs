@@ -229,7 +229,7 @@ namespace Bint.Controllers
                 _context.ActivityLog.Add(activityLog);
                 _context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["error"] = "Error occurred";
                 _logger.LogError("Error occurred {id}", id);
