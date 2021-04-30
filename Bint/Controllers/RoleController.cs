@@ -41,7 +41,6 @@ namespace Bint.Controllers
             try
             {
                 var role = await _roleManager.FindByIdAsync(id);
-                var r = _roleManager.Roles;
                 var members = new List<ApplicationUser>();
                 var nonMembers = new List<ApplicationUser>();
 

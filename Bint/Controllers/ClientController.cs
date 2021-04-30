@@ -159,12 +159,7 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
-                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
-                                 DateTime.Now.Millisecond;
-                var words = formFile.FileName.Split('.');
-                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
-
+                var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) + "_" + DateTime.Now.ToString("yyyyMMddTHHmmssfff") + Path.GetExtension(formFile.FileName);//file extension
                 var path = Path.Combine("wwwroot", "Tether", z1);
                 var u = _userManager.GetUserAsync(User).Result;
 

@@ -6,7 +6,7 @@ namespace Bint.Controllers
     [Route("api/Client")]
     public class ClientApiController : Controller
     {
-        private IClientRepository _clientRepository;
+        private readonly IClientRepository _clientRepository;
         public ClientApiController(IClientRepository clientRepository)
         {
             _clientRepository = clientRepository;

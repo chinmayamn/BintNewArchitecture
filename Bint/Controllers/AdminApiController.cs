@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
+using System.IO;
 namespace Bint.Controllers
 {
     [Produces("application/json")]
@@ -24,7 +24,7 @@ namespace Bint.Controllers
         private readonly ILogger<Message> _messageLogger;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private IAdminRepository _adminRepository;
+        private readonly IAdminRepository _adminRepository;
 
         public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository,
             UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context,
@@ -91,20 +91,14 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
-                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
-                                 DateTime.Now.Millisecond;
-                var words = formFile.FileName.Split('.');
-                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
-
+                var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) +"_"+ DateTime.Now.ToString("yyyyMMddTHHmmssfff") + Path.GetExtension(formFile.FileName);//file extension
                 var path = Path.Combine("wwwroot", "uploads", z1);
                 var u = _userManager.GetUserAsync(User).Result;
 
                 //hard delete previous file
                 try
                 {
-                    var z = Directory.GetCurrentDirectory();
-                    var t = z + "\\wwwroot" + u.ProfilePicture.Replace("/", "\\");
+                    var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ProfilePicture.Replace("/", "\\");
                     var fileInfo = new FileInfo(t);
                     if (fileInfo.Exists)
                         fileInfo.Delete();
@@ -144,12 +138,7 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
-                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
-                                 DateTime.Now.Millisecond;
-                var words = formFile.FileName.Split('.');
-                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
-
+                var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) +"_"+ DateTime.Now.ToString("yyyyMMddTHHmmssfff") + Path.GetExtension(formFile.FileName); //file extension
                 var path = Path.Combine("wwwroot", "docs", z1);
                 var u = _userManager.GetUserAsync(User).Result;
 
@@ -157,7 +146,6 @@ namespace Bint.Controllers
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream); //push file
-
                     var d = new Doc();
                     var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     d.CreatedDate = indianTime;
@@ -187,50 +175,26 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
-                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
-                                 DateTime.Now.Millisecond;
-                var words = formFile.FileName.Split('.');
-                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
-
+                var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) +"_"+ DateTime.Now.ToString("yyyyMMddTHHmmssfff") +Path.GetExtension(formFile.FileName); //file extension
                 var path = Path.Combine("wwwroot", "Tether", z1);
                 var u = _userManager.GetUserAsync(User).Result;
-
 
                 //hard delete previous file
                 try
                 {
-                    var z = Directory.GetCurrentDirectory();
                     var t = "";
-                    FileInfo fileInfo;
                     if (role == "Admin")
-                    {
-                        t = z + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
-                        fileInfo = new FileInfo(t);
-                        if (fileInfo.Exists)
-                            fileInfo.Delete();
-                    }
-                    else if (role == "Investor")
-                    {
-                        t = z + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
-                        fileInfo = new FileInfo(t);
-                        if (fileInfo.Exists)
-                            fileInfo.Delete();
-                    }
-                    else if (role == "Partner")
-                    {
-                        t = z + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\");
-                        fileInfo = new FileInfo(t);
-                        if (fileInfo.Exists)
-                            fileInfo.Delete();
-                    }
-                    else if (role == "Client")
-                    {
-                        t = z + "\\wwwroot" + u.ClientQrCode.Replace("/", "\\");
-                        fileInfo = new FileInfo(t);
-                        if (fileInfo.Exists)
-                            fileInfo.Delete();
-                    }
+                        t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
+                    if (role == "Investor")
+                        t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
+                    if (role == "Partner")
+                        t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\"); 
+                    if (role == "Client")
+                       t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ClientQrCode.Replace("/", "\\");
+   
+                    var fileInfo = new FileInfo(t);
+                    if (fileInfo.Exists)
+                        fileInfo.Delete();
                 }
                 catch (Exception ex)
                 {
@@ -286,7 +250,7 @@ namespace Bint.Controllers
             {
                 var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                var mm = new Message(_messageLogger);
+                Message mm;
                 var activityLog = new ActivityLog();
                 var tusd = _context.DepositWithdraw.First(x => x.Id == id); //deposit here
 
@@ -295,7 +259,6 @@ namespace Bint.Controllers
                     tusd.ModifiedDate = dt;
                     tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
                     await _context.SaveChangesAsync();
-
                     var ud = _userManager.Users.First(x => x.UserId == tusd.UserId); //update his account with deposit
                     ud.Usd += tusd.Amount;
                     await _userManager.UpdateAsync(ud);
@@ -429,7 +392,7 @@ namespace Bint.Controllers
             {
                 var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                var mm = new Message(_messageLogger);
+                Message mm;
                 var activityLog = new ActivityLog();
                 var tusd = _context.DepositWithdraw.First(x => x.Id == id); //deposit here
                 var ud = _userManager.Users.First(x => x.UserId == tusd.UserId);
@@ -517,9 +480,7 @@ namespace Bint.Controllers
                     tusd.ModifiedDate = dt;
                     tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
                     await _context.SaveChangesAsync();
-
                     var sud = await _userManager.GetUserAsync(User); //update his account with deposit
-
 
                     //to admin
                     activityLog.Userid = au[0].UserId;
