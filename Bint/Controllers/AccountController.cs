@@ -407,28 +407,28 @@ namespace Bint.Controllers
                     if (role.Name == "Admin")
                     {
                         z1 = Convert.ToInt32(z.AdminId);
-                        z1 = z1 + 1;
+                        z1 += 1;
                         user.UserId = "A" + z1.ToString("D4");
                         z.AdminId = z1.ToString("D4");
                     }
                     else if (role.Name == "Partner")
                     {
                         z1 = Convert.ToInt32(z.PartnerId);
-                        z1 = z1 + 1;
+                        z1 += 1;
                         user.UserId = "P" + z1.ToString("D4");
                         z.PartnerId = z1.ToString("D4");
                     }
                     else if (role.Name == "Investor")
                     {
                         z1 = Convert.ToInt32(z.InvestorId);
-                        z1 = z1 + 1;
+                        z1 += 1;
                         user.UserId = "I" + z1.ToString("D4");
                         z.InvestorId = z1.ToString("D4");
                     }
                     else if (role.Name == "Client")
                     {
                         z1 = Convert.ToInt32(z.ClientId);
-                        z1 = z1 + 1;
+                        z1 += 1;
                         user.UserId = "C" + z1.ToString("D4");
                         z.ClientId = z1.ToString("D4");
                     }
@@ -607,37 +607,34 @@ namespace Bint.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user == null)
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    TempData["error"] = "Cant find account for this user";
-                    _logger.LogError("Cant find account for this user {model.Email}", model.Email);
-                    return RedirectToAction(nameof(Login));
-                }
-
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                {
-                    TempData["error"] = "Account not verified, check your email for confirm email";
-                    _logger.LogError("Account not verified, check your email for confirm email {model.Email}",
-                        model.Email);
-                    return RedirectToAction(nameof(Login));
-                }
-
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                    $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                TempData["data"] = "Please check your email to reset your password";
+                // Don't reveal that the user does not exist or is not confirmed
+                TempData["error"] = "Cant find account for this user";
+                _logger.LogError("Cant find account for this user {model.Email}", model.Email);
                 return RedirectToAction(nameof(Login));
             }
 
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                TempData["error"] = "Account not verified, check your email for confirm email";
+                _logger.LogError("Account not verified, check your email for confirm email {model.Email}",
+                    model.Email);
+                return RedirectToAction(nameof(Login));
+            }
+
+            // For more information on how to enable account confirmation and password reset please
+            // visit https://go.microsoft.com/fwlink/?LinkID=532713
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
+            await _emailSender.SendEmailAsync(model.Email, "Reset Password",
+                $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            TempData["data"] = "Please check your email to reset your password";
+            return RedirectToAction(nameof(Login));
+
             // If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         [HttpGet]

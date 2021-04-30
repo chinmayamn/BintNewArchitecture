@@ -1,30 +1,15 @@
-﻿using System;
+﻿using Bint.Data;
+using Bint.Models;
+using DeviceDetectorNET;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Bint.Models;
-using Bint.Models.AccountViewModels;
-using Bint.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System.Net;
-using DeviceDetectorNET;
-using DeviceDetectorNET.Parser;
-using DeviceDetectorNET.Cache;
-using Bint.Data;
-using Microsoft.AspNetCore.Cors;
 
 namespace Bint.Controllers
 {
-    
+
     public class SuperAdminController : Controller
     {
         private readonly IApplicationDBContext _context;

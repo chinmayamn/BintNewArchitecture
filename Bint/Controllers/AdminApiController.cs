@@ -297,7 +297,7 @@ namespace Bint.Controllers
                     await _context.SaveChangesAsync();
 
                     var ud = _userManager.Users.First(x => x.UserId == tusd.UserId); //update his account with deposit
-                    ud.Usd = ud.Usd + tusd.Amount;
+                    ud.Usd += tusd.Amount;
                     await _userManager.UpdateAsync(ud);
 
                     var myt = new TransferUsd
@@ -444,7 +444,7 @@ namespace Bint.Controllers
                         await _context.SaveChangesAsync();
 
                         //update his account with deposit
-                        ud.Usd = ud.Usd - tusd.Amount;
+                        ud.Usd -= tusd.Amount;
                         await _userManager.UpdateAsync(ud);
 
                         var myt = new TransferUsd
@@ -483,12 +483,14 @@ namespace Bint.Controllers
                         }; //to admin
                         _message.SendMessage(mm);
 
-                        activityLog = new ActivityLog(); //to user
-                        activityLog.Userid = tusd.UserId;
-                        activityLog.ActivityDate = dt;
-                        activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
-                        activityLog.Activity =
-                            "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd;
+                        activityLog = new ActivityLog
+                        {
+                            Userid = tusd.UserId,
+                            ActivityDate = dt,
+                            ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString(),
+                            Activity =
+                            "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
+                        }; //to user
                         _context.ActivityLog.Add(activityLog);
                         await _context.SaveChangesAsync();
 

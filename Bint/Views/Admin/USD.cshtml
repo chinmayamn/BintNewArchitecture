@@ -1,5 +1,4 @@
 ﻿@model Bint.Models.UsdDashboard
-@using System.Data
 @{
 
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -76,10 +75,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                @await Html.PartialAsync("_USDTransactions", new UsdDashboard() { RequestUsd = Model.RequestUsd, Stats = Model.Stats })
+                                @await Html.PartialAsync("_USDTransactions", new UsdDashboard { RequestUsd = Model.RequestUsd, Stats = Model.Stats })
                             </div>
                             <div class="col-md-12">
-                                @await Html.PartialAsync("_USDRequests", new UsdDashboard() { TransferUsd = Model.TransferUsd, Stats = Model.Stats })
+                                @await Html.PartialAsync("_USDRequests", new UsdDashboard { TransferUsd = Model.TransferUsd, Stats = Model.Stats })
                             </div>
 
                         </div>

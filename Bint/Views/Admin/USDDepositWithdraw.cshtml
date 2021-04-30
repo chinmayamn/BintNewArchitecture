@@ -91,14 +91,13 @@
                                                 {
 
                                                     var a = ""; var b = "";
-                                                    if (@row["status"].ToString() == "Pending")
+                                                    if (row["status"].ToString() == "Pending")
                                                     { a = "badge-warning"; }
-                                                    else if (@row["status"].ToString() == "Accepted")
+                                                    else if (row["status"].ToString() == "Accepted")
                                                     { a = "badge-success"; b = "disabled"; }
-                                                    else if (@row["status"].ToString() == "Rejected")
+                                                    else if (row["status"].ToString() == "Rejected")
                                                     { a = "badge-danger"; b = "disabled"; }
-                                                    else
-                                                    { }
+                                                
                                                 <tr>
                                                     <td>@row["id"]</td>
                                                     <td class="text-danger-400 text-bold text-right ">@row["amount"]</td>
@@ -170,14 +169,13 @@
                                                 {
 
                                                     var a = ""; var b = "";
-                                                    if (@row["status"].ToString() == "Pending")
+                                                    if (row["status"].ToString() == "Pending")
                                                     { a = "badge-warning"; }
-                                                    else if (@row["status"].ToString() == "Accepted")
+                                                    else if (row["status"].ToString() == "Accepted")
                                                     { a = "badge-success"; b = "disabled"; }
-                                                    else if (@row["status"].ToString() == "Rejected")
+                                                    else if (row["status"].ToString() == "Rejected")
                                                     { a = "badge-danger"; b = "disabled"; }
-                                                    else
-                                                    { }
+                                                  
                                                 <tr>
                                                     <td>@row["id"]</td>
                                                     <td class="text-danger-400 text-bold text-right ">@row["amount"]</td>

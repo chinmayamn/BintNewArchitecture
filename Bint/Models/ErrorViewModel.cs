@@ -1,5 +1,3 @@
-using System;
-
 namespace Bint.Models
 {
     public class ErrorViewModel

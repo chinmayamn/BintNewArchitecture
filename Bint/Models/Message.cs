@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using System;
 namespace Bint.Models
 {
     public class Message:IMessage

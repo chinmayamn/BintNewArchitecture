@@ -487,7 +487,7 @@ namespace Bint.Controllers
 
                     var sendu = await _userManager.FindByIdAsync(ud.CreatedId); //get his account
                     //update his wallet
-                    sendu.Usd = sendu.Usd + tusd.Amount;
+                    sendu.Usd += tusd.Amount;
                     await _userManager.UpdateAsync(sendu);
 
                     ud.Usd -= tusd.Amount;
@@ -1053,9 +1053,9 @@ namespace Bint.Controllers
 
             if (await _userManager.IsInRoleAsync(r, "Admin"))
             {
-                ll.Add("USDRequested", bd.Stats.Rows[0][1].ToString() + " Usd requested");
-                ll.Add("USDDepositRequest", bd.Stats.Rows[0][2].ToString() + " Usd deposit requests received");
-                ll.Add("USDWithdrawRequest", bd.Stats.Rows[0][3].ToString() + " Usd withdraw requests received");
+                ll.Add("USDRequested", bd.Stats.Rows[0][1] + " Usd requested");
+                ll.Add("USDDepositRequest", bd.Stats.Rows[0][2] + " Usd deposit requests received");
+                ll.Add("USDWithdrawRequest", bd.Stats.Rows[0][3] + " Usd withdraw requests received");
                 ll.Add("AdminUsers", bd.Stats.Rows[0][7].ToString());
                 ll.Add("InvestorUsers", bd.Stats.Rows[0][8].ToString());
                 ll.Add("PartnerUsers", bd.Stats.Rows[0][9].ToString());
@@ -1064,9 +1064,9 @@ namespace Bint.Controllers
             }
             else
             {
-                ll.Add("USDRequested", bd.Stats.Rows[0][1].ToString() + " Usd requested");
-                ll.Add("USDDepositRequest", bd.Stats.Rows[0][4].ToString() + " Usd deposit requests pending");
-                ll.Add("USDWithdrawRequest", bd.Stats.Rows[0][5].ToString() + " Usd withdraw requests pending");
+                ll.Add("USDRequested", bd.Stats.Rows[0][1] + " Usd requested");
+                ll.Add("USDDepositRequest", bd.Stats.Rows[0][4] + " Usd deposit requests pending");
+                ll.Add("USDWithdrawRequest", bd.Stats.Rows[0][5] + " Usd withdraw requests pending");
                 ll.Add("UsersCreated", bd.Stats.Rows[0][6].ToString());
             }
 

@@ -76,11 +76,13 @@ namespace Bint.Controllers
 
                 adb.AdminRequestDashboard = _dbf.GetAdminRequestDashboard();
                 var usdInvestment = _dbf.GetUsdInvestment();
-                var dd = new Dictionary<string, string>();
-                dd.Add("adminusd", usdInvestment.Rows[0][0].ToString());
-                dd.Add("investorusd", usdInvestment.Rows[0][1].ToString());
-                dd.Add("partnerusd", usdInvestment.Rows[0][2].ToString());
-                dd.Add("clientusd", usdInvestment.Rows[0][3].ToString());
+                var dd = new Dictionary<string, string>
+                {
+                    {"adminusd", usdInvestment.Rows[0][0].ToString()},
+                    {"investorusd", usdInvestment.Rows[0][1].ToString()},
+                    {"partnerusd", usdInvestment.Rows[0][2].ToString()},
+                    {"clientusd", usdInvestment.Rows[0][3].ToString()}
+                };
                 adb.UsdInvestment = dd;
                 adb.UsdInvestmentMonthWise = _dbf.GetUsdInvestmentMonthwise();
                 return View(adb);
@@ -145,8 +147,7 @@ namespace Bint.Controllers
         {
             try
             {
-                var idb = new Payback();
-                idb.UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId);
+                var idb = new Payback {UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)};
                 return View(idb);
             }
             catch (Exception e)
@@ -360,8 +361,10 @@ namespace Bint.Controllers
             try
             {
                 var r = _userManager.GetUserAsync(User).Result;
-                var act = new ActivityLogDashboard();
-                act.ActivityLogTable = _dbf.GetUserActivityLog(r.UserId);
+                var act = new ActivityLogDashboard
+                {
+                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                };
 
                 return View(act);
             }

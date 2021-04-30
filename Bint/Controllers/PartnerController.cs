@@ -179,8 +179,7 @@ namespace Bint.Controllers
             {
                 ViewBag.ReturnUrl = "/partner/clients";
                 var m = new CustomerUserCreate();
-                IOrderedEnumerable<ApplicationUser> z;
-                z = _userManager.Users.AsEnumerable().Where(u => u.CreatedId == _userManager.GetUserId(User))
+                var z = _userManager.Users.AsEnumerable().Where(u => u.CreatedId == _userManager.GetUserId(User))
                     .OrderByDescending(x => x.CreatedOn.TimeOfDay);
                 m.AppUser = z;
                 return View(m);
@@ -213,7 +212,7 @@ namespace Bint.Controllers
                     Activity = "Deleted user " + u.UserId
                 };
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception)
             {
@@ -229,8 +228,10 @@ namespace Bint.Controllers
             try
             {
                 var r = _userManager.GetUserAsync(User).Result;
-                var act = new ActivityLogDashboard();
-                act.ActivityLogTable = _dbf.GetUserActivityLog(r.UserId);
+                var act = new ActivityLogDashboard
+                {
+                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                };
 
                 return View(act);
             }

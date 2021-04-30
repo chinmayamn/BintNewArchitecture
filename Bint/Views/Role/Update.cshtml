@@ -51,7 +51,7 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-sm">
-                                @if (Model.NonMembers.Count() == 0)
+                                @if (!Model.NonMembers.Any())
                                 {
                                     <tr><td colspan="2">All Users Are Members</td></tr>
                                 }
@@ -93,7 +93,7 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-sm">
-                                @if (Model.Members.Count() == 0)
+                                @if (!Model.Members.Any())
                                 {
                                     <tr><td colspan="2">No Users Are Members</td></tr>
                                 }

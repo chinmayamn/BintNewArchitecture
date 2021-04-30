@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Bint.Models;
+﻿using Bint.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Bint.Controllers
 {
@@ -74,9 +72,9 @@ namespace Bint.Controllers
         {
             try
             {
-                IdentityResult result;
                 if (ModelState.IsValid)
                 {
+                    IdentityResult result;
                     foreach (var userId in model.AddIds ?? new string[] { })
                     {
                         var user = await _userManager.FindByIdAsync(userId);

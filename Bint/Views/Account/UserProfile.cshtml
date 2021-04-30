@@ -22,10 +22,7 @@
     {
         Layout = "~/Views/Shared/_ClientLayout.cshtml";
     }
-    else
-    {
-
-    }
+ 
 
     var uid = Context.Request.Path.Value.Split('/')[3];
 
@@ -101,7 +98,7 @@
                         <div class="card card-info card-outline">
                             <div class="card-body box-profile">
                                 @{
-                                    var ol = @Model.UserProfile.Kyc;
+                                    var ol = Model.UserProfile.Kyc;
                                     var lol = "";
                                     if (ol == "Pending")
                                     {
@@ -115,10 +112,7 @@
                                     {
                                         lol = "badge-success";
                                     }
-                                    else
-                                    {
-
-                                    }
+                                 
                                 }
 
                                 <span id="kycbadge" class="badge @lol">@Model.UserProfile.Kyc</span>
@@ -247,19 +241,19 @@
                                                     <div class="col-sm-9">
                                                         <div class="form-group clearfix">
                                                             <div class="icheck-primary d-inline">
-                                                                <input type="radio" id="radioPrimary1" name="r1" checked value="@Bint.Models.ActivityLogEnum.Pending">
+                                                                <input type="radio" id="radioPrimary1" name="r1" checked value="@ActivityLogEnum.Pending">
                                                                 <label for="radioPrimary1">
                                                                     Pending
                                                                 </label>
                                                             </div>
                                                             <div class="icheck-primary d-inline">
-                                                                <input type="radio" id="radioPrimary2" name="r1" value="@Bint.Models.ActivityLogEnum.Verified">
+                                                                <input type="radio" id="radioPrimary2" name="r1" value="@ActivityLogEnum.Verified">
                                                                 <label for="radioPrimary2">
                                                                     Verified
                                                                 </label>
                                                             </div>
                                                             <div class="icheck-primary d-inline">
-                                                                <input type="radio" id="radioPrimary3" name="r1" value="@Bint.Models.ActivityLogEnum.VerificationFailed">
+                                                                <input type="radio" id="radioPrimary3" name="r1" value="@ActivityLogEnum.VerificationFailed">
                                                                 <label for="radioPrimary3">
                                                                     Verification Failed
                                                                 </label>
@@ -410,7 +404,7 @@
                                             <ul class="users-list clearfix">
                                                 @foreach (var item in Model.UserList)
                                                 {
-                                                    var temp = @item.Firstname + ' ' + @item.Lastname;
+                                                    var temp = item.Firstname + ' ' + item.Lastname;
                                                     if (temp.Length > 12)
                                                     {
                                                         temp = temp.Substring(0, 12) + "...";

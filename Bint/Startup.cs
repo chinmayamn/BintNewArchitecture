@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Bint.Data;
+using Bint.Models;
+using Bint.Repository;
+using Bint.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Bint.Data;
-using Bint.Models;
-using Bint.Services;
-using Bint.Repository;
-using Newtonsoft.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Serialization;
 using Serilog;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 
 namespace Bint
 {
