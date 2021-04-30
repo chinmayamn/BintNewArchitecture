@@ -1,11 +1,11 @@
-﻿@model Bint.Models.USDDashboard
+﻿@model Bint.Models.UsdDashboard
 @using System.Data
 <div class="card card-outline card-info">
     <div class="card-header">
         <h1 class="card-title">USD Requests</h1>
         <div class="card-tools">
 
-            @foreach (DataRow row in Model._Stats.Rows)
+            @foreach (DataRow row in Model.Stats.Rows)
             {<span class="badge badge-secondary">
 
                     @row["usdrequests"] USD requests to approve
@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (DataRow row in Model._transferUSD.Rows)
+                @foreach (DataRow row in Model.TransferUsd.Rows)
                 {
                     var a = ""; var b = "";
                     if (@row["status"].ToString() == "Requested")

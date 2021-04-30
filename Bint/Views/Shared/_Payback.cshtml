@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (DataRow row in Model.USDPayback.Rows)
+                @foreach (DataRow row in Model.UsdPayback.Rows)
                 {
                     var b = "";
                     if(Convert.ToInt32(@row["percentage"])<=30)

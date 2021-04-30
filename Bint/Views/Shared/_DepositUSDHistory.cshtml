@@ -1,12 +1,12 @@
 ﻿@using System.Data
-@model USDDashboard
+@model UsdDashboard
 <div class="row">
     <div class="col-md-12">
         <div class="card card-outline card-info">
             <div class="card-header">
                 <h1 class="card-title">Deposit USD Requests</h1>
                 <div class="card-tools">
-                    @foreach (DataRow row in Model._Stats.Rows)
+                    @foreach (DataRow row in Model.Stats.Rows)
                     {<span class="badge badge-secondary">
 
                          @row["clientdepositrequest"] Deposit requests pending
