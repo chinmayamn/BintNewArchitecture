@@ -186,7 +186,7 @@
                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                             <input type="checkbox" class="custom-control-input" id="chkStatus" />
                                             <label class="custom-control-label" for="chkStatus" id="chkstatuslabel">
-                                                @((Convert.ToString(_userManager.FindByIdAsync(uid).Result.LockoutEnd) == "") ? "Active" : "Locked" )
+                                                @(Convert.ToString(_userManager.FindByIdAsync(uid).Result.LockoutEnd) == "") ? "Active" : "Locked" 
                                             </label>
                                         </div>
                                     </li>
@@ -195,7 +195,7 @@
                                         <div class="custom-control custom-switch custom-switch-on-success">
                                             <input type="checkbox" class="custom-control-input" id="chkEmailStatus" />
                                             <label class="custom-control-label" for="chkEmailStatus" id="chkEmailStatusLabel">
-                                                @((Convert.ToString(_userManager.FindByIdAsync(uid).Result.EmailConfirmed) == "True") ? "Verified" : "Not verified" )
+                                                @(Convert.ToString(_userManager.FindByIdAsync(uid).Result.EmailConfirmed) == "True") ? "Verified" : "Not verified" 
                                             </label>
                                         </div>
                                     </li>
