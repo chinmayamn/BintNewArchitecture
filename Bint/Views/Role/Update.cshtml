@@ -57,7 +57,7 @@
                                 }
                                 else
                                 {
-                                    @foreach (ApplicationUser user in Model.NonMembers)
+                                    @foreach (var user in Model.NonMembers)
                                     {
                                         <tr>
                                             <td>@user.UserName</td>
@@ -99,7 +99,7 @@
                                 }
                                 else
                                 {
-                                    @foreach (ApplicationUser user in Model.Members)
+                                    @foreach (var user in Model.Members)
                                     {
                                         <tr>
                                             <td>@user.UserName</td>

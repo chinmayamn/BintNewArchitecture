@@ -35,7 +35,7 @@
 
                             <div class="info-box-content-new">
                                 <span class="info-box-text-new">Total USD</span>
-                                <span class="info-box-number-new">@Model.TotalUSD</span>
+                                <span class="info-box-number-new">@Model.TotalUsd</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -47,8 +47,8 @@
                             <span class="info-box-icon-new bg-red"><i class="nav-icon fab fa-btc"></i></span>
 
                             <div class="info-box-content-new">
-                                <span class="info-box-text-new">Total BGC</span>
-                                <span class="info-box-number-new">@Model.TotalBGC</span>
+                                <span class="info-box-text-new">Total Bgc</span>
+                                <span class="info-box-number-new">@Model.TotalBgc</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -64,7 +64,7 @@
 
                             <div class="info-box-content-new">
                                 <span class="info-box-text-new">Total Amount</span>
-                                <span class="info-box-number-new">@(Model.TotalUSD + Model.TotalBGC)</span>
+                                <span class="info-box-number-new">@(Model.TotalUsd + Model.TotalBgc)</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -124,7 +124,7 @@
                                 <a href="/Admin/Admin">
                                     <span class="info-box-text">Admin</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.AdminCount
+                                        @Model.UserCount.AdminCount
                                     </span>
                                 </a>
                             </div>
@@ -146,7 +146,7 @@
                                 <a href="/Admin/Investor">
                                     <span class="info-box-text">Investors</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.InvestorCount
+                                        @Model.UserCount.InvestorCount
                                     </span>
                                 </a>
                             </div>
@@ -169,7 +169,7 @@
                                 <a href="/Admin/Client">
                                     <span class="info-box-text">Clients</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.ClientCount
+                                        @Model.UserCount.ClientCount
                                     </span>
                                 </a>
                             </div>
@@ -189,7 +189,7 @@
                                 <a href="/Admin/partner">
                                     <span class="info-box-text">Partners</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.PartnerCount
+                                        @Model.UserCount.PartnerCount
                                     </span>
                                 </a>
                             </div>
@@ -358,7 +358,7 @@
                             <!-- /.card-header -->
                             <div class="card-body p-0">
                                 <ul class="users-list clearfix">
-                                    @foreach (var item in Model.userCount.InvestorList)
+                                    @foreach (var item in Model.UserCount.InvestorList)
                                     {
                                         var temp = @item.Firstname + ' ' + @item.Lastname;
                                         if (temp.Length > 12)
@@ -366,7 +366,7 @@
 
                                         <li>
                                             <a href="/account/userprofile/@item.Id">
-                                                <img src="@item.Profilepicture" alt="User Image">
+                                                <img src="@item.ProfilePicture" alt="User Image">
                                             </a>
                                             <a class="users-list-name" href="/account/userprofile/@item.Id">
                                                 @temp
@@ -404,7 +404,7 @@
                             <!-- /.card-header -->
                             <div class="card-body p-0">
                                 <ul class="users-list clearfix">
-                                    @foreach (var item in Model.userCount.PartnerList)
+                                    @foreach (var item in Model.UserCount.PartnerList)
                                     {
                                         var temp = @item.Firstname + ' ' + @item.Lastname;
                                         if (temp.Length > 12)
@@ -412,7 +412,7 @@
 
                                         <li>
                                             <a href="/account/userprofile/@item.Id">
-                                                <img src="@item.Profilepicture" alt="User Image">
+                                                <img src="@item.ProfilePicture" alt="User Image">
                                             </a>
                                             <a class="users-list-name" href="/account/userprofile/@item.Id">
                                                 @temp
@@ -450,7 +450,7 @@
                             <!-- /.card-header -->
                             <div class="card-body p-0">
                                 <ul class="users-list clearfix">
-                                    @foreach (var item in Model.userCount.ClientList)
+                                    @foreach (var item in Model.UserCount.ClientList)
                                     {
                                         var temp = @item.Firstname + ' ' + @item.Lastname;
                                         if (temp.Length > 12)
@@ -458,7 +458,7 @@
 
                                         <li>
                                             <a href="/account/userprofile/@item.Id">
-                                                <img src="@item.Profilepicture" alt="User Image">
+                                                <img src="@item.ProfilePicture" alt="User Image">
                                             </a>
                                             <a class="users-list-name" href="/account/userprofile/@item.Id">
                                                 @temp
@@ -492,7 +492,7 @@
                                 <a href="/Admin/locked">
                                     <span class="info-box-text">Locked Users</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.LockedUsersCount
+                                        @Model.UserCount.LockedUsersCount
                                     </span>
                                 </a>
                             </div>
@@ -508,7 +508,7 @@
                                 <a href="/Admin/pendingaccess">
                                     <span class="info-box-text">Pending access</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.PendingAccessCount
+                                        @Model.UserCount.PendingAccessCount
                                     </span>
                                 </a>
                             </div>
@@ -522,9 +522,9 @@
                             </span>
                             <div class="info-box-content">
                                 <a href="/Admin/pendingaccess">
-                                    <span class="info-box-text">Pending KYC</span>
+                                    <span class="info-box-text">Pending Kyc</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.PendingKYCCount
+                                        @Model.UserCount.PendingKYCCount
                                     </span>
                                 </a>
                             </div>
@@ -540,7 +540,7 @@
                                 <a href="/Admin/pendingaccess">
                                     <span class="info-box-text">Completed Groups</span>
                                     <span class="info-box-number">
-                                        @Model.userCount.PendingAccessCount
+                                        @Model.UserCount.PendingAccessCount
                                     </span>
                                 </a>
                             </div>
@@ -644,7 +644,7 @@
           /********************* area chart *********************************/
         var monthLabelArray = [];
         var monthUSD = [];
-         @foreach (DataRow d in Model._USDInvestmentMonthwise.Tables[0].Rows)
+         @foreach (DataRow d in Model.UsdInvestmentMonthWise.Tables[0].Rows)
         {
             @:monthUSD.push('@d.ItemArray[0]');
         @:monthLabelArray.push('@d.ItemArray[1]');
@@ -712,7 +712,7 @@
          var usersLabelArray = [];
         var usersCount = [];
 
-        @foreach (var d in Model._USDInvestment)
+        @foreach (var d in Model.UsdInvestment)
         {
             @:usersLabelArray.push('@d.Key');
         @:usersCount.push('@d.Value');
