@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Bint.Data;
 using Bint.Models;
 using Bint.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.IO;
-using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Bint.Data;
 
 namespace Bint.Controllers
 {
@@ -18,18 +17,24 @@ namespace Bint.Controllers
     [Route("api/Admin")]
     public class AdminApiController : Controller
     {
-        private IAdminRepository _adminRepository;
+        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<AdminApiController> _logger;
+        private readonly IMessage _message;
+        private readonly ILogger<Message> _messageLogger;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<AdminApiController> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<Message> _messageLogger;
-        private readonly IMessage _message;
-        private readonly static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository, UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context, ILogger<Message> messageLogger, IMessage message)
+        private IAdminRepository _adminRepository;
+
+        public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository,
+            UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context,
+            ILogger<Message> messageLogger, IMessage message)
         {
             _adminRepository = adminRepository;
-            _roleManager = roleManager; _userManager = userManager;_logger = logger;_context = context;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _logger = logger;
+            _context = context;
             _messageLogger = messageLogger;
             _message = message;
         }
@@ -39,14 +44,13 @@ namespace Bint.Controllers
         public IEnumerable<IdentityRole> UserRoles()
         {
             return _roleManager.Roles.ToList();
-         
         }
 
         // GET: api/Admin
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new[] {"value1", "value2"};
         }
 
         // GET: api/Admin/5
@@ -55,23 +59,22 @@ namespace Bint.Controllers
         {
             return "value";
         }
-        
+
         // POST: api/Admin
         [HttpPost]
         [Route("createrole")]
         public async Task<string> CreateRole([FromBody] string roleName)
         {
-           
-            IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+            var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
             return "success";
         }
-        
+
         // PUT: api/Admin/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
@@ -83,26 +86,28 @@ namespace Bint.Controllers
         [Route("/investor/profilepic")]
         [Route("/client/profilepic")]
         [Route("/partner/profilepic")]
-        public async Task<IActionResult> ProfilePic([FromForm]IFormFile formFile)
+        public async Task<IActionResult> ProfilePic([FromForm] IFormFile formFile)
         {
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string uniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
-                string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + uniqueName + "." + words[1];//file extension
-                
+                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
+                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
+                                 DateTime.Now.Millisecond;
+                var words = formFile.FileName.Split('.');
+                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
+
                 var path = Path.Combine("wwwroot", "uploads", z1);
-                ApplicationUser u = _userManager.GetUserAsync(User).Result;
+                var u = _userManager.GetUserAsync(User).Result;
 
                 //hard delete previous file
                 try
                 {
                     var z = Directory.GetCurrentDirectory();
-                    var t = z+ "\\wwwroot"+ u.ProfilePicture.Replace("/", "\\");
-                    var fileInfo = new System.IO.FileInfo(t);
-                    if(fileInfo.Exists)
-                         fileInfo.Delete();
+                    var t = z + "\\wwwroot" + u.ProfilePicture.Replace("/", "\\");
+                    var fileInfo = new FileInfo(t);
+                    if (fileInfo.Exists)
+                        fileInfo.Delete();
                 }
                 catch (Exception ex)
                 {
@@ -114,18 +119,12 @@ namespace Bint.Controllers
                     await formFile.CopyToAsync(stream);
                     u.ProfilePicture = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
                     var s = await _userManager.UpdateAsync(u);
-                    if(s.Succeeded)
-                    {
-                        return RedirectToAction("myprofile", route);
-                    }
-                    else
-                    {
-                        TempData["error"] = "Profile pic update failed";
-                        _logger.LogError("Profile pic update failed", formFile);
-                        return RedirectToAction("myprofile", route);
-                    }
-                }
+                    if (s.Succeeded) return RedirectToAction("myprofile", route);
 
+                    TempData["error"] = "Profile pic update failed";
+                    _logger.LogError("Profile pic update failed", formFile);
+                    return RedirectToAction("myprofile", route);
+                }
             }
             catch (Exception ex)
             {
@@ -140,36 +139,38 @@ namespace Bint.Controllers
         [Route("/investor/UploadDocs")]
         [Route("/client/UploadDocs")]
         [Route("/partner/UploadDocs")]
-        public async Task<IActionResult> UploadDocs([FromForm]IFormFile formFile,string filename)
+        public async Task<IActionResult> UploadDocs([FromForm] IFormFile formFile, string filename)
         {
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string uniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
-                string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + uniqueName + "." + words[1];//file extension
+                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
+                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
+                                 DateTime.Now.Millisecond;
+                var words = formFile.FileName.Split('.');
+                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
 
                 var path = Path.Combine("wwwroot", "docs", z1);
-                ApplicationUser u = _userManager.GetUserAsync(User).Result;
+                var u = _userManager.GetUserAsync(User).Result;
 
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream); //push file
-               
-                    Doc d = new Doc();
-                    DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+
+                    var d = new Doc();
+                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     d.CreatedDate = indianTime;
-                    d.DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); ;
+                    d.DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                    ;
                     d.Filename = filename;
                     d.Status = "Pending";
-                    d.Userid = u.Id.ToString();
+                    d.Userid = u.Id;
                     _context.Doc.Add(d);
                     _context.SaveChanges();
                     TempData["data"] = "File uploaded successfully";
                     return RedirectToAction("myprofile", route);
                 }
-
             }
             catch (Exception ex)
             {
@@ -179,60 +180,58 @@ namespace Bint.Controllers
             }
         }
 
-        
 
         [HttpPost]
         [Route("/admin/TetherUpdate")]
-        public async Task<IActionResult> TetherUpdate(string txtTether,[FromForm]IFormFile formFile,string role)
+        public async Task<IActionResult> TetherUpdate(string txtTether, [FromForm] IFormFile formFile, string role)
         {
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string uniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
-                string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + uniqueName + "." + words[1];//file extension
+                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
+                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
+                                 DateTime.Now.Millisecond;
+                var words = formFile.FileName.Split('.');
+                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
 
                 var path = Path.Combine("wwwroot", "Tether", z1);
-                ApplicationUser u = _userManager.GetUserAsync(User).Result;
-                
+                var u = _userManager.GetUserAsync(User).Result;
+
 
                 //hard delete previous file
                 try
                 {
-                    var z = Directory.GetCurrentDirectory();var t = "";FileInfo fileInfo;
-                    if(role=="Admin")
+                    var z = Directory.GetCurrentDirectory();
+                    var t = "";
+                    FileInfo fileInfo;
+                    if (role == "Admin")
                     {
-                         t = z + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
-                         fileInfo = new System.IO.FileInfo(t);
+                        t = z + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
+                        fileInfo = new FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
-                    else if(role=="Investor")
+                    else if (role == "Investor")
                     {
-                         t = z + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
-                         fileInfo = new System.IO.FileInfo(t);
+                        t = z + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
+                        fileInfo = new FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
-                    else if(role=="Partner")
+                    else if (role == "Partner")
                     {
-                         t = z + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\");
-                         fileInfo = new System.IO.FileInfo(t);
+                        t = z + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\");
+                        fileInfo = new FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
-                    else if(role=="Client")
+                    else if (role == "Client")
                     {
                         t = z + "\\wwwroot" + u.ClientQrCode.Replace("/", "\\");
-                        fileInfo = new System.IO.FileInfo(t);
+                        fileInfo = new FileInfo(t);
                         if (fileInfo.Exists)
                             fileInfo.Delete();
                     }
-                    else
-                    {
-
-                    }
-                 
                 }
                 catch (Exception ex)
                 {
@@ -244,39 +243,33 @@ namespace Bint.Controllers
                     await formFile.CopyToAsync(stream);
                     if (role == "Admin")
                     {
-                        u.AdminQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");u.AdminTetherAddress = txtTether;
+                        u.AdminQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                        u.AdminTetherAddress = txtTether;
                     }
                     else if (role == "Investor")
                     {
-                        u.InvestorQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.InvestorTetherAddress= txtTether;
+                        u.InvestorQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                        u.InvestorTetherAddress = txtTether;
                     }
                     else if (role == "Partner")
                     {
-                        u.PartnerQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.PartnerTetherAddress = txtTether;
+                        u.PartnerQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                        u.PartnerTetherAddress = txtTether;
                     }
                     else if (role == "Client")
                     {
-                        u.ClientQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""); u.ClientTetherAddress = txtTether;
-                    }
-                    else
-                    {
-
+                        u.ClientQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                        u.ClientTetherAddress = txtTether;
                     }
 
-                   
+
                     var s = await _userManager.UpdateAsync(u);
-                    if (s.Succeeded)
-                    {
-                        return RedirectToAction("sitesettings", route);
-                    }
-                    else
-                    {
-                        TempData["error"] = "Tether update failed";
-                        _logger.LogError("Tether update failed", formFile);
-                        return RedirectToAction("sitesettings", route);
-                    }
-                }
+                    if (s.Succeeded) return RedirectToAction("sitesettings", route);
 
+                    TempData["error"] = "Tether update failed";
+                    _logger.LogError("Tether update failed", formFile);
+                    return RedirectToAction("sitesettings", route);
+                }
             }
             catch (Exception ex)
             {
@@ -292,11 +285,11 @@ namespace Bint.Controllers
         {
             try
             {
-                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                Message mm = new Message(_messageLogger);
-                ActivityLog activityLog = new ActivityLog();
-                DepositWithdraw tusd = _context.depositwithdraw.First(x => x.Id == id);  //deposit here
+                var mm = new Message(_messageLogger);
+                var activityLog = new ActivityLog();
+                var tusd = _context.depositwithdraw.First(x => x.Id == id); //deposit here
 
                 if (status == "Deposit")
                 {
@@ -304,11 +297,11 @@ namespace Bint.Controllers
                     tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
                     _context.SaveChanges();
 
-                    var ud = _userManager.Users.First(x=>x.UserId==tusd.UserId); //update his account with deposit
+                    var ud = _userManager.Users.First(x => x.UserId == tusd.UserId); //update his account with deposit
                     ud.Usd = ud.Usd + tusd.Amount;
                     await _userManager.UpdateAsync(ud);
 
-                    TransferUsd myt = new TransferUsd
+                    var myt = new TransferUsd
                     {
                         Amount = tusd.Amount,
                         FromStatus = TransferUsdStatusEnum.Deposit.ToString(),
@@ -329,7 +322,8 @@ namespace Bint.Controllers
                     activityLog.Userid = au[0].UserId;
                     activityLog.ActivityDate = dt;
                     activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString();
-                    activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId + ". Balance : " + ud.Usd;
+                    activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId +
+                                           ". Balance : " + ud.Usd;
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -340,7 +334,7 @@ namespace Bint.Controllers
                         MobileNumber = au[0].Mobile,
                         To = au[0].Email,
                         Subject = "Usd Deposit Confirmed"
-                    };  //to admin
+                    }; //to admin
                     _message.SendMessage(mm);
 
                     activityLog = new ActivityLog
@@ -349,23 +343,25 @@ namespace Bint.Controllers
                         ActivityDate = dt,
                         ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString(),
                         Activity = "Confirmed deposit " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
-                    };  //to user
+                    }; //to user
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
-                    mm = new Message(_messageLogger); //to user
-                    mm.EmailMessageBody = activityLog.Activity;
-                    mm.SmsMessageBody = activityLog.Activity;
-                    mm.MobileNumber = ud.Mobile;
-                    mm.To = ud.Email;
-                    mm.Subject = "Usd Deposit Confirmed";
+                    mm = new Message(_messageLogger)
+                    {
+                        EmailMessageBody = activityLog.Activity,
+                        SmsMessageBody = activityLog.Activity,
+                        MobileNumber = ud.Mobile,
+                        To = ud.Email,
+                        Subject = "Usd Deposit Confirmed"
+                    }; //to user
                     _message.SendMessage(mm);
 
                     TempData["data"] = activityLog.Activity;
                     return Json("success");
                 }
 
-                if(status=="Reject")
+                if (status == "Reject")
                 {
                     tusd.ModifiedDate = dt;
                     tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
@@ -382,12 +378,14 @@ namespace Bint.Controllers
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
-                    mm = new Message(_messageLogger);  //to admin
-                    mm.EmailMessageBody = activityLog.Activity;
-                    mm.SmsMessageBody = activityLog.Activity;
-                    mm.MobileNumber = au[0].Mobile;
-                    mm.To = au[0].Email;
-                    mm.Subject = "Usd Deposit Rejected";
+                    mm = new Message(_messageLogger)
+                    {
+                        EmailMessageBody = activityLog.Activity,
+                        SmsMessageBody = activityLog.Activity,
+                        MobileNumber = au[0].Mobile,
+                        To = au[0].Email,
+                        Subject = "Usd Deposit Rejected"
+                    }; //to admin
                     _message.SendMessage(mm);
 
                     activityLog = new ActivityLog
@@ -396,7 +394,7 @@ namespace Bint.Controllers
                         ActivityDate = dt,
                         ActivityType = ActivityLogEnum.Reject.ToString(),
                         Activity = "Rejected deposit " + tusd.Amount + " Usd by Admin"
-                    };  //to user
+                    }; //to user
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -413,11 +411,12 @@ namespace Bint.Controllers
                     TempData["data"] = activityLog.Activity;
                     return Json("success");
                 }
+
                 return Json("success");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString(), "Deposit confirm error{id} {status}", id,status);
+                _logger.LogError(ex.ToString(), "Deposit confirm error{id} {status}", id, status);
                 TempData["error"] = "Deposit confirm error";
                 return Json("error");
             }
@@ -425,15 +424,15 @@ namespace Bint.Controllers
 
         [HttpGet]
         [Route("/admin/confirmwithdraw")]
-        public async Task<IActionResult> ConfirmWithdraw(int id, string status,string trnsid)
+        public async Task<IActionResult> ConfirmWithdraw(int id, string status, string trnsId)
         {
             try
             {
-                DateTime dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                Message mm = new Message(_messageLogger);
-                ActivityLog activityLog = new ActivityLog();
-                DepositWithdraw tusd = _context.depositwithdraw.First(x => x.Id == id);  //deposit here
+                var mm = new Message(_messageLogger);
+                var activityLog = new ActivityLog();
+                var tusd = _context.depositwithdraw.First(x => x.Id == id); //deposit here
                 var ud = _userManager.Users.First(x => x.UserId == tusd.UserId);
 
                 if (status == "Withdraw")
@@ -442,14 +441,14 @@ namespace Bint.Controllers
                     {
                         tusd.ModifiedDate = dt;
                         tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
-                        tusd.TransactionId = trnsid;
+                        tusd.TransactionId = trnsId;
                         _context.SaveChanges();
 
                         //update his account with deposit
                         ud.Usd = ud.Usd - tusd.Amount;
                         await _userManager.UpdateAsync(ud);
 
-                        TransferUsd myt = new TransferUsd
+                        var myt = new TransferUsd
                         {
                             Amount = tusd.Amount,
                             FromStatus = TransferUsdStatusEnum.Withdraw.ToString(),
@@ -461,7 +460,7 @@ namespace Bint.Controllers
                             FromUserId = tusd.UserId,
                             ToUserId = tusd.UserId,
                             Userid = ud.Id
-                         };
+                        };
                         _context.transferusd.Add(myt);
                         _context.SaveChanges();
 
@@ -470,44 +469,47 @@ namespace Bint.Controllers
                         activityLog.Userid = au[0].UserId;
                         activityLog.ActivityDate = dt;
                         activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
-                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd of user " + tusd.UserId + ". Balance : " + ud.Usd;
+                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd of user " + tusd.UserId +
+                                               ". Balance : " + ud.Usd;
                         _context.activitylog.Add(activityLog);
                         _context.SaveChanges();
 
-                        mm = new Message(_messageLogger);  //to admin
-                        mm.EmailMessageBody = activityLog.Activity;
-                        mm.SmsMessageBody = activityLog.Activity;
-                        mm.MobileNumber = au[0].Mobile;
-                        mm.To = au[0].Email;
-                        mm.Subject = "Usd Withdraw Confirmed";
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = au[0].Mobile,
+                            To = au[0].Email,
+                            Subject = "Usd Withdraw Confirmed"
+                        }; //to admin
                         _message.SendMessage(mm);
 
-                        activityLog = new ActivityLog();  //to user
+                        activityLog = new ActivityLog(); //to user
                         activityLog.Userid = tusd.UserId;
                         activityLog.ActivityDate = dt;
                         activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
-                        activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd;
+                        activityLog.Activity =
+                            "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd;
                         _context.activitylog.Add(activityLog);
                         _context.SaveChanges();
 
-                        mm = new Message(_messageLogger); //to user
-                        mm.EmailMessageBody = activityLog.Activity;
-                        mm.SmsMessageBody = activityLog.Activity;
-                        mm.MobileNumber = ud.Mobile;
-                        mm.To = ud.Email;
-                        mm.Subject = "Usd Withdraw Confirmed";
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = ud.Mobile,
+                            To = ud.Email,
+                            Subject = "Usd Withdraw Confirmed"
+                        }; //to user
                         _message.SendMessage(mm);
 
                         TempData["data"] = activityLog.Activity;
                         return Json("success");
                     }
-                    else
-                    {
-                        TempData["error"] = "Insufficient amount in user account balance to withdraw";
 
-                    }
+                    TempData["error"] = "Insufficient amount in user account balance to withdraw";
                 }
-               
+
 
                 if (status == "Reject")
                 {
@@ -533,7 +535,7 @@ namespace Bint.Controllers
                         MobileNumber = au[0].Mobile,
                         To = au[0].Email,
                         Subject = "Usd Withdraw Rejected"
-                    };  //to admin
+                    }; //to admin
                     _message.SendMessage(mm);
 
                     activityLog = new ActivityLog
@@ -542,7 +544,7 @@ namespace Bint.Controllers
                         ActivityDate = dt,
                         ActivityType = ActivityLogEnum.Reject.ToString(),
                         Activity = "Rejected withdraw " + tusd.Amount + " Usd by Admin"
-                    };  //to user
+                    }; //to user
                     _context.activitylog.Add(activityLog);
                     _context.SaveChanges();
 
@@ -559,6 +561,7 @@ namespace Bint.Controllers
                     TempData["data"] = activityLog.Activity;
                     return Json("success");
                 }
+
                 return Json("success");
             }
             catch (Exception ex)

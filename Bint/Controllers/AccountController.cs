@@ -91,12 +91,12 @@ namespace Bint.Controllers
                 {
                     // This doesn't count login failures towards account lockout
                     // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                    var result = await _signInManager.PasswordSignInAsync(model.loginviewmodel.Email,
-                        model.loginviewmodel.Password, model.loginviewmodel.RememberMe, lockoutOnFailure: true);
+                    var result = await _signInManager.PasswordSignInAsync(model.LoginViewModel.Email,
+                        model.LoginViewModel.Password, model.LoginViewModel.RememberMe, lockoutOnFailure: true);
                     if (result.Succeeded)
                     {
                         // Resolve the user via their email
-                        var user = await _userManager.FindByEmailAsync(model.loginviewmodel.Email);
+                        var user = await _userManager.FindByEmailAsync(model.LoginViewModel.Email);
 
                         if (!user.EmailConfirmed)
                         {
@@ -111,7 +111,7 @@ namespace Bint.Controllers
                         // Get the roles for the user
                         var roles = await _userManager.GetRolesAsync(user);
 
-                        string uagent = _request.HttpContext.Request.Headers["User-Agent"];
+                        string uAgent = _request.HttpContext.Request.Headers["User-Agent"];
 
                         var ipv4 = "";
                         var ipv6 = "";
@@ -153,7 +153,7 @@ namespace Bint.Controllers
 
 
                         DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
-                        var dd = new DeviceDetector(uagent);
+                        var dd = new DeviceDetector(uAgent);
                         dd.SetCache(new DictionaryCache());
                         dd.DiscardBotInformation();
                         dd.SkipBotDetection();
@@ -171,7 +171,7 @@ namespace Bint.Controllers
                         cd.DeviceModel = dd.GetModel();
                         cd.Brand = dd.GetBrand();
                         cd.BrandName = dd.GetBrandName();
-                        cd.Useragent = uagent;
+                        cd.Useragent = uAgent;
                         cd.URole = roles[0];
                         cd.UserId = user.Id;
                         cd.LoginTime = indianTime;
@@ -195,7 +195,7 @@ namespace Bint.Controllers
                     }
 
                     if (result.RequiresTwoFactor)
-                        return RedirectToAction(nameof(LoginWith2fa), new {returnUrl, model.loginviewmodel.RememberMe});
+                        return RedirectToAction(nameof(LoginWith2fa), new {returnUrl, model.LoginViewModel.RememberMe});
                     if (result.IsLockedOut)
                     {
                         TempData["error"] = "User account has been locked out. Contact administrator";
@@ -205,8 +205,8 @@ namespace Bint.Controllers
 
                     TempData["error"] = "Invalid username and password";
                     _logger.LogError(
-                        "Invalid username and password {model.loginviewmodel.Email}{model.loginviewmodel.Password}",
-                        model.loginviewmodel.Email, model.loginviewmodel.Password);
+                        "Invalid username and password {model.LoginViewModel.Email}{model.LoginViewModel.Password}",
+                        model.LoginViewModel.Email, model.LoginViewModel.Password);
                     return View("login");
                 }
 
@@ -216,8 +216,8 @@ namespace Bint.Controllers
             {
                 TempData["error"] = "An error occurred";
                 _logger.LogError(ex.ToString(),
-                    "Invalid model for login {model.loginviewmodel.Email}{model.loginviewmodel.Password}",
-                    model.loginviewmodel.Email, model.loginviewmodel.Password);
+                    "Invalid model for login {model.LoginViewModel.Email}{model.LoginViewModel.Password}",
+                    model.LoginViewModel.Email, model.LoginViewModel.Password);
                 return View("login");
             }
         }
@@ -683,18 +683,18 @@ namespace Bint.Controllers
         public async Task<IActionResult> AccessDenied()
         {
             string uagent = _request.HttpContext.Request.Headers["User-Agent"];
-            var rurl = "";
+            var rUrl = "";
             if (HttpContext.Request.Query["returnurl"].ToString() != "")
-                rurl = HttpContext.Request.Query["returnurl"].ToString();
+                rUrl = HttpContext.Request.Query["returnurl"].ToString();
 
             var id = "";
-            var crole = "";
+            var cRole = "";
             if (_userManager.GetUserId(User) != "")
             {
                 id = _userManager.GetUserId(User);
                 var user = await _userManager.FindByIdAsync(id);
                 var roles = await _userManager.GetRolesAsync(user);
-                crole = roles[0];
+                cRole = roles[0];
             }
 
             var ipv4 = "";
@@ -744,18 +744,18 @@ namespace Bint.Controllers
             cd.Brand = dd.GetBrand();
             cd.BrandName = dd.GetBrandName();
             cd.Useragent = uagent;
-            cd.Urole = crole;
+            cd.Urole = cRole;
             cd.UserId = id;
             cd.ErrorTime = indianTime;
             cd.PublicIp = pip;
             cd.Ipv4 = ipv4;
             cd.Ipv6 = ipv6;
             cd.Verified = "Not Verified";
-            cd.ReturnUrl = rurl;
+            cd.ReturnUrl = rUrl;
             _context._restrictedAccess.Add(cd);
             _context.SaveChanges();
             await _signInManager.SignOutAsync(); //remove session variables
-            _logger.LogError("Access denied {rurl}", rurl);
+            _logger.LogError("Access denied {rUrl}", rUrl);
             return View();
         }
 
