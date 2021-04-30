@@ -402,7 +402,7 @@ namespace Bint.Controllers
                     await _userManager.AddToRoleAsync(user, role.Name);
                     //  await _signInManager.SignInAsync(user, isPersistent: false);    // disabled user signing after registering
 
-                    var z = _context.regId.First();
+                    var z = _context.RegId.First();
                     int z1;
                     if (role.Name == "Admin")
                     {
@@ -444,7 +444,7 @@ namespace Bint.Controllers
                         ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
                         Activity = "Created user " + user.UserId
                     };
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     TempData["data"] = "User has been created successfully";

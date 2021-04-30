@@ -28,9 +28,9 @@ namespace Bint.Data
         public virtual DbSet<RestrictedAccess> _restrictedAccess { get; set; }
         public virtual DbSet<ErrorLog> Log { get; set; }
         public virtual DbSet<Doc> Doc { get; set; }
-        public virtual DbSet<RegId> regId { get; set; }
-        public virtual DbSet<ActivityLog> activitylog { get; set; }
-        public virtual DbSet<TransferUSD> transferusd { get; set; }
-        public virtual DbSet<DepositWithdraw> depositwithdraw { get; set; }
+        public virtual DbSet<RegId> RegId { get; set; }
+        public virtual DbSet<ActivityLog> ActivityLog { get; set; }
+        public virtual DbSet<TransferUsd> TransferUsd { get; set; }
+        public virtual DbSet<DepositWithdraw> DepositWithdraw { get; set; }
     }
 }

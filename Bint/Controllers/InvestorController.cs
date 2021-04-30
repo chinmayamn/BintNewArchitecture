@@ -260,7 +260,7 @@ namespace Bint.Controllers
                     ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
                     Activity = "Deleted user " + u.UserId
                 };
-                _context.activitylog.Add(activityLog);
+                _context.ActivityLog.Add(activityLog);
                 _context.SaveChanges();
             }
             catch (Exception)

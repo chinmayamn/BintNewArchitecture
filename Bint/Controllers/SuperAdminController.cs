@@ -48,28 +48,26 @@ namespace Bint.Controllers
         public IActionResult Statistics()
         {
             SavedStatsDashboard sd = new SavedStatsDashboard();
-            sd._OS = _context._captureDeviceData.GroupBy(s => s.OSName).Select(bn => new CaptureDeviceData { OSName = bn.Key, userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.Os = _context._captureDeviceData.GroupBy(s => s.OsName).Select(bn => new CaptureDeviceData { OsName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
 
-            sd._Browser = _context._captureDeviceData.GroupBy(s => s.BrowserName).Select(bn => new CaptureDeviceData { BrowserName = bn.Key,userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.Browser = _context._captureDeviceData.GroupBy(s => s.BrowserName).Select(bn => new CaptureDeviceData { BrowserName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
 
-            sd._WifiMobile = _context._captureDeviceData.GroupBy(s => s.IPv4 == "" ? "Mobile Data" : "Wifi").Select(bn => new CaptureDeviceData { PublicIp = bn.Key, userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.WifiMobile = _context._captureDeviceData.GroupBy(s => s.Ipv4 == "" ? "Mobile Data" : "Wifi").Select(bn => new CaptureDeviceData { PublicIp = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
 
-            sd._DeviceName = _context._captureDeviceData.GroupBy(s => s.DeviceName).Select(bn => new CaptureDeviceData { DeviceName = bn.Key, userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.DeviceName = _context._captureDeviceData.GroupBy(s => s.DeviceName).Select(bn => new CaptureDeviceData { DeviceName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
 
-            sd._BrandName = _context._captureDeviceData.Where(s => s.BrandName != "").GroupBy(s =>  s.BrandName).Select(bn => new CaptureDeviceData { BrandName = bn.Key, userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.BrandName = _context._captureDeviceData.Where(s => s.BrandName != "").GroupBy(s =>  s.BrandName).Select(bn => new CaptureDeviceData { BrandName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
 
-            sd._URole = _context._captureDeviceData.GroupBy(s => s.urole).Select(bn => new CaptureDeviceData { urole = bn.Key, userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.URole = _context._captureDeviceData.GroupBy(s => s.URole).Select(bn => new CaptureDeviceData { URole = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
 
-            sd._PublicIp = _context._captureDeviceData.Where(s => s.PublicIp != "" && s.PublicIp != "::1").GroupBy(s => s.PublicIp).Select(bn => new CaptureDeviceData { PublicIp = bn.Key, userid = bn.Select(u2 => u2.userid).Distinct().Count().ToString() });
+            sd.PublicIp = _context._captureDeviceData.Where(s => s.PublicIp != "" && s.PublicIp != "::1").GroupBy(s => s.PublicIp).Select(bn => new CaptureDeviceData { PublicIp = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
             //bn.Select(u2 => u2.userid.Distinct().Count()).ToString()
             return View(sd);
         }
         public IActionResult Restricted()
         {
             RestrictedAccessDashboard rdb = new RestrictedAccessDashboard();
-            rdb._restrictedaccess = _context._restrictedAccess;
-
-
+            rdb.RestrictedAccess = _context._restrictedAccess;
             return View(rdb);
         }
         public IActionResult Settings()

@@ -289,7 +289,7 @@ namespace Bint.Controllers
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 var mm = new Message(_messageLogger);
                 var activityLog = new ActivityLog();
-                var tusd = _context.depositwithdraw.First(x => x.Id == id); //deposit here
+                var tusd = _context.DepositWithdraw.First(x => x.Id == id); //deposit here
 
                 if (status == "Deposit")
                 {
@@ -314,7 +314,7 @@ namespace Bint.Controllers
                         ToUserId = tusd.UserId,
                         Userid = ud.Id
                     };
-                    _context.transferusd.Add(myt);
+                    _context.TransferUsd.Add(myt);
                     _context.SaveChanges();
 
 
@@ -324,7 +324,7 @@ namespace Bint.Controllers
                     activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString();
                     activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId +
                                            ". Balance : " + ud.Usd;
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger)
@@ -344,7 +344,7 @@ namespace Bint.Controllers
                         ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString(),
                         Activity = "Confirmed deposit " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
                     }; //to user
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger)
@@ -375,7 +375,7 @@ namespace Bint.Controllers
                     activityLog.ActivityDate = dt;
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
                     activityLog.Activity = "Rejected deposit " + tusd.Amount + " Usd of user " + tusd.UserId;
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger)
@@ -395,7 +395,7 @@ namespace Bint.Controllers
                         ActivityType = ActivityLogEnum.Reject.ToString(),
                         Activity = "Rejected deposit " + tusd.Amount + " Usd by Admin"
                     }; //to user
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger)
@@ -432,7 +432,7 @@ namespace Bint.Controllers
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 var mm = new Message(_messageLogger);
                 var activityLog = new ActivityLog();
-                var tusd = _context.depositwithdraw.First(x => x.Id == id); //deposit here
+                var tusd = _context.DepositWithdraw.First(x => x.Id == id); //deposit here
                 var ud = _userManager.Users.First(x => x.UserId == tusd.UserId);
 
                 if (status == "Withdraw")
@@ -461,7 +461,7 @@ namespace Bint.Controllers
                             ToUserId = tusd.UserId,
                             Userid = ud.Id
                         };
-                        _context.transferusd.Add(myt);
+                        _context.TransferUsd.Add(myt);
                         _context.SaveChanges();
 
 
@@ -471,7 +471,7 @@ namespace Bint.Controllers
                         activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
                         activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd of user " + tusd.UserId +
                                                ". Balance : " + ud.Usd;
-                        _context.activitylog.Add(activityLog);
+                        _context.ActivityLog.Add(activityLog);
                         _context.SaveChanges();
 
                         mm = new Message(_messageLogger)
@@ -490,7 +490,7 @@ namespace Bint.Controllers
                         activityLog.ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString();
                         activityLog.Activity =
                             "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd;
-                        _context.activitylog.Add(activityLog);
+                        _context.ActivityLog.Add(activityLog);
                         _context.SaveChanges();
 
                         mm = new Message(_messageLogger)
@@ -525,7 +525,7 @@ namespace Bint.Controllers
                     activityLog.ActivityDate = dt;
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
                     activityLog.Activity = "Rejected withdraw " + tusd.Amount + " Usd of user " + tusd.UserId;
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger)
@@ -545,7 +545,7 @@ namespace Bint.Controllers
                         ActivityType = ActivityLogEnum.Reject.ToString(),
                         Activity = "Rejected withdraw " + tusd.Amount + " Usd by Admin"
                     }; //to user
-                    _context.activitylog.Add(activityLog);
+                    _context.ActivityLog.Add(activityLog);
                     _context.SaveChanges();
 
                     mm = new Message(_messageLogger)
