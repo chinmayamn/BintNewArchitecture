@@ -1,4 +1,4 @@
-﻿@inject UserManager<ApplicationUser> UserManager
+﻿@inject UserManager<ApplicationUser> _userManager
 @model ResetPasswordViewModel
 @{
 
@@ -76,10 +76,10 @@
                                 <span class="badge badge-success">Verified</span>
                                 <div class="text-center">
                                     <img class="profile-user-img img-fluid img-circle"
-                                         src="@UserManager.GetUserAsync(User).Result.Profilepicture"
+                                         src="@_userManager.GetUserAsync(User).Result.ProfilePicture"
                                          alt="User profile picture">
                                 </div>
-                                <h3 class="profile-username text-center">@UserManager.GetUserAsync(User).Result.Firstname @UserManager.GetUserAsync(User).Result.Lastname</h3>
+                                <h3 class="profile-username text-center">@_userManager.GetUserAsync(User).Result.Firstname @_userManager.GetUserAsync(User).Result.Lastname</h3>
                                 <p class="text-muted text-center">ID : I0002</p>
 
 

@@ -155,7 +155,7 @@
                                         <a href="/investor/partners">
                                             <span class="info-box-text">Partners</span>
                                             <span class="info-box-number">
-                                               @Model.userCount.PartnerCount
+                                               @Model.UserCount.PartnerCount
 
                                             </span>
                                         </a>
@@ -187,7 +187,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text">Total Partner USD</span>
                                     <span class="info-box-number">
-                                       @Model.TotalUSD
+                                       @Model.TotalUsd
 
                                     </span>
                                 </div>
@@ -202,7 +202,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text">Total Partner BGC</span>
                                     <span class="info-box-number">
-                                        @Model.TotalBGC
+                                        @Model.TotalBgc
 
                                     </span>
                                 </div>
@@ -228,15 +228,17 @@
                                 <!-- /.card-header -->
                                 <div class="card-body p-0">
                                     <ul class="users-list clearfix">
-                                        @foreach (var item in Model.userCount.PartnerList)
+                                        @foreach (var item in Model.UserCount.PartnerList)
                                         {
                                             var temp = @item.Firstname + ' ' + @item.Lastname;
                                             if (temp.Length > 12)
+                                            {
                                                 temp = temp.Substring(0, 12) + "...";
+                                            }
 
                                             <li>
                                                 <a href="/account/userprofile/@item.Id">
-                                                    <img src="@item.Profilepicture" alt="User Image">
+                                                    <img src="@item.ProfilePicture" alt="User Image">
                                                 </a>
                                                 <a class="users-list-name" href="/account/userprofile/@item.Id">
                                                     @temp
@@ -267,7 +269,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body border-top-0 pt-0">
-                                    @foreach (DataRow row in Model._payback.USDPaybackUser.Rows)
+                                    @foreach (DataRow row in Model.Payback.UsdPaybackUser.Rows)
                                     {
                                         ViewData["bsf"] = Convert.ToString(@row["percentage"]);
                                         bsf = Convert.ToString(ViewData["bsf"]);

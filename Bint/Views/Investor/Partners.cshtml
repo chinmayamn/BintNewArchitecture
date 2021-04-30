@@ -33,7 +33,7 @@
                                 <div class="card card-outline card-info">
                                     <div class="card-header">
 
-                                        @await Html.PartialAsync("_Quickuser", Model.reg)
+                                        @await Html.PartialAsync("_Quickuser", Model.Reg)
 
                                         <a href="/Account/Register" class="btn btn-secondary">Create User</a>
                                         <div class="card-tools">
@@ -64,7 +64,7 @@
                                                     <tr>
                                                         <td>@item.UserId</td>
                                                         <td>@item.Firstname</td>
-                                                        <td>@item.Created_on</td>
+                                                        <td>@item.CreatedOn</td>
                                                         <td>@item.Mobile</td>
 
                                                         <td><span class="badge badge-success">@item.Status</span></td>
