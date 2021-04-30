@@ -1,4 +1,4 @@
-﻿@model Bint.Models.USDDashboard
+﻿@model Bint.Models.UsdDashboard
 @using System.Data
 @{
 
@@ -116,15 +116,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                @await Html.PartialAsync("_USDTransactions", new USDDashboard { _requestUSD = Model._requestUSD,_Stats = Model._Stats})
+                                @await Html.PartialAsync("_USDTransactions", new UsdDashboard { RequestUsd = Model.RequestUsd, Stats = Model.Stats })
                             </div>
                             <div class="col-md-12">
-                                @await Html.PartialAsync("_USDRequests", new USDDashboard { _transferUSD = Model._transferUSD, _Stats = Model._Stats })
+                                @await Html.PartialAsync("_USDRequests", new UsdDashboard { TransferUsd = Model.TransferUsd, Stats = Model.Stats })
                             </div>
 
                         </div>
-                        @await Html.PartialAsync("_DepositUSDHistory", new USDDashboard { _depositUSD = Model._depositUSD, _Stats = Model._Stats })
-                        @await Html.PartialAsync("_WithdrawUSDHistory", new USDDashboard { _withdrawUSD = Model._withdrawUSD, _Stats = Model._Stats })
+                        @await Html.PartialAsync("_DepositUSDHistory", new UsdDashboard { DepositUsd = Model.DepositUsd, Stats = Model.Stats })
+                        @await Html.PartialAsync("_WithdrawUSDHistory", new UsdDashboard { WithdrawUsd = Model.WithdrawUsd, Stats = Model.Stats })
                         @await Html.PartialAsync("_TransferTerms")
                     </div>
                     @await Html.PartialAsync("_PartnerProfile")
