@@ -41,8 +41,8 @@ namespace Bint.Models
         }
         public void SendEmail(Message message)
         {
-                  string mto = message.To;
-                string mFrom = "support@bintekglobal.com";
+                  var mto = message.To;
+                var mFrom = "support@bintekglobal.com";
 
                 try
                 {
@@ -80,7 +80,7 @@ namespace Bint.Models
         {
             try
             {
-                string result = "";
+                var result = "";
                 //string message = HttpUtility.UrlEncode(_message.SMSMessageBody);
 
                 //using (var wb = new WebClient())

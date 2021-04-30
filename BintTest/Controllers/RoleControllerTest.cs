@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Bint.Controllers;
+﻿using Bint.Controllers;
 using Bint.Data;
 using Bint.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Xunit;
-using Moq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
+using Moq;
+using System;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace BintTest.Controllers
 {
@@ -29,16 +27,15 @@ namespace BintTest.Controllers
             var dbContextMock = new Mock<ApplicationDbContext>();
 
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<RoleController>> logMock = new Mock<ILogger<RoleController>>();
+            var logMock = new Mock<ILogger<RoleController>>();
 
-
-            RoleController _roleController = new RoleController(roleManagerMock, userManagerMock.Object, logMock.Object);
+            var roleController = new RoleController(roleManagerMock, userManagerMock.Object, logMock.Object);
 
             //Act
-            var result = _roleController.Index() as ViewResult;
+            var result = roleController.Index() as ViewResult;
 
             //Assert
             Assert.NotNull(result);
@@ -51,35 +48,34 @@ namespace BintTest.Controllers
             var dbContextMock = new Mock<ApplicationDbContext>();
 
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<RoleController>> logMock = new Mock<ILogger<RoleController>>();
+            var logMock = new Mock<ILogger<RoleController>>();
 
-
-            RoleController _roleController = new RoleController(roleManagerMock, userManagerMock.Object, logMock.Object);
+            var roleController = new RoleController(roleManagerMock, userManagerMock.Object, logMock.Object);
            
             //Act
-            var result = _roleController.Index() as ViewResult;
+            var result = roleController.Index() as ViewResult;
 
             //Assert
             Assert.NotNull(result);
         }
-        Mock<UserManager<TIDentityUser>> GetUserManagerMock<TIDentityUser>() where TIDentityUser : IdentityUser
+        private Mock<UserManager<TIdentityUser>> GetUserManagerMock<TIdentityUser>() where TIdentityUser : IdentityUser
         {
-            return new Mock<UserManager<TIDentityUser>>(
-                    new Mock<IUserStore<TIDentityUser>>().Object,
+            return new Mock<UserManager<TIdentityUser>>(
+                    new Mock<IUserStore<TIdentityUser>>().Object,
                     new Mock<IOptions<IdentityOptions>>().Object,
-                    new Mock<IPasswordHasher<TIDentityUser>>().Object,
-                    new IUserValidator<TIDentityUser>[0],
-                    new IPasswordValidator<TIDentityUser>[0],
+                    new Mock<IPasswordHasher<TIdentityUser>>().Object,
+                    new IUserValidator<TIdentityUser>[0],
+                    new IPasswordValidator<TIdentityUser>[0],
                     new Mock<ILookupNormalizer>().Object,
                     new Mock<IdentityErrorDescriber>().Object,
                     new Mock<IServiceProvider>().Object,
-                    new Mock<ILogger<UserManager<TIDentityUser>>>().Object);
+                    new Mock<ILogger<UserManager<TIdentityUser>>>().Object);
         }
 
-        Mock<RoleManager<TIdentityRole>> GetRoleManagerMock<TIdentityRole>() where TIdentityRole : IdentityRole
+        private Mock<RoleManager<TIdentityRole>> GetRoleManagerMock<TIdentityRole>() where TIdentityRole : IdentityRole
         {
             return new Mock<RoleManager<TIdentityRole>>(
                     new Mock<IRoleStore<TIdentityRole>>().Object,

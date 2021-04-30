@@ -22,13 +22,10 @@ namespace Bint
 {
     public class Startup
     {
-        public List<ApplicationUser> globalappuser = new List<ApplicationUser>();
         public Startup(IConfiguration configuration)
         {
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
-
             Configuration = configuration;
-           
         }
 
         public IConfiguration Configuration { get; }
@@ -98,8 +95,8 @@ namespace Bint
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                     "default",
+                     "{controller=Home}/{action=Index}/{id?}");
             });
 
             //added to get ip address
