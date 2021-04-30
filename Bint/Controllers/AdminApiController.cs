@@ -162,12 +162,11 @@ namespace Bint.Controllers
                     var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                     d.CreatedDate = indianTime;
                     d.DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
-                    ;
                     d.Filename = filename;
                     d.Status = "Pending";
                     d.Userid = u.Id;
                     _context.Doc.Add(d);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     TempData["data"] = "File uploaded successfully";
                     return RedirectToAction("myprofile", route);
                 }
@@ -295,7 +294,7 @@ namespace Bint.Controllers
                 {
                     tusd.ModifiedDate = dt;
                     tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var ud = _userManager.Users.First(x => x.UserId == tusd.UserId); //update his account with deposit
                     ud.Usd = ud.Usd + tusd.Amount;
@@ -315,7 +314,7 @@ namespace Bint.Controllers
                         Userid = ud.Id
                     };
                     _context.TransferUsd.Add(myt);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
 
                     //to admin
@@ -325,7 +324,7 @@ namespace Bint.Controllers
                     activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId +
                                            ". Balance : " + ud.Usd;
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     mm = new Message(_messageLogger)
                     {
@@ -345,7 +344,7 @@ namespace Bint.Controllers
                         Activity = "Confirmed deposit " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
                     }; //to user
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     mm = new Message(_messageLogger)
                     {
@@ -365,7 +364,7 @@ namespace Bint.Controllers
                 {
                     tusd.ModifiedDate = dt;
                     tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var ud = await _userManager.GetUserAsync(User); //update his account with deposit
 
@@ -376,7 +375,7 @@ namespace Bint.Controllers
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
                     activityLog.Activity = "Rejected deposit " + tusd.Amount + " Usd of user " + tusd.UserId;
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     mm = new Message(_messageLogger)
                     {
@@ -396,7 +395,7 @@ namespace Bint.Controllers
                         Activity = "Rejected deposit " + tusd.Amount + " Usd by Admin"
                     }; //to user
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     mm = new Message(_messageLogger)
                     {
@@ -442,7 +441,7 @@ namespace Bint.Controllers
                         tusd.ModifiedDate = dt;
                         tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
                         tusd.TransactionId = trnsId;
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         //update his account with deposit
                         ud.Usd = ud.Usd - tusd.Amount;
@@ -462,7 +461,7 @@ namespace Bint.Controllers
                             Userid = ud.Id
                         };
                         _context.TransferUsd.Add(myt);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
 
                         //to admin
@@ -472,7 +471,7 @@ namespace Bint.Controllers
                         activityLog.Activity = "Confirmed withdraw " + tusd.Amount + " Usd of user " + tusd.UserId +
                                                ". Balance : " + ud.Usd;
                         _context.ActivityLog.Add(activityLog);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         mm = new Message(_messageLogger)
                         {
@@ -491,7 +490,7 @@ namespace Bint.Controllers
                         activityLog.Activity =
                             "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd;
                         _context.ActivityLog.Add(activityLog);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         mm = new Message(_messageLogger)
                         {
@@ -515,7 +514,7 @@ namespace Bint.Controllers
                 {
                     tusd.ModifiedDate = dt;
                     tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var sud = await _userManager.GetUserAsync(User); //update his account with deposit
 
@@ -526,7 +525,7 @@ namespace Bint.Controllers
                     activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
                     activityLog.Activity = "Rejected withdraw " + tusd.Amount + " Usd of user " + tusd.UserId;
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     mm = new Message(_messageLogger)
                     {
@@ -546,7 +545,7 @@ namespace Bint.Controllers
                         Activity = "Rejected withdraw " + tusd.Amount + " Usd by Admin"
                     }; //to user
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     mm = new Message(_messageLogger)
                     {

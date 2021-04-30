@@ -35,8 +35,7 @@ namespace Bint.Controllers
             {
                 var idb = new InvestorDashboard();
                 var u = new UserCount();
-                IEnumerable<ApplicationUser> z;
-                z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
+                IEnumerable<ApplicationUser> z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
                 u.PartnerCount = z.Count();
                 u.PartnerList = z.TakeLast(8);
                 idb.TotalBgc = z.Sum(x => x.Bgc);
@@ -126,9 +125,8 @@ namespace Bint.Controllers
             {
                 ViewBag.ReturnUrl = "/investor/partners";
                 var m = new CustomerUserCreate();
-                IEnumerable<ApplicationUser> z;
                 var id = _userManager.GetUserId(User);
-                z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
+                IEnumerable<ApplicationUser> z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
                 m.AppUser = z;
                 return View(m);
             }
@@ -227,7 +225,7 @@ namespace Bint.Controllers
                     Activity = "Deleted user " + u.UserId
                 };
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception)
             {

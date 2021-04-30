@@ -255,7 +255,7 @@ namespace Bint.Controllers
                     Activity = "Deleted user " + u.UserId
                 };
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception)
             {
@@ -321,7 +321,6 @@ namespace Bint.Controllers
             }
             catch (Exception ex)
             {
-                ;
                 _logger.LogError(ex.ToString());
             }
 

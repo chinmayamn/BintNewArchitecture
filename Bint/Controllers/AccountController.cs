@@ -125,12 +125,12 @@ namespace Bint.Controllers
                         //normally will get wifi router ip. for mobile it will throw socket exception
                         try
                         {
-                            if (Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
+                            if ((await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Any())
                             {
                                 if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
                                     // for mobiles normally ipv6 will not be there
                                 {
-                                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+                                    remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList
                                         .First(x => x.AddressFamily ==
                                                     AddressFamily.InterNetwork);
                                     ipv6 = remoteIpAddress.ToString();
@@ -139,7 +139,7 @@ namespace Bint.Controllers
 
                                 if (remoteIpAddress.AddressFamily == AddressFamily.InterNetwork) //
                                 {
-                                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList.Last(x =>
+                                    remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Last(x =>
                                         x.AddressFamily == AddressFamily.InterNetwork);
                                     ipv4 = remoteIpAddress.ToString();
                                 }
@@ -180,7 +180,7 @@ namespace Bint.Controllers
                         cd.Ipv6 = ipv6;
 
                         _context._captureDeviceData.Add(cd);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
 
                         if (roles[0].ToLower() == "admin")
@@ -433,7 +433,7 @@ namespace Bint.Controllers
                         z.ClientId = z1.ToString("D4");
                     }
 
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     //update reg id
                     await _userManager.UpdateAsync(user);
 
@@ -445,7 +445,7 @@ namespace Bint.Controllers
                         Activity = "Created user " + user.UserId
                     };
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     TempData["data"] = "User has been created successfully";
                     return RedirectToLocal(returnUrl);
@@ -478,7 +478,7 @@ namespace Bint.Controllers
             var stu = _context._captureDeviceData.Where(j => j.UserId == id && j.PublicIp == pip).LastOrDefault();
             var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
             stu.LogoutTime = indianTime;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login), "Account");
         }
@@ -706,11 +706,11 @@ namespace Bint.Controllers
             pip = remoteIpAddress.ToString();
 
             //normally will get wifi router ip
-            if (Dns.GetHostEntry(remoteIpAddress).AddressList.Count() > 0)
+            if ((await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Any())
             {
                 if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6) //
                 {
-                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+                    remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList
                         .First(x => x.AddressFamily == AddressFamily.InterNetwork);
                     ipv6 = remoteIpAddress.ToString();
                 }
@@ -718,7 +718,7 @@ namespace Bint.Controllers
 
                 if (remoteIpAddress.AddressFamily == AddressFamily.InterNetwork) //
                 {
-                    remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+                    remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList
                         .Last(x => x.AddressFamily == AddressFamily.InterNetwork);
                     ipv4 = remoteIpAddress.ToString();
                 }
@@ -753,7 +753,7 @@ namespace Bint.Controllers
             cd.Verified = "Not Verified";
             cd.ReturnUrl = rUrl;
             _context._restrictedAccess.Add(cd);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             await _signInManager.SignOutAsync(); //remove session variables
             _logger.LogError("Access denied {rUrl}", rUrl);
             return View();

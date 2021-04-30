@@ -497,7 +497,7 @@ namespace Bint.Controllers
                     tusd.FromTotalAmount = ud.Usd;
                     tusd.ToTotalAmount = sendu.Usd;
                     _context.TransferUsd.Add(tusd);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var activityLog = new ActivityLog
                     {
@@ -508,7 +508,7 @@ namespace Bint.Controllers
                                            ". Balance : " + sendu.Usd
                     };
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     //sending message to himself
                     mm.EmailMessageBody = activityLog.Activity;
@@ -548,7 +548,7 @@ namespace Bint.Controllers
                                    ". Balance : " + ud.Usd
                     };
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     //sending message to himself
                     mm.EmailMessageBody = activityLog.Activity;
@@ -597,7 +597,7 @@ namespace Bint.Controllers
                 tusd.FromStatus = tusd.ToStatus = TransferUsdStatusEnum.Requested.ToString();
                 tusd.Userid = ud.Id;
                 _context.TransferUsd.Add(tusd);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 var activityLog = new ActivityLog
                 {
@@ -607,7 +607,7 @@ namespace Bint.Controllers
                     Activity = "Requested " + amount + " Usd to " + ud.CreatedBy
                 };
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 var mm = new Message(_messageLogger)
                 {
@@ -639,7 +639,7 @@ namespace Bint.Controllers
                     Activity = ud.UserId + " has requested " + amount + " Usd"
                 };
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
 
                 TempData["data"] = "Requested " + amount + " Usd to " + ud.CreatedBy;
@@ -692,7 +692,7 @@ namespace Bint.Controllers
 
                         tusd.FromTotalAmount = uid.Usd;
                         tusd.ToTotalAmount = ud.Usd;
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         activityLog = new ActivityLog
                         {
@@ -703,7 +703,7 @@ namespace Bint.Controllers
                                                ". Balance : " + uid.Usd
                         }; //set activitylog
                         _context.ActivityLog.Add(activityLog);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         mm = new Message(_messageLogger)
                         {
@@ -744,7 +744,7 @@ namespace Bint.Controllers
                                                ". Balance : " + ud.Usd
                         }; //set activitylog
                         _context.ActivityLog.Add(activityLog);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
 
                         mm = new Message(_messageLogger)
                         {
@@ -770,7 +770,7 @@ namespace Bint.Controllers
                 {
                     tusd.FromStatus = tusd.ToStatus = TransferUsdStatusEnum.Rejected.ToString();
                     tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var activityLog = new ActivityLog
                     {
@@ -780,7 +780,7 @@ namespace Bint.Controllers
                         Activity = "Rejected " + tusd.Amount + " Usd to " + tusd.FromUserId
                     }; //set activitylog
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var mm = new Message(_messageLogger)
                     {
@@ -812,7 +812,7 @@ namespace Bint.Controllers
                         Activity = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer"
                     }; //set activitylog
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     TempData["data"] = activityLog.Activity;
                     return Json("success");
@@ -855,7 +855,7 @@ namespace Bint.Controllers
                     }; //to user
 
                     _context.DepositWithdraw.Add(tusd);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var activityLog = new ActivityLog
                     {
@@ -865,7 +865,7 @@ namespace Bint.Controllers
                         Activity = "Requested to withdraw " + withdrawAmount + " Usd to Admin"
                     }; //to user
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     var mm = new Message(_messageLogger)
                     {
@@ -896,7 +896,7 @@ namespace Bint.Controllers
                         Activity = ud.UserId + " has requested " + withdrawAmount + " Usd to withdraw"
                     };
                     _context.ActivityLog.Add(activityLog);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
 
                     TempData["data"] = "Withdraw request for " + withdrawAmount + " Usd has been raised to admin";
@@ -942,7 +942,7 @@ namespace Bint.Controllers
                 }; //to user
 
                 _context.DepositWithdraw.Add(tusd);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 var activityLog = new ActivityLog
                 {
@@ -952,7 +952,7 @@ namespace Bint.Controllers
                     Activity = "Requested to deposit " + txtDepositAmount + " Usd to Admin"
                 }; //to user
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 var mm = new Message(_messageLogger)
                 {
@@ -983,7 +983,7 @@ namespace Bint.Controllers
                     Activity = ud.UserId + " has requested " + txtDepositAmount + " Usd to deposit"
                 };
                 _context.ActivityLog.Add(activityLog);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
 
                 TempData["data"] = "Deposit request for " + txtDepositAmount + " Usd has been raised to admin";
