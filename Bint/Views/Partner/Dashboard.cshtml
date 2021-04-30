@@ -38,13 +38,13 @@
                                 <!-- Invitation stats white -->
                                 <div class="card text-center">
                                     <div class="card-body">
-                                        <h6 class="font-weight-semibold mb-0 mt-1">USD Request Payback</h6>
+                                        <h6 class="font-weight-semibold mb-0 mt-1">Usd Request Payback</h6>
                                         <div class="text-muted mb-3"></div>
                                         <div class="svg-center position-relative mb-1" id="progress_percentage_one">
                                         </div>
                                     </div>
                                     <div class="card-body border-top-0 pt-0">
-                                        @foreach (DataRow row in Model._payback.USDPaybackUser.Rows)
+                                        @foreach (DataRow row in Model.Payback.UsdPaybackUser.Rows)
                                         {
                                             ViewData["bsf"] = Convert.ToString(@row["percentage"]);
                                             bsf = Convert.ToString(ViewData["bsf"]);

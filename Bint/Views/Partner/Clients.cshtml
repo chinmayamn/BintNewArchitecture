@@ -33,7 +33,7 @@
                                 <div class="card card-outline card-info">
                                     <div class="card-header">
 
-                                        @await Html.PartialAsync("_Quickuser",Model.reg)
+                                        @await Html.PartialAsync("_Quickuser",Model.Reg)
 
                                         <a href="/Account/Register" class="btn btn-secondary">Create User</a>
                                         <div class="card-tools">
@@ -54,14 +54,14 @@
                                                     <th>Lastname</th>
                                                     <th>Mobile</th>
                                                     <th>Status</th>
-                                                    <th>USD</th>
+                                                    <th>Usd</th>
                                                     <th class="text-center"> Details</th>
 
 
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model.appUser)
+                                                @foreach (var item in Model.AppUser)
                                                 {
                                                     <tr>
                                                         <td>@item.UserId</td>
@@ -70,7 +70,7 @@
                                                         <td>@item.Lastname</td>
                                                         <td>@item.Mobile</td>
                                                         <td>@item.Status</td>
-                                                        <td>@item.USD</td>
+                                                        <td>@item.Usd</td>
 
                                                         <td class="text-center">
                                                           
