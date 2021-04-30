@@ -54,7 +54,7 @@ namespace Bint.Controllers
         }
 
         // GET: api/Admin/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id:int}", Name = "Get")]
         public string Get(int id)
         {
             return "value";
@@ -70,13 +70,13 @@ namespace Bint.Controllers
         }
 
         // PUT: api/Admin/5
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public void Delete(int id)
         {
         }

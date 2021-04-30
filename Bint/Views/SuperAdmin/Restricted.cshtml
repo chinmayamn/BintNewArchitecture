@@ -210,12 +210,12 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach (var item in Model._restrictedaccess)
+                                        @foreach (var item in Model.RestrictedAccess)
                                         {
                                             <tr>
-                                                <td>@item.userid</td>
+                                                <td>@item.UserId</td>
                                                 <td>
-                                                    @item.urole
+                                                    @item.Urole
                                                 </td>
                                                 <td>@item.PublicIp</td>
                                                 <td>@item.ErrorTime</td>

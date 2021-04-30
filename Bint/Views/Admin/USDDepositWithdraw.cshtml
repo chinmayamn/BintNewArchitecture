@@ -59,7 +59,7 @@
                                     <div class="card-header">
                                         <h1 class="card-title">Deposit USD Requests</h1>
                                         <div class="card-tools">
-                                            @foreach (DataRow row in Model._Stats.Rows)
+                                            @foreach (DataRow row in Model.Stats.Rows)
                                             {<span class="badge badge-secondary">
 
                                                     @row["depositrequest"] USD deposit requests pending
@@ -87,7 +87,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (DataRow row in Model._depositUSD.Rows)
+                                                @foreach (DataRow row in Model.DepositUsd.Rows)
                                                 {
 
                                                     var a = ""; var b = "";
@@ -138,7 +138,7 @@
                                     <div class="card-header">
                                         <h1 class="card-title">Withdraw USD Requests</h1>
                                         <div class="card-tools">
-                                            @foreach (DataRow row in Model._Stats.Rows)
+                                            @foreach (DataRow row in Model.Stats.Rows)
                                             {<span class="badge badge-secondary">
 
                                                     @row["withdrawrequest"] USD withdraw requests pending
@@ -166,7 +166,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (DataRow row in Model._withdrawUSD.Rows)
+                                                @foreach (DataRow row in Model.WithdrawUsd.Rows)
                                                 {
 
                                                     var a = ""; var b = "";

@@ -321,7 +321,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("/Account/Error{statusCode}")]
+        [Route("/Account/Error{statusCode:int}")]
         public IActionResult Error(int statusCode)
         {
             var statusCodeData = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -866,7 +866,7 @@ namespace Bint.Controllers
         {
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
-            return RedirectToAction(nameof(ClientController.Index), "Client");
+            return RedirectToAction(nameof(ClientController.Plans), "Client");
         }
 
         #endregion

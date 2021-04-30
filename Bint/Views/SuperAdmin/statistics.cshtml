@@ -516,10 +516,10 @@
          var browserLabelArray = [];
         var browserCount = [];
 
-        @foreach (var d in Model._Browser)
+        @foreach (var d in Model.Browser)
         {
             @:browserLabelArray.push("@d.BrowserName");
-        @:browserCount.push("@d.userid")
+        @:browserCount.push("@d.UserId");
         }
         var donutData = {
             labels: browserLabelArray,
@@ -549,10 +549,10 @@
          var usersLabelArray = [];
         var usersCount = [];
 
-        @foreach (var d in Model._URole)
+        @foreach (var d in Model.URole)
         {
-            @:usersLabelArray.push("@d.urole");
-        @:usersCount.push("@d.userid")
+            @:usersLabelArray.push("@d.URole");
+        @:usersCount.push("@d.UserId")
         }
         var donutUsersData = {
             labels: usersLabelArray,
@@ -575,10 +575,10 @@
         var netLabelArray = [];
         var netCount = [];
 
-        @foreach (var d in Model._WifiMobile)
+        @foreach (var d in Model.WifiMobile)
         {
             @:netLabelArray.push("@d.PublicIp");
-        @:netCount.push("@d.userid")
+        @:netCount.push("@d.UserId")
         }
 
         var donutIDataData = {
@@ -601,10 +601,10 @@
         var osLabelArray = [];
         var osCount = [];
 
-        @foreach (var d in Model._OS)
+        @foreach (var d in Model.Os)
         {
-            @:osLabelArray.push("@d.OSName");
-        @:osCount.push("@d.userid")
+            @:osLabelArray.push("@d.OsName");
+        @:osCount.push("@d.UserId")
         }
 
         var donutOSData = {
@@ -627,10 +627,10 @@
         var deviceLabelArray = [];
         var deviceCount = [];
 
-        @foreach (var d in Model._DeviceName)
+        @foreach (var d in Model.DeviceName)
         {
             @:deviceLabelArray.push("@d.DeviceName");
-        @:deviceCount.push("@d.userid")
+        @:deviceCount.push("@d.UserId");
         }
         var donutDeviceData = {
             labels: deviceLabelArray ,
@@ -652,10 +652,10 @@
         var brandLabelArray = [];
         var brandCount = [];
 
-        @foreach (var d in Model._BrandName)
+        @foreach (var d in Model.BrandName)
         {
             @:brandLabelArray.push("@d.BrandName");
-        @:brandCount.push("@d.userid")
+        @:brandCount.push("@d.UserId");
         }
         var donutBrandData = {
             labels: brandLabelArray ,
@@ -700,7 +700,7 @@
 
 
         var countryLabelArray = [];
-        @foreach (var d in Model._PublicIp)
+        @foreach (var d in Model.PublicIp)
         {
             @:countryLabelArray.push("@d.PublicIp");
 
