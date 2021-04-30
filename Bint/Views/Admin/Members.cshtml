@@ -11,7 +11,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
 
-                        @await Html.PartialAsync("_Quickuser", Model.reg)
+                        @await Html.PartialAsync("_Quickuser", Model.Reg)
 
                         <a href="/Account/Register" class="btn btn-secondary">Create User</a>
 
@@ -49,7 +49,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.appUser)
+                                    @foreach (var item in Model.AppUser)
                                     {
                                     <tr>
                                         <td>@item.UserId <img class="img-circle elevation-2 userimagesmall float-right" alt="User Image" id="img3" src="@item.ProfilePicture"></td>

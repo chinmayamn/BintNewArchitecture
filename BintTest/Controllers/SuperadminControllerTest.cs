@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Bint.Controllers;
+﻿using Bint.Controllers;
 using Bint.Data;
 using Microsoft.AspNetCore.Mvc;
-using Xunit;
-using Moq;
 using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
 
 namespace BintTest.Controllers
 {
-    public class SuperadminControllerTest
+    public class SuperAdminControllerTest
     {
-        static Mock<ILogger<SuperAdminController>> mock = new Mock<ILogger<SuperAdminController>>();
-        static Mock<IApplicationDBContext> mockAppDBContext = new Mock<IApplicationDBContext>();
-        SuperAdminController _superAdminController = new SuperAdminController(mockAppDBContext.Object,mock.Object);
-        public SuperadminControllerTest()
-        {
-            
-
-           
-        }
-
+        private static readonly Mock<ILogger<SuperAdminController>> Mock = new Mock<ILogger<SuperAdminController>>();
+        private static readonly Mock<IApplicationDBContext> MockAppDbContext = new Mock<IApplicationDBContext>();
+        private readonly SuperAdminController _superAdminController = new SuperAdminController(MockAppDbContext.Object, Mock.Object);
         
         [Fact]
         public void Test_Dashboard()

@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body border-top-0 pt-0">
-                                        @foreach (DataRow row in Model._payback.USDPaybackUser.Rows)
+                                        @foreach (DataRow row in Model.Payback.UsdPaybackUser.Rows)
                                         {
                                             ViewData["bsf"] = Convert.ToString(@row["percentage"]);
                                             bsf = Convert.ToString(ViewData["bsf"]);
