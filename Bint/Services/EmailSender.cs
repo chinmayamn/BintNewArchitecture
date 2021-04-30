@@ -18,10 +18,12 @@ namespace Bint.Services
         }
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            Message m = new Message(_logger);
-            m.EmailMessageBody = message;
-            m.To = email;
-            m.Subject = subject;
+            Message m = new Message(_logger)
+            {
+                EmailMessageBody = message,
+                To = email,
+                Subject = subject
+            };
             m.SendEmail(m);
             return Task.CompletedTask;
         }
