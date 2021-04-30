@@ -80,14 +80,14 @@ namespace Bint.Controllers
                 adb.TotalUsd = _userManager.Users.Sum(x => x.Usd);
 
                 adb.AdminRequestDashboard = _dbf.GetAdminRequestDashboard();
-                var usdInvestment = _dbf.GetUSDInvestment();
+                var usdInvestment = _dbf.GetUsdInvestment();
                 var dd = new Dictionary<string, string>();
                 dd.Add("adminusd", usdInvestment.Rows[0][0].ToString());
                 dd.Add("investorusd", usdInvestment.Rows[0][1].ToString());
                 dd.Add("partnerusd", usdInvestment.Rows[0][2].ToString());
                 dd.Add("clientusd", usdInvestment.Rows[0][3].ToString());
                 adb.UsdInvestment = dd;
-                adb.UsdInvestmentMonthWise = _dbf.GetUSDInvestmentMonthwise();
+                adb.UsdInvestmentMonthWise = _dbf.GetUsdInvestmentMonthwise();
                 return View(adb);
             }
             catch (Exception ex)
@@ -119,8 +119,8 @@ namespace Bint.Controllers
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUSDRequestsadmin("Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUSDRequestsadmin("Deposit");
+                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Withdraw");
+                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Deposit");
                 bd.Stats = _dbf.GetAlertStats(r.UserId);
                 return View(bd);
             }
@@ -300,10 +300,12 @@ namespace Bint.Controllers
         {
             try
             {
-                var sd = new SiteSettingDashboard();
-                sd.SmsBalance = checkBalance();
-                sd.RegId= _context.RegId.First();
-                sd.ApplicationUser = _userManager.GetUserAsync(User).Result;
+                var sd = new SiteSettingDashboard
+                {
+                    SmsBalance = CheckBalance(),
+                    RegId = _context.RegId.First(),
+                    ApplicationUser = _userManager.GetUserAsync(User).Result
+                };
 
                 return View(sd);
             }
@@ -383,7 +385,7 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
+                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
                 bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);
                 bd.QrCode = r.AdminQrCode;
                 bd.Tether = r.AdminTetherAddress;

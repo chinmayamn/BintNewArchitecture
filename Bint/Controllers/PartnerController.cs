@@ -90,7 +90,7 @@ namespace Bint.Controllers
             {
                 var ud = new UserProfileDoc();
                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = _dbf.GetKYCDocs(id);
+                ud.UserDocs = _dbf.GetKycDocs(id);
                 return View(ud);
             }
             catch (Exception e)
@@ -139,13 +139,13 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
+                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
                 bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);
                 bd.Stats = _dbf.GetAlertStats(r.UserId);
                 var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Deposit");
+                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
 
                 if (uRole == "Client")
                 {

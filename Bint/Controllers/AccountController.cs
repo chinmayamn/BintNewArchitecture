@@ -843,7 +843,7 @@ namespace Bint.Controllers
                     ActivityLogTable = _dbf.GetUserActivityLog(u.UserId)
                 };
                 aupd.ActivityLogDashboard = adb;
-                aupd.UserDocs = _dbf.GetKYCDocs(id);
+                aupd.UserDocs = _dbf.GetKycDocs(id);
                 aupd.UserList = _userManager.Users.Where(x => x.CreatedBy == u.UserId);
                 return View(aupd);
             }
