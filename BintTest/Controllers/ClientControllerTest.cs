@@ -48,7 +48,7 @@ namespace BintTest.Controllers
             Assert.NotNull(result);
         }
         [Fact]
-        public void Test_Myprofile()
+        public void Test_MyProfile()
         {
             //Act
             var result = _clientController.MyProfile() as IActionResult;

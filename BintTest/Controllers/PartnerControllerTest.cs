@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Bint.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Xunit;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Bint.Models;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Moq;
+using Xunit;
 
 namespace BintTest.Controllers
 {
@@ -63,28 +56,28 @@ namespace BintTest.Controllers
         //    //Assert
         //    Assert.NotNull(result);
         //}
-        Mock<UserManager<TIDentityUser>> GetUserManagerMock<TIDentityUser>() where TIDentityUser : IdentityUser
+        private Mock<UserManager<TIDentityUser>> GetUserManagerMock<TIDentityUser>() where TIDentityUser : IdentityUser
         {
             return new Mock<UserManager<TIDentityUser>>(
-                    new Mock<IUserStore<TIDentityUser>>().Object,
-                    new Mock<IOptions<IdentityOptions>>().Object,
-                    new Mock<IPasswordHasher<TIDentityUser>>().Object,
-                    new IUserValidator<TIDentityUser>[0],
-                    new IPasswordValidator<TIDentityUser>[0],
-                    new Mock<ILookupNormalizer>().Object,
-                    new Mock<IdentityErrorDescriber>().Object,
-                    new Mock<IServiceProvider>().Object,
-                    new Mock<ILogger<UserManager<TIDentityUser>>>().Object);
+                new Mock<IUserStore<TIDentityUser>>().Object,
+                new Mock<IOptions<IdentityOptions>>().Object,
+                new Mock<IPasswordHasher<TIDentityUser>>().Object,
+                new IUserValidator<TIDentityUser>[0],
+                new IPasswordValidator<TIDentityUser>[0],
+                new Mock<ILookupNormalizer>().Object,
+                new Mock<IdentityErrorDescriber>().Object,
+                new Mock<IServiceProvider>().Object,
+                new Mock<ILogger<UserManager<TIDentityUser>>>().Object);
         }
 
-        Mock<RoleManager<TIdentityRole>> GetRoleManagerMock<TIdentityRole>() where TIdentityRole : IdentityRole
+        private Mock<RoleManager<TIdentityRole>> GetRoleManagerMock<TIdentityRole>() where TIdentityRole : IdentityRole
         {
             return new Mock<RoleManager<TIdentityRole>>(
-                    new Mock<IRoleStore<TIdentityRole>>().Object,
-                    new IRoleValidator<TIdentityRole>[0],
-                    new Mock<ILookupNormalizer>().Object,
-                    new Mock<IdentityErrorDescriber>().Object,
-                    new Mock<ILogger<RoleManager<TIdentityRole>>>().Object);
+                new Mock<IRoleStore<TIdentityRole>>().Object,
+                new IRoleValidator<TIdentityRole>[0],
+                new Mock<ILookupNormalizer>().Object,
+                new Mock<IdentityErrorDescriber>().Object,
+                new Mock<ILogger<RoleManager<TIdentityRole>>>().Object);
         }
     }
 }
