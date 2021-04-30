@@ -18,7 +18,7 @@ namespace Bint.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ClientController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DBFunc _dbf;
+        private readonly DbFunc _dbf;
 
         public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
             UserManager<ApplicationUser> userManager)
@@ -26,7 +26,7 @@ namespace Bint.Controllers
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _dbf = new DBFunc(_logger);
+            _dbf = new DbFunc(_logger);
         }
 
         public IActionResult Index()
@@ -50,7 +50,7 @@ namespace Bint.Controllers
                 var cdb = new ClientDashboard();
                 var pdb = new Payback
                 {
-                    UsdPaybackUser = _dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPaybackUser = _dbf.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 cdb.Payback = pdb;
                 return View(cdb);
@@ -83,7 +83,7 @@ namespace Bint.Controllers
             {
                 var ud = new UserProfileDoc();
                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = _dbf.GetKYCDocs(id);
+                ud.UserDocs = _dbf.GetKycDocs(id);
                 return View(ud);
             }
             catch (Exception e)
@@ -100,11 +100,11 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
+                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
                 var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Deposit");
+                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
                 bd.Stats = _dbf.GetAlertStats(r.UserId);
                 if (uRole == "Client")
                 {
