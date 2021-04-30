@@ -14,8 +14,8 @@ namespace Bint.Controllers
     [Route("api/Investor")]
     public class InvestorApiController : Controller
     {
-        private readonly ILogger<InvestorApiController> _logger;
         private readonly IInvestorRepository _investorRepository;
+        private readonly ILogger<InvestorApiController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public InvestorApiController(IInvestorRepository investorRepository, UserManager<ApplicationUser> userManager,

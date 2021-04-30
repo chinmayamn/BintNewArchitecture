@@ -1,70 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Bint.Data;
 using Bint.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Authorization;
-using System.Net;
-using System.Collections.Specialized;
-using Exception = System.Exception;
 using Microsoft.Extensions.Logging;
-using Bint.Data;
-using System.Threading.Tasks;
-using System.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Bint.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private IHttpContextAccessor _request;
-        HttpClient _client= new HttpClient();
-        private RoleManager<IdentityRole> _roleManager;
-        private UserManager<ApplicationUser> _userManager;
-        private IHostingEnvironment Environment;
-        private readonly ILogger<AdminController> _logger;
+        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
-        private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        DBFunc dbf;
-        public AdminController(IHttpContextAccessor httpcontext, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> usermanager, IHostingEnvironment _environment, ILogger<AdminController> logger, ApplicationDbContext context)
+        private readonly ILogger<AdminController> _logger;
+        private readonly HttpClient _client = new HttpClient();
+        private readonly IHttpContextAccessor _request;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly DBFunc _dbf;
+        private readonly IHostingEnvironment _environment;
+
+        public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
+            ApplicationDbContext context)
         {
-            _request = httpcontext;
-         
-            string Baseurl = $"{_request.HttpContext.Request.Scheme}://{_request.HttpContext.Request.Host}";
-            _client.BaseAddress = new Uri(Baseurl);
-            _roleManager = roleManager; _userManager = usermanager;
-            Environment = _environment;
+            _request = httpContext;
+
+            var baseUrl = $"{_request.HttpContext.Request.Scheme}://{_request.HttpContext.Request.Host}";
+            _client.BaseAddress = new Uri(baseUrl);
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _environment = environment;
             _logger = logger;
             _context = context;
-            dbf = new DBFunc(_logger);
+            _dbf = new DBFunc(_logger);
         }
 
-   
+
         public IActionResult Index()
         {
-           
             return View();
         }
-        
+
         public IActionResult Dashboard()
         {
             try
             {
-                AdminDashboard adb  = new AdminDashboard();
-                UserCount u = new UserCount();
-
-                u.AdminList = _userManager.GetUsersInRoleAsync("Admin").Result.TakeLast(8);
-                u.InvestorList= _userManager.GetUsersInRoleAsync("Investor").Result.TakeLast(8);
-                u.ClientList = _userManager.GetUsersInRoleAsync("Client").Result.TakeLast(8);
-                u.PartnerList = _userManager.GetUsersInRoleAsync("Partner").Result.TakeLast(8);
-                u.LockedUsersList = _userManager.Users.AsEnumerable().Where(uu => uu.LockoutEnd != null);
-                u.PendingKYCCount = _userManager.Users.AsEnumerable().Where(uu => uu.Kyc == "Pending").Count();
+                var adb = new AdminDashboard();
+                var u = new UserCount
+                {
+                    AdminList = _userManager.GetUsersInRoleAsync("Admin").Result.TakeLast(8),
+                    InvestorList = _userManager.GetUsersInRoleAsync("Investor").Result.TakeLast(8),
+                    ClientList = _userManager.GetUsersInRoleAsync("Client").Result.TakeLast(8),
+                    PartnerList = _userManager.GetUsersInRoleAsync("Partner").Result.TakeLast(8),
+                    LockedUsersList = _userManager.Users.AsEnumerable().Where(uu => uu.LockoutEnd != null),
+                    PendingKycCount = _userManager.Users.AsEnumerable().Where(uu => uu.Kyc == "Pending").Count()
+                };
 
                 u.AdminCount = u.AdminList.Count();
                 u.InvestorCount = u.InvestorList.Count();
@@ -73,28 +76,28 @@ namespace Bint.Controllers
                 u.LockedUsersCount = u.LockedUsersList.Count();
 
                 adb.UserCount = u; // load viewmodel with full data
-                adb.TotalBGC = _userManager.Users.Sum(x => x.Bgc);
-                adb.TotalUSD = _userManager.Users.Sum(x => x.Usd);
+                adb.TotalBgc = _userManager.Users.Sum(x => x.Bgc);
+                adb.TotalUsd = _userManager.Users.Sum(x => x.Usd);
 
-                adb.AdminRequestDashboard = dbf.GetAdminRequestDashboard();
-                DataTable USDInvestment = dbf.GetUSDInvestment();
-                Dictionary<string, string> dd = new Dictionary<string, string>();
-                dd.Add("adminusd", USDInvestment.Rows[0][0].ToString());
-                dd.Add("investorusd", USDInvestment.Rows[0][1].ToString());
-                dd.Add("partnerusd", USDInvestment.Rows[0][2].ToString());
-                dd.Add("clientusd", USDInvestment.Rows[0][3].ToString());
-                adb._USDInvestment = dd;
-                adb._USDInvestmentMonthwise = dbf.GetUSDInvestmentMonthwise();
+                adb.AdminRequestDashboard = _dbf.GetAdminRequestDashboard();
+                var usdInvestment = _dbf.GetUSDInvestment();
+                var dd = new Dictionary<string, string>();
+                dd.Add("adminusd", usdInvestment.Rows[0][0].ToString());
+                dd.Add("investorusd", usdInvestment.Rows[0][1].ToString());
+                dd.Add("partnerusd", usdInvestment.Rows[0][2].ToString());
+                dd.Add("clientusd", usdInvestment.Rows[0][3].ToString());
+                adb.UsdInvestment = dd;
+                adb.UsdInvestmentMonthWise = _dbf.GetUSDInvestmentMonthwise();
                 return View(adb);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-
             }
 
             return View();
         }
+
         public IActionResult MyProfile()
         {
             try
@@ -105,29 +108,30 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
-            return View();
 
+            return View();
         }
 
         public IActionResult USDDepositWithdraw()
         {
             try
             {
-                USDDashboard bd = new USDDashboard();
+                var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd._withdrawUSD = dbf.GetDepositWithdrawUSDRequestsadmin("Withdraw");
-                bd._depositUSD = dbf.GetDepositWithdrawUSDRequestsadmin("Deposit");
-                bd._Stats = dbf.GetAlertStats(r.UserId);
+                bd.WithdrawUsd = _dbf.GetDepositWithdrawUSDRequestsadmin("Withdraw");
+                bd.DepositUsd = _dbf.GetDepositWithdrawUSDRequestsadmin("Deposit");
+                bd.Stats = _dbf.GetAlertStats(r.UserId);
                 return View(bd);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
-            return View();
 
+            return View();
         }
+
         public IActionResult BGCDepositWithdraw()
         {
             try
@@ -138,24 +142,26 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
-            return View();
 
+            return View();
         }
+
         public IActionResult USDPayback()
         {
             try
             {
-                Payback idb = new Payback();
-                idb.USDPayback = dbf.GetUSDPayback(_userManager.GetUserAsync(User).Result.UserId);
+                var idb = new Payback();
+                idb.UsdPayback = _dbf.GetUSDPayback(_userManager.GetUserAsync(User).Result.UserId);
                 return View(idb);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
-            return View();
 
+            return View();
         }
+
         [HttpGet]
         [Route("admin/admin")]
         [Route("admin/investor")]
@@ -166,47 +172,60 @@ namespace Bint.Controllers
         {
             try
             {
+                var route = Request.Path.Value.Split("/")[2];
+                IEnumerable<ApplicationUser> z;
+                ViewBag.U = route;
+                var m = new CustomerUserCreate();
+                var k = _roleManager.Roles.ToList();
+                m.URole = k;
 
-          
-            var route = Request.Path.Value.Split("/")[2];
-            IEnumerable<ApplicationUser> z;
-            ViewBag.U = route;
-            CustomerUserCreate m = new CustomerUserCreate();
-            List<IdentityRole> k = _roleManager.Roles.ToList(); m.urole = k;
+                if (route.ToLower() == "admin")
+                {
+                    ViewBag.ReturnUrl = "/admin/admin";
+                    z = _userManager.GetUsersInRoleAsync("Admin").Result;
+                    m.AppUser = z;
+                    return View(m);
+                }
 
-            if (route.ToLower() =="admin")
-            {
-                ViewBag.ReturnUrl = "/admin/admin";  z = _userManager.GetUsersInRoleAsync("Admin").Result; m.appUser = z; return View(m);
+                if (route.ToLower() == "investor")
+                {
+                    ViewBag.ReturnUrl = "/admin/investor";
+                    z = _userManager.GetUsersInRoleAsync("Investor").Result;
+                    m.AppUser = z;
+                    return View(m);
+                }
 
-            }
-            else if (route.ToLower() == "investor")
-            {
-                ViewBag.ReturnUrl = "/admin/investor"; z = _userManager.GetUsersInRoleAsync("Investor").Result; m.appUser = z; return View(m);
+                if (route.ToLower() == "client")
+                {
+                    ViewBag.ReturnUrl = "/admin/client";
+                    z = _userManager.GetUsersInRoleAsync("Client").Result;
+                    m.AppUser = z;
+                    return View(m);
+                }
 
-            }
-            else if (route.ToLower() == "client")
-            {
-                ViewBag.ReturnUrl = "/admin/client"; z = _userManager.GetUsersInRoleAsync("Client").Result;  m.appUser = z; return View(m);
+                if (route.ToLower() == "partner")
+                {
+                    ViewBag.ReturnUrl = "/admin/partner";
+                    z = _userManager.GetUsersInRoleAsync("Partner").Result;
+                    m.AppUser = z;
+                    return View(m);
+                }
 
-            }
-            else if (route.ToLower() == "partner")
-            {
-                ViewBag.ReturnUrl = "/admin/partner"; z = _userManager.GetUsersInRoleAsync("Partner").Result; m.appUser = z; return View(m);
-            }
-            else if (route.ToLower() == "locked")
-            {
-                ViewBag.ReturnUrl = "/admin/locked"; z = _userManager.Users.AsEnumerable().Where(u => u.LockoutEnd != null); m.appUser = z; return View(m);
-            }
-            else
-            {
+                if (route.ToLower() == "locked")
+                {
+                    ViewBag.ReturnUrl = "/admin/locked";
+                    z = _userManager.Users.AsEnumerable().Where(u => u.LockoutEnd != null);
+                    m.AppUser = z;
+                    return View(m);
+                }
 
-            }
-            return View();
+                return View();
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
 
@@ -232,24 +251,27 @@ namespace Bint.Controllers
                 if (result.Succeeded)
                     TempData["data"] = "User deleted successfully";
 
-                ApplicationUser y = _userManager.GetUserAsync(User).Result;
-                ActivityLog activityLog = new ActivityLog();
-                activityLog.Userid = y.UserId;
-                activityLog.ActivityType = ActivityLogEnum.DeletePerson.ToString();
-                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-                activityLog.Activity = "Deleted user " +u.UserId;
+                var y = _userManager.GetUserAsync(User).Result;
+                var activityLog = new ActivityLog
+                {
+                    Userid = y.UserId,
+                    ActivityType = ActivityLogEnum.DeletePerson.ToString(),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    Activity = "Deleted user " + u.UserId
+                };
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["error"] = "Error occurred";
                 _logger.LogError("Error occurred {id}", id);
             }
+
             return RedirectToAction(route, "Admin");
         }
 
-      
+
         public ActionResult ProjectUseCases()
         {
             return View();
@@ -260,29 +282,28 @@ namespace Bint.Controllers
         {
             try
             {
-                ApplicationUser u = _userManager.FindByIdAsync(userid).Result;
+                var u = _userManager.FindByIdAsync(userid).Result;
                 u.Kyc = Kyc;
-                var t =  _userManager.UpdateAsync(u).Result;
+                var t = _userManager.UpdateAsync(u).Result;
                 if (t.Succeeded)
                     return Json(Kyc);
-                else
-                    return Json("error");
-
+                return Json("error");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
                 return Json("error");
             }
         }
+
         public ActionResult SiteSettings()
         {
             try
             {
-                SiteSettingDashboard sd = new SiteSettingDashboard();
-                sd.SMSBalance = checkBalance();
-                sd._regId = _context.regId.First();
-                sd.u = _userManager.GetUserAsync(User).Result;
+                var sd = new SiteSettingDashboard();
+                sd.SmsBalance = checkBalance();
+                sd.RegId= _context.regId.First();
+                sd.ApplicationUser = _userManager.GetUserAsync(User).Result;
 
                 return View(sd);
             }
@@ -303,7 +324,8 @@ namespace Bint.Controllers
             }
             catch (Exception ex)
             {
-                ; _logger.LogError(ex.ToString());
+                ;
+                _logger.LogError(ex.ToString());
             }
 
             return View();
@@ -315,19 +337,18 @@ namespace Bint.Controllers
             {
                 using (var wb = new WebClient())
                 {
-                    byte[] response = wb.UploadValues("https://api.textlocal.in/balance/", new NameValueCollection()
+                    var response = wb.UploadValues("https://api.textlocal.in/balance/", new NameValueCollection
                     {
                         {"apikey", "HSmxGKHOCC4-wJfRLr2vnPYhHv97HS7tsZbYpaOLq2"}
                     });
 
-                    string result = System.Text.Encoding.UTF8.GetString(response);
-                    object res = JsonConvert.DeserializeObject(result);
-                    string balance = ((Newtonsoft.Json.Linq.JContainer) ((Newtonsoft.Json.Linq.JContainer)
-                                ((Newtonsoft.Json.Linq.JContainer) ((Newtonsoft.Json.Linq.JContainer) res).First).First)
+                    var result = Encoding.UTF8.GetString(response);
+                    var res = JsonConvert.DeserializeObject(result);
+                    var balance = ((JContainer) ((JContainer)
+                                ((JContainer) ((JContainer) res).First).First)
                             .First)
                         .First.ToString();
                     return balance;
-
                 }
             }
             catch (Exception e)
@@ -336,15 +357,15 @@ namespace Bint.Controllers
             }
 
             return "";
-
         }
+
         public IActionResult ActivityLog()
         {
             try
             {
                 var r = _userManager.GetUserAsync(User).Result;
-                ActivityLogDashboard act = new ActivityLogDashboard();
-                act.activityLogTable = dbf.GetUserActivityLog(r.UserId);
+                var act = new ActivityLogDashboard();
+                act.ActivityLogTable = _dbf.GetUserActivityLog(r.UserId);
 
                 return View(act);
             }
@@ -352,6 +373,7 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
 
@@ -359,22 +381,23 @@ namespace Bint.Controllers
         {
             try
             {
-                USDDashboard bd = new USDDashboard();
+                var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd._requestUSD = dbf.GetRequestUSDReport(r.UserId);
-                bd._transferUSD = dbf.GetTransferUSDReport(r.UserId);
-                bd._qrcode = r.AdminQRCode;
-                bd._tether = r.AdminTetherAddress;
-                bd._Stats = dbf.GetAlertStats(r.UserId);
+                bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
+                bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);
+                bd.QrCode = r.AdminQrCode;
+                bd.Tether = r.AdminTetherAddress;
+                bd.Stats = _dbf.GetAlertStats(r.UserId);
                 return View(bd);
-
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Bgc()
         {
             try
@@ -385,11 +408,8 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
-
-       
-   
-
     }
 }

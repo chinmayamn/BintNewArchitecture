@@ -16,9 +16,9 @@ namespace Bint.Controllers
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
+        private readonly DBFunc _dbf;
         private readonly ILogger<InvestorController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DBFunc _dbf;
 
         public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
             ApplicationDbContext context)
@@ -116,7 +116,7 @@ namespace Bint.Controllers
             return View();
         }
 
-        public IActionResult USDPayback()
+        public IActionResult UsdPayback()
         {
             try
             {

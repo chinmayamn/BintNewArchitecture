@@ -1,35 +1,34 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Bint.Data;
+using Bint.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Bint.Models;
-using System.Collections.Generic;
-using Bint.Data;
-using Microsoft.AspNetCore.Identity;
-using System.Data;
-using System.Threading.Tasks;
-using System.IO;
-using Microsoft.AspNetCore.Http;
 
 namespace Bint.Controllers
 {
     [Authorize(Roles = "Client")]
     public class ClientController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private UserManager<ApplicationUser> _userManager;
         private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<ClientController> _logger;
-        DBFunc dbf;
-      
-        public ClientController(ILogger<ClientController> logger, ApplicationDbContext context, UserManager<ApplicationUser> usermanager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly DBFunc _dbf;
+
+        public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
-            _userManager = usermanager;
+            _userManager = userManager;
             _context = context;
-             dbf = new DBFunc(_logger);
-
+            _dbf = new DBFunc(_logger);
         }
+
         public IActionResult Index()
         {
             try
@@ -38,26 +37,32 @@ namespace Bint.Controllers
             }
             catch (Exception e)
             {
-              _logger.LogError(e.ToString());
+                _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Dashboard()
         {
             try
             {
-                ClientDashboard cdb = new ClientDashboard();
-                Payback pdb = new Payback();
-                pdb.USDPaybackUser = dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId);
-                cdb._payback = pdb;
+                var cdb = new ClientDashboard();
+                var pdb = new Payback
+                {
+                    UsdPaybackUser = _dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                };
+                cdb.Payback = pdb;
                 return View(cdb);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Plans()
         {
             try
@@ -68,63 +73,65 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult MyProfile()
         {
             try
             {
-                UserProfileDoc ud = new UserProfileDoc();
-                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = dbf.GetKYCDocs(id);
+                var ud = new UserProfileDoc();
+                var id = _userManager.GetUserId(User);
+                ud.UserDocs = _dbf.GetKYCDocs(id);
                 return View(ud);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Usd()
         {
             try
             {
-                USDDashboard bd = new USDDashboard();
+                var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd._requestUSD = dbf.GetRequestUSDReport(r.UserId);
-                var urole = ControllerContext.ActionDescriptor.ControllerName;
+                bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
+                var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd._withdrawUSD = dbf.GetDepositWithdrawUSDRequests(r.UserId,"Withdraw");
-                bd._depositUSD = dbf.GetDepositWithdrawUSDRequests(r.UserId,"Deposit");
-                bd._Stats = dbf.GetAlertStats(r.UserId);
-                if (urole=="Client")
+                bd.WithdrawUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Deposit");
+                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                if (uRole == "Client")
                 {
-                    bd._qrcode = au[0].ClientQRCode;
-                    bd._tether = au[0].ClientTetherAddress;
+                    bd.QrCode = au[0].ClientQrCode;
+                    bd.Tether = au[0].ClientTetherAddress;
                 }
-                else if(urole=="Partner")
+                else if (uRole == "Partner")
                 {
-                    bd._qrcode = au[0].PartnerQRCode;
-                    bd._tether = au[0].PartnerTetherAddress;
+                    bd.QrCode = au[0].PartnerQrCode;
+                    bd.Tether = au[0].PartnerTetherAddress;
                 }
-                else if(urole=="Investor")
+                else if (uRole == "Investor")
                 {
-                    bd._qrcode = au[0].InvestorQRCode;
-                    bd._tether = au[0].InvestorTetherAddress;
+                    bd.QrCode = au[0].InvestorQrCode;
+                    bd.Tether = au[0].InvestorTetherAddress;
                 }
-                else
-                {
 
-
-                }
                 return View(bd);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Bgc()
         {
             try
@@ -135,16 +142,19 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
-      
+
         public IActionResult ActivityLog()
         {
             try
             {
                 var r = _userManager.GetUserAsync(User).Result;
-                ActivityLogDashboard act = new ActivityLogDashboard();
-                act.activityLogTable = dbf.GetUserActivityLog(r.UserId);
+                var act = new ActivityLogDashboard
+                {
+                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                };
 
                 return View(act);
             }
@@ -152,30 +162,34 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         [HttpPost]
         [Route("/client/TetherUpdate")]
-        public async Task<IActionResult> TetherUpdate(string txtTether, [FromForm]IFormFile formFile)
+        public async Task<IActionResult> TetherUpdate(string txtTether, [FromForm] IFormFile formFile)
         {
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                string UniqueName = (DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString());
-                string[] words = formFile.FileName.Split('.');
-                string z1 = words[0] + UniqueName + "." + words[1];//file extension
+                var uniqueName = DateTime.Now.Year + DateTime.Now.Month.ToString() + DateTime.Now.Day +
+                                 DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second +
+                                 DateTime.Now.Millisecond;
+                var words = formFile.FileName.Split('.');
+                var z1 = words[0] + uniqueName + "." + words[1]; //file extension
 
                 var path = Path.Combine("wwwroot", "Tether", z1);
-                ApplicationUser u = _userManager.GetUserAsync(User).Result;
+                var u = _userManager.GetUserAsync(User).Result;
 
 
                 //hard delete previous file
                 try
                 {
                     var z = Directory.GetCurrentDirectory();
-                    var t = ""; FileInfo fileInfo;
-                    t = z + "\\wwwroot" + u.QRCode.Replace("/", "\\");
-                    fileInfo = new System.IO.FileInfo(t);
+                    var t = "";
+                    t = z + "\\wwwroot" + u.QrCode.Replace("/", "\\");
+                    var fileInfo = new FileInfo(t);
                     if (fileInfo.Exists)
                         fileInfo.Delete();
                 }
@@ -187,22 +201,16 @@ namespace Bint.Controllers
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream);
-                    u.QRCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                    u.QrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
                     u.TetherAddress = txtTether;
 
                     var s = await _userManager.UpdateAsync(u);
-                    if (s.Succeeded)
-                    {
-                        return RedirectToAction("myprofile", route);
-                    }
-                    else
-                    {
-                        TempData["error"] = "Tether update failed";
-                        _logger.LogError("Tether update failed", formFile);
-                        return RedirectToAction("myprofile", route);
-                    }
-                }
+                    if (s.Succeeded) return RedirectToAction("myprofile", route);
 
+                    TempData["error"] = "Tether update failed";
+                    _logger.LogError("Tether update failed", formFile);
+                    return RedirectToAction("myprofile", route);
+                }
             }
             catch (Exception ex)
             {
@@ -211,6 +219,5 @@ namespace Bint.Controllers
                 return BadRequest();
             }
         }
-
     }
 }
