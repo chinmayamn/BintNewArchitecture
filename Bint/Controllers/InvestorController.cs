@@ -16,7 +16,7 @@ namespace Bint.Controllers
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
-        private readonly DBFunc _dbf;
+        private readonly DbFunc _dbf;
         private readonly ILogger<InvestorController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -26,7 +26,7 @@ namespace Bint.Controllers
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _dbf = new DBFunc(_logger);
+            _dbf = new DbFunc(_logger);
         }
 
         public IActionResult Index()

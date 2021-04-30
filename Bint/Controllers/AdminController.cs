@@ -29,7 +29,7 @@ namespace Bint.Controllers
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DBFunc _dbf;
+        private readonly DbFunc _dbf;
         private readonly IHostingEnvironment _environment;
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
@@ -45,7 +45,7 @@ namespace Bint.Controllers
             _environment = environment;
             _logger = logger;
             _context = context;
-            _dbf = new DBFunc(_logger);
+            _dbf = new DbFunc(_logger);
         }
 
 
@@ -151,7 +151,7 @@ namespace Bint.Controllers
             try
             {
                 var idb = new Payback();
-                idb.UsdPayback = _dbf.GetUSDPayback(_userManager.GetUserAsync(User).Result.UserId);
+                idb.UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId);
                 return View(idb);
             }
             catch (Exception e)

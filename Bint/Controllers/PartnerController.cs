@@ -22,7 +22,7 @@ namespace Bint.Controllers
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DBFunc _dbf;
+        private readonly DbFunc _dbf;
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
@@ -33,7 +33,7 @@ namespace Bint.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
-            _dbf = new DBFunc(logger);
+            _dbf = new DbFunc(logger);
         }
 
         public IActionResult Index()
@@ -71,7 +71,7 @@ namespace Bint.Controllers
                 var pdbb = new PartnerDashboard();
                 var pdb = new Payback
                 {
-                    UsdPaybackUser = _dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPaybackUser = _dbf.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 pdbb.Payback = pdb;
                 return View(pdbb);
@@ -121,7 +121,7 @@ namespace Bint.Controllers
             {
                 var idb = new Payback
                 {
-                    UsdPayback = _dbf.GetUSDPayback(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 return View(idb);
             }
