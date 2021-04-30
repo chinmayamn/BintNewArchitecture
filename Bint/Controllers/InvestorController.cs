@@ -8,21 +8,27 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 namespace Bint.Controllers
 {
     [Authorize(Roles = "Investor")]
     public class InvestorController : Controller
     {
-        private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly ILogger<InvestorController> _logger;
-        private UserManager<ApplicationUser> _userManager;
+        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
-        DBFunc dbf;
-        public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> usermanager, ApplicationDbContext context)
+        private readonly ILogger<InvestorController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly DBFunc _dbf;
+
+        public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
+            ApplicationDbContext context)
         {
-            _logger = logger; _userManager = usermanager; _context = context;
-             dbf = new DBFunc(_logger);
+            _logger = logger;
+            _userManager = userManager;
+            _context = context;
+            _dbf = new DBFunc(_logger);
         }
+
         public IActionResult Index()
         {
             try
@@ -33,32 +39,38 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Dashboard()
         {
             try
             {
-                InvestorDashboard idb = new InvestorDashboard();
-                UserCount u = new UserCount();
+                var idb = new InvestorDashboard();
+                var u = new UserCount();
                 IEnumerable<ApplicationUser> z;
                 z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
                 u.PartnerCount = z.Count();
                 u.PartnerList = z.TakeLast(8);
-                idb.TotalBGC = z.Sum(x => x.Bgc);
-                idb.TotalUSD = z.Sum(x => x.Usd);
-                idb.userCount = u;
-                Payback pdb = new Payback();
-                pdb.USDPaybackUser = dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId);
-                idb._payback = pdb;
+                idb.TotalBgc = z.Sum(x => x.Bgc);
+                idb.TotalUsd = z.Sum(x => x.Usd);
+                idb.UserCount = u;
+                var pdb = new Payback
+                {
+                    UsdPaybackUser = _dbf.GetUSDPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                };
+                idb.Payback = pdb;
                 return View(idb);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Plans()
         {
             try
@@ -69,23 +81,27 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult MyProfile()
         {
             try
             {
-                UserProfileDoc ud = new UserProfileDoc();
+                var ud = new UserProfileDoc();
                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = dbf.GetKYCDocs(id);
+                ud.UserDocs = _dbf.GetKYCDocs(id);
                 return View(ud);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Investments()
         {
             try
@@ -96,83 +112,87 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult USDPayback()
         {
             try
             {
-                Payback idb = new Payback();
-                idb.USDPayback = dbf.GetUSDPayback(_userManager.GetUserAsync(User).Result.UserId);
+                var idb = new Payback
+                {
+                    UsdPayback = _dbf.GetUSDPayback(_userManager.GetUserAsync(User).Result.UserId)
+                };
                 return View(idb);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
-            return View();
 
+            return View();
         }
+
         public IActionResult Partners()
         {
             try
             {
                 ViewBag.ReturnUrl = "/investor/partners";
-                CustomerUserCreate m = new CustomerUserCreate();
+                var m = new CustomerUserCreate();
                 IEnumerable<ApplicationUser> z;
-                string id = _userManager.GetUserId(User);
-                z = _userManager.Users.Where(x=>x.CreatedBy==_userManager.GetUserAsync(User).Result.UserId);
-                m.appUser = z;
+                var id = _userManager.GetUserId(User);
+                z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
+                m.AppUser = z;
                 return View(m);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Usd()
         {
             try
             {
-                USDDashboard bd = new USDDashboard();
+                var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd._requestUSD = dbf.GetRequestUSDReport(r.UserId);
-                bd._transferUSD = dbf.GetTransferUSDReport(r.UserId);
-                var urole = ControllerContext.ActionDescriptor.ControllerName;
+                bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
+                bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);
+                var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd._withdrawUSD = dbf.GetDepositWithdrawUSDRequests(r.UserId, "Withdraw");
-                bd._depositUSD = dbf.GetDepositWithdrawUSDRequests(r.UserId, "Deposit");
-                bd._Stats = dbf.GetAlertStats(r.UserId);
-                if (urole == "Client")
+                bd.WithdrawUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbf.GetDepositWithdrawUSDRequests(r.UserId, "Deposit");
+                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                if (uRole == "Client")
                 {
-                    bd._qrcode = au[0].ClientQRCode;
-                    bd._tether = au[0].ClientTetherAddress;
+                    bd.QrCode = au[0].ClientQrCode;
+                    bd.Tether = au[0].ClientTetherAddress;
                 }
-                else if (urole == "Partner")
+                else if (uRole == "Partner")
                 {
-                    bd._qrcode = au[0].PartnerQRCode;
-                    bd._tether = au[0].PartnerTetherAddress;
+                    bd.QrCode = au[0].PartnerQrCode;
+                    bd.Tether = au[0].PartnerTetherAddress;
                 }
-                else if (urole == "Investor")
+                else if (uRole == "Investor")
                 {
-                    bd._qrcode = au[0].InvestorQRCode;
-                    bd._tether = au[0].InvestorTetherAddress;
+                    bd.QrCode = au[0].InvestorQrCode;
+                    bd.Tether = au[0].InvestorTetherAddress;
                 }
-                else
-                {
 
-
-                }
                 return View(bd);
-
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Bgc()
         {
             try
@@ -183,10 +203,10 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
-           
         }
-       
+
         public IActionResult PartnerDetail()
         {
             try
@@ -197,8 +217,10 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         public IActionResult Register()
         {
             try
@@ -209,8 +231,10 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
+
         [HttpGet]
         public IActionResult DeleteUser()
         {
@@ -221,19 +245,21 @@ namespace Bint.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string id)
         {
-           try
+            try
             {
                 var u = await _userManager.FindByIdAsync(id);
                 var result = await _userManager.DeleteAsync(u);
                 if (result.Succeeded)
                     TempData["data"] = "User deleted successfully";
 
-                ApplicationUser y = _userManager.GetUserAsync(User).Result;
-                ActivityLog activityLog = new ActivityLog();
-                activityLog.Userid = y.UserId;
-                activityLog.ActivityType = ActivityLogEnum.DeletePerson.ToString();
-                activityLog.ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-                activityLog.Activity = "Deleted user " + u.UserId;
+                var y = _userManager.GetUserAsync(User).Result;
+                var activityLog = new ActivityLog
+                {
+                    Userid = y.UserId,
+                    ActivityType = ActivityLogEnum.DeletePerson.ToString(),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    Activity = "Deleted user " + u.UserId
+                };
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();
             }
@@ -242,15 +268,17 @@ namespace Bint.Controllers
                 TempData["error"] = "Error occurred";
                 _logger.LogError("Error occurred {id}", id);
             }
+
             return RedirectToAction("partners");
         }
+
         public IActionResult ActivityLog()
         {
             try
             {
                 var r = _userManager.GetUserAsync(User).Result;
-                ActivityLogDashboard act = new ActivityLogDashboard();
-                act.activityLogTable = dbf.GetUserActivityLog(r.UserId);
+                var act = new ActivityLogDashboard();
+                act.ActivityLogTable = _dbf.GetUserActivityLog(r.UserId);
 
                 return View(act);
             }
@@ -258,9 +286,8 @@ namespace Bint.Controllers
             {
                 _logger.LogError(e.ToString());
             }
+
             return View();
         }
-       
-
     }
 }
