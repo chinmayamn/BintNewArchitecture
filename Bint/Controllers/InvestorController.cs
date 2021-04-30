@@ -263,7 +263,7 @@ namespace Bint.Controllers
                 _context.activitylog.Add(activityLog);
                 _context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["error"] = "Error occurred";
                 _logger.LogError("Error occurred {id}", id);
@@ -277,9 +277,10 @@ namespace Bint.Controllers
             try
             {
                 var r = _userManager.GetUserAsync(User).Result;
-                var act = new ActivityLogDashboard();
-                act.ActivityLogTable = _dbf.GetUserActivityLog(r.UserId);
-
+                var act = new ActivityLogDashboard
+                {
+                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                };
                 return View(act);
             }
             catch (Exception e)
