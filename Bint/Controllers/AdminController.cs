@@ -20,6 +20,7 @@ using Newtonsoft.Json.Linq;
 namespace Bint.Controllers
 {
     [Authorize(Roles = "Admin")]
+    [Route("admin")]
     public class AdminController : Controller
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
@@ -157,11 +158,11 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
-        [Route("admin/admin")]
-        [Route("admin/investor")]
-        [Route("admin/client")]
-        [Route("admin/locked")]
-        [Route("admin/partner")]
+        [Route("admin")]
+        [Route("investor")]
+        [Route("client")]
+        [Route("locked")]
+        [Route("partner")]
         public ActionResult Members()
         {
             try
