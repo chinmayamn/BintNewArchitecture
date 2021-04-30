@@ -29,20 +29,6 @@ namespace Bint.Controllers
             _dbf = new DbFunc(_logger);
         }
 
-        public IActionResult Index()
-        {
-            try
-            {
-                return View();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ToString());
-            }
-
-            return View();
-        }
-
         public IActionResult Dashboard()
         {
             try
@@ -218,26 +204,6 @@ namespace Bint.Controllers
                 _logger.LogError(e.ToString());
             }
 
-            return View();
-        }
-
-        public IActionResult Register()
-        {
-            try
-            {
-                return View();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ToString());
-            }
-
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult DeleteUser()
-        {
             return View();
         }
 

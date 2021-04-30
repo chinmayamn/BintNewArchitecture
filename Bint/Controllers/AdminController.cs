@@ -48,12 +48,6 @@ namespace Bint.Controllers
             _dbf = new DbFunc(_logger);
         }
 
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         public IActionResult Dashboard()
         {
             try

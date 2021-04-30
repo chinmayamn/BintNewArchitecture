@@ -412,7 +412,9 @@
                                                 {
                                                     var temp = @item.Firstname + ' ' + @item.Lastname;
                                                     if (temp.Length > 12)
+                                                    {
                                                         temp = temp.Substring(0, 12) + "...";
+                                                    }
                                                     <li>
                                                         <a class="users-list-name" href="/account/userprofile/@item.Id">
                                                             <img src="@item.ProfilePicture" alt="User Image" class="userimage">

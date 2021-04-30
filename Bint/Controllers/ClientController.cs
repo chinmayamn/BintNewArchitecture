@@ -29,20 +29,6 @@ namespace Bint.Controllers
             _dbf = new DbFunc(_logger);
         }
 
-        public IActionResult Index()
-        {
-            try
-            {
-                return View();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ToString());
-            }
-
-            return View();
-        }
-
         public IActionResult Dashboard()
         {
             try
