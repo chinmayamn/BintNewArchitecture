@@ -1,6 +1,6 @@
 ﻿@inject UserManager<ApplicationUser> _userManager
 @{ 
-    var u = @_userManager.GetUserAsync(User).Result;
+    var u = _userManager.GetUserAsync(User).Result;
     var ol = u.Kyc;
     var lol = "";
     if (ol == "Pending")
@@ -15,10 +15,7 @@
     {
         lol = "badge-success";
     }
-    else
-    {
-
-    }
+ 
 }
 <div class="col-md-3 ">
 

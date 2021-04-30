@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Bint.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Xunit;
-using Microsoft.Extensions.Logging;
-using Moq;
-
-namespace BintTest.Controllers
+﻿namespace BintTest.Controllers
 {
     public class ClientControllerTest
     {

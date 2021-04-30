@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Bint.Controllers;
-using Bint.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Bint.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Xunit;
 
 namespace BintTest.Controllers
 {

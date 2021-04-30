@@ -9,29 +9,29 @@
 
                 var a = "";
 
-                if (@row["activitytype"].ToString() == "Credit")
+                if (row["activitytype"].ToString() == "Credit")
                 { a = "nav-icon fas fa-money-bill-alt bg-fuchsia"; }
-                else if (@row["activitytype"].ToString() == "Debit")
+                else if (row["activitytype"].ToString() == "Debit")
                 { a = "fas fas fa-hand-holding-usd bg-secondary"; }
-                else if (@row["activitytype"].ToString() == "Reject")
+                else if (row["activitytype"].ToString() == "Reject")
                 { a = "fa fa-ban bg-danger"; }
-                else if (@row["activitytype"].ToString() == "Person")
+                else if (row["activitytype"].ToString() == "Person")
                 { a = "fas fa-user bg-pink"; }
-                else if (@row["activitytype"].ToString() == "DeletePerson")
+                else if (row["activitytype"].ToString() == "DeletePerson")
                 { a = "fa fa-trash bg-darkblack"; }
-                else if (@row["activitytype"].ToString() == "RequestUSD")
+                else if (row["activitytype"].ToString() == "RequestUSD")
                 { a = "fas fa-arrow-right bg-yellow"; }
-                else if (@row["activitytype"].ToString() == "TransferUSD")
+                else if (row["activitytype"].ToString() == "TransferUSD")
                 { a = "fas fa-arrow-right bg-info"; }
-                else if (@row["activitytype"].ToString() == "ReceiveUSD")
+                else if (row["activitytype"].ToString() == "ReceiveUSD")
                 { a = "fas fa-arrow-left bg-gradient-green"; }
-                else if (@row["activitytype"].ToString() == "DepositUSD")
+                else if (row["activitytype"].ToString() == "DepositUSD")
                 { a = "fas fa-donate bg-lime"; }
-                else if (@row["activitytype"].ToString() == "ConfirmDepositUSD")
+                else if (row["activitytype"].ToString() == "ConfirmDepositUSD")
                 { a = "fas fa-donate bg-gradient-olive"; }
-                else if (@row["activitytype"].ToString() == "WithdrawUSD")
+                else if (row["activitytype"].ToString() == "WithdrawUSD")
                 { a = "fa fa-coins bg-gradient-gray-dark"; }
-                else if (@row["activitytype"].ToString() == "ConfirmWithdrawUSD")
+                else if (row["activitytype"].ToString() == "ConfirmWithdrawUSD")
                 { a = "fas fa-coins bg-black"; }
                 else
                 { a = ""; }

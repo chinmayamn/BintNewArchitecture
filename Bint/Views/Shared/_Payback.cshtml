@@ -26,15 +26,15 @@
                 @foreach (DataRow row in Model.UsdPayback.Rows)
                 {
                     var b = "";
-                    if(Convert.ToInt32(@row["percentage"])<=30)
+                    if(Convert.ToInt32(row["percentage"])<=30)
                     {
                         b = "bg-danger";
                     }
-                    else if(Convert.ToInt32(@row["percentage"]) >=31 && Convert.ToInt32(@row["percentage"]) <=70)
+                    else if(Convert.ToInt32(row["percentage"]) >=31 && Convert.ToInt32(row["percentage"]) <=70)
                       {
                           b = "bg-warning";
                       }
-                    else if(Convert.ToInt32(@row["percentage"]) >=71 && Convert.ToInt32(@row["percentage"]) <=99)
+                    else if(Convert.ToInt32(row["percentage"]) >=71 && Convert.ToInt32(row["percentage"]) <=99)
                     {
                         b = "bg-info";
                     }

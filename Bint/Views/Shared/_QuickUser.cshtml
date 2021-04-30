@@ -39,30 +39,22 @@
                         @{
                             var currentUser = await _userManager.GetUserAsync(User);
                             var role = _userManager.GetRolesAsync(currentUser).Result;
-                            if (role[0].ToString() == "Admin")
+                            if (role[0] == "Admin")
                             {
                                 var f = await _roleManager.FindByNameAsync("Investor");
                                 <option value="@f.Id">Investor</option>
                             }
-                            else if(role[0].ToString() == "Investor")
+                            else if(role[0] == "Investor")
                             {
                                 var f = await _roleManager.FindByNameAsync("Partner");
                                     <option value="@f.Id">Partner</option>
                             }
-                            else if(role[0].ToString() == "Partner")
+                            else if(role[0] == "Partner")
                             {
                                 var f = await _roleManager.FindByNameAsync("Client");
                                 <option value="@f.Id">Client</option>
                             }
-                            else
-                            {
-                                
-                            }
-                          }
-                            @*@foreach (var g in _roleManager.Roles)
-                            {
-                               
-                            }*@
+                           }
                         </select>
                     </div>
                     <button id="btnp" type="submit" class="btn btn-success">Create</button><button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>

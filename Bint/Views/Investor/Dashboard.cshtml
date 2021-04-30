@@ -230,7 +230,7 @@
                                     <ul class="users-list clearfix">
                                         @foreach (var item in Model.UserCount.PartnerList)
                                         {
-                                            var temp = @item.Firstname + ' ' + @item.Lastname;
+                                            var temp = item.Firstname + ' ' + item.Lastname;
                                             if (temp.Length > 12)
                                             {
                                                 temp = temp.Substring(0, 12) + "...";
@@ -271,7 +271,7 @@
                                 <div class="card-body border-top-0 pt-0">
                                     @foreach (DataRow row in Model.Payback.UsdPaybackUser.Rows)
                                     {
-                                        ViewData["bsf"] = Convert.ToString(@row["percentage"]);
+                                        ViewData["bsf"] = Convert.ToString(row["percentage"]);
                                         bsf = Convert.ToString(ViewData["bsf"]);
 
                                         <div class="row">

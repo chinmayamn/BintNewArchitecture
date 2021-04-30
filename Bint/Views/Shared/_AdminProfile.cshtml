@@ -1,6 +1,6 @@
 ﻿@inject UserManager<ApplicationUser> _userManager
 @{
-    var u = @_userManager.GetUserAsync(User).Result;
+    var u = _userManager.GetUserAsync(User).Result;
    
 }
 <div class="col-md-3 ">

@@ -1,10 +1,8 @@
 ﻿using Bint.Data;
 using Bint.Models;
-using DeviceDetectorNET;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Bint.Controllers

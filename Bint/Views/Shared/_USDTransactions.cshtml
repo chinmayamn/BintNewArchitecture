@@ -35,19 +35,19 @@
             {
 
                 var a = ""; var b = "";
-                if (@row["status"].ToString() == "Requested")
+                if (row["status"].ToString() == "Requested")
                 { a = "badge-warning"; }
-                else if (@row["status"].ToString() == "Transferred")
+                else if (row["status"].ToString() == "Transferred")
                 { a = "badge-info"; b = "fa fa-arrow-down text-red mr-1"; }
-                else if (@row["status"].ToString() == "Debit")
+                else if (row["status"].ToString() == "Debit")
                 { a = "badge-secondary"; b = "fa fa-arrow-down text-red mr-1"; }
-                else if (@row["status"].ToString() == "Credit")
+                else if (row["status"].ToString() == "Credit")
                 { a = "bg-fuchsia"; b = "fa fa-arrow-up text-green mr-1"; }
-                else if (@row["status"].ToString() == "Received")
+                else if (row["status"].ToString() == "Received")
                 { a = "bg-gradient-green"; b = "fa fa-arrow-up text-green mr-1"; }
-                else if (@row["status"].ToString() == "Deposit")
+                else if (row["status"].ToString() == "Deposit")
                 { a = "bg-gradient-olive"; b = "fa fa-arrow-up text-green mr-1"; }
-                else if (@row["status"].ToString() == "Withdraw")
+                else if (row["status"].ToString() == "Withdraw")
                 { a = "bg-gray-light"; b = "fa fa-arrow-down text-red mr-1"; }
                 else
                 { a = "badge-danger"; }
@@ -60,7 +60,7 @@
                     <td><span class="badge @a">@row["status"]</span></td>
                     <td class="text-brown-600 text-bold text-right"  >
                         <i class="@b" style="float:left !important"></i>
-                        @(Convert.ToString(@row["totalamount"]) == "0.00" ? "0.00" : @row["totalamount"])
+                        @(Convert.ToString(row["totalamount"]) == "0.00" ? "0.00" : row["totalamount"])
                     </td>
                 </tr>
             }

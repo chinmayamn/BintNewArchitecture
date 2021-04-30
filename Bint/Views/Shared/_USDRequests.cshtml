@@ -36,15 +36,15 @@
                 @foreach (DataRow row in Model.TransferUsd.Rows)
                 {
                     var a = ""; var b = "";
-                    if (@row["status"].ToString() == "Requested")
+                    if (row["status"].ToString() == "Requested")
                     {
                         a = "badge-warning";
                     }
-                    else if (@row["status"].ToString() == "Transferred")
+                    else if (row["status"].ToString() == "Transferred")
                     { a = "badge-info"; b = "disabled"; }
-                    else if (@row["status"].ToString() == "Withdraw")
+                    else if (row["status"].ToString() == "Withdraw")
                     { a = "bg-gray-light"; b = "disabled"; }
-                    else if (@row["status"].ToString() == "Deposit")
+                    else if (row["status"].ToString() == "Deposit")
                     { a = "bg-gradient-olive"; b = "disabled"; }
                     else
                     { a = "badge-danger"; b = "disabled"; }

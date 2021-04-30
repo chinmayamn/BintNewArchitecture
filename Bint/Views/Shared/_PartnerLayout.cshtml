@@ -1,10 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor HttpContextAccessor
-@using Microsoft.AspNetCore.Identity
-@using Bint.Models
-
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@inject IHttpContextAccessor _httpContextAccessor
+@inject SignInManager<ApplicationUser> _signInManager
+@inject UserManager<ApplicationUser> _userManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -443,10 +440,10 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/partner/myprofile" class="nav-link"> Welcome @UserManager.GetUserAsync(User).Result.Firstname @UserManager.GetUserAsync(User).Result.Lastname </a>
+                    <a href="/partner/myprofile" class="nav-link"> Welcome @_userManager.GetUserAsync(User).Result.Firstname @_userManager.GetUserAsync(User).Result.Lastname </a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="/partner/myprofile"><img class="img-circle elevation-2 userimagesmall" alt="User Image" id="img3" src="@UserManager.GetUserAsync(User).Result.ProfilePicture"></a>
+                    <a href="/partner/myprofile"><img class="img-circle elevation-2 userimagesmall" alt="User Image" id="img3" src="@_userManager.GetUserAsync(User).Result.ProfilePicture"></a>
                 </li>
 
 
@@ -483,10 +480,10 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <a href="/partner/myprofile"> <img id="img4" class="img-circle elevation-2 userimagesmall" alt="User Image" src="@UserManager.GetUserAsync(User).Result.ProfilePicture"></a>
+                        <a href="/partner/myprofile"> <img id="img4" class="img-circle elevation-2 userimagesmall" alt="User Image" src="@_userManager.GetUserAsync(User).Result.ProfilePicture"></a>
                     </div>
                     <div class="info">
-                        <a href="/partner/myprofile" class="d-block"> @UserManager.GetUserAsync(User).Result.Firstname @UserManager.GetUserAsync(User).Result.Lastname</a>
+                        <a href="/partner/myprofile" class="d-block"> @_userManager.GetUserAsync(User).Result.Firstname @_userManager.GetUserAsync(User).Result.Lastname</a>
                     </div>
                 </div>
                 <!-- Sidebar Menu -->
