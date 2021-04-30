@@ -1,14 +1,14 @@
-﻿@model Bint.Models.USDDashboard
+﻿@model Bint.Models.UsdDashboard
 @using System.Data
 <div class="card card-outline card-info">
     <div class="card-header">
         <h1 class="card-title">USD Transactions</h1>
         <div class="card-tools">
-            @foreach (DataRow row in Model._Stats.Rows)
+            @foreach (DataRow row in Model.Stats.Rows)
             {<span class="badge badge-secondary">
 
-                 @row["usdrequested"] USD requests sent
-             </span>
+    @row["usdrequested"] USD requests sent
+</span>
 
             }
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -31,7 +31,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (DataRow row in Model._requestUSD.Rows)
+            @foreach (DataRow row in Model.RequestUsd.Rows)
             {
 
                 var a = ""; var b = "";

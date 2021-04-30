@@ -34,24 +34,24 @@
 
                     </div>
                     <div class="form-group">
-                        <label>Role</label> <select asp-for="Upi_id" id="dlrole" class="form-control">
+                        <label>Role</label> <select asp-for="UpiId" id="dlrole" class="form-control">
                             <option>Select</option>
                         @{
                             var currentUser = await _userManager.GetUserAsync(User);
                             var role = _userManager.GetRolesAsync(currentUser).Result;
                             if (role[0].ToString() == "Admin")
                             {
-                                IdentityRole f = await _roleManager.FindByNameAsync("Investor");
+                                var f = await _roleManager.FindByNameAsync("Investor");
                                 <option value="@f.Id">Investor</option>
                             }
                             else if(role[0].ToString() == "Investor")
                             {
-                                IdentityRole f = await _roleManager.FindByNameAsync("Partner");
+                                var f = await _roleManager.FindByNameAsync("Partner");
                                     <option value="@f.Id">Partner</option>
                             }
                             else if(role[0].ToString() == "Partner")
                             {
-                                IdentityRole f = await _roleManager.FindByNameAsync("Client");
+                                var f = await _roleManager.FindByNameAsync("Client");
                                 <option value="@f.Id">Client</option>
                             }
                             else
