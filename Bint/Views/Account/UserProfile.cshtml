@@ -1,10 +1,10 @@
 ﻿@model Bint.Models.AdminUserProfileDashboard
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
-@inject UserManager<ApplicationUser> UserManager
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
+@inject UserManager<ApplicationUser> _userManager
 @using System.Data
 @{
 
-    string u = Convert.ToString(ViewData["layout"]).ToLower();
+    var u = Convert.ToString(ViewData["layout"]).ToLower();
     
     if (u == "admin")
     {
@@ -101,7 +101,7 @@
                         <div class="card card-info card-outline">
                             <div class="card-body box-profile">
                                 @{
-                                    var ol = @Model._userProfile.KYC;
+                                    var ol = @Model.UserProfile.Kyc;
                                     var lol = "";
                                     if (ol == "Pending")
                                     {
@@ -121,14 +121,14 @@
                                     }
                                 }
 
-                                <span id="kycbadge" class="badge @lol">@Model._userProfile.KYC</span>
+                                <span id="kycbadge" class="badge @lol">@Model.UserProfile.Kyc</span>
                                 <div class="text-center">
                                     <img class="profile-user-img img-fluid img-circle"
-                                         src="@Model._userProfile.Profilepicture"
+                                         src="@Model.UserProfile.ProfilePicture"
                                          alt="User profile picture">
                                 </div>
-                                <h3 class="profile-username text-center">@Model._userProfile.Firstname @Model._userProfile.Lastname</h3>
-                                <p class="text-muted text-center">ID : @Model._userProfile.UserId</p>
+                                <h3 class="profile-username text-center">@Model.UserProfile.Firstname @Model.UserProfile.Lastname</h3>
+                                <p class="text-muted text-center">ID : @Model.UserProfile.UserId</p>
 
 
                             </div>
@@ -138,7 +138,7 @@
 
                         <div class="card card-warning card-outline  ">
                             <div class="card-header">
-                                <h1 class="card-title">USD</h1>
+                                <h1 class="card-title">Usd</h1>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -148,14 +148,14 @@
                             <div class="card-body box-profile">
                                 <!-- About Me Box -->
                                 <div class="social-box facebook">
-                                    <span>@Model._userProfile.USD</span>
+                                    <span>@Model.UserProfile.Usd</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card card-success card-outline ">
                             <div class="card-header">
-                                <h1 class="card-title">BGC Token</h1>
+                                <h1 class="card-title">Bgc Token</h1>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -164,8 +164,8 @@
                             </div>
                             <div class="card-body box-profile">
                                 <div class="social-box facebook">
-                                    <span>@Model._userProfile.BGC</span>
-                                    <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">1 BGC = 0.001 USD</div>
+                                    <span>@Model.UserProfile.Bgc</span>
+                                    <div style="background-color: #f3efef; line-height: 40px; padding-left: 22px;">1 Bgc = 0.001 Usd</div>
 
                                 </div>
 
@@ -186,7 +186,7 @@
                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                             <input type="checkbox" class="custom-control-input" id="chkStatus" />
                                             <label class="custom-control-label" for="chkStatus" id="chkstatuslabel">
-                                                @((Convert.ToString(UserManager.FindByIdAsync(uid).Result.LockoutEnd) == "") ? "Active" : "Locked" )
+                                                @((Convert.ToString(_userManager.FindByIdAsync(uid).Result.LockoutEnd) == "") ? "Active" : "Locked" )
                                             </label>
                                         </div>
                                     </li>
@@ -195,7 +195,7 @@
                                         <div class="custom-control custom-switch custom-switch-on-success">
                                             <input type="checkbox" class="custom-control-input" id="chkEmailStatus" />
                                             <label class="custom-control-label" for="chkEmailStatus" id="chkEmailStatusLabel">
-                                                @((Convert.ToString(UserManager.FindByIdAsync(uid).Result.EmailConfirmed) == "True") ? "Verified" : "Not verified" )
+                                                @((Convert.ToString(_userManager.FindByIdAsync(uid).Result.EmailConfirmed) == "True") ? "Verified" : "Not verified" )
                                             </label>
                                         </div>
                                     </li>
@@ -238,12 +238,12 @@
 
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">User Id</label>
                                                     <div class="col-sm-9">
-                                                        @Model._userProfile.UserId
-                                                        <input type="hidden" id="hdnsuerid" value="@Model._userProfile.Id">
+                                                        @Model.UserProfile.UserId
+                                                        <input type="hidden" id="hdnsuerid" value="@Model.UserProfile.Id">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12 float-right">
-                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">KYC</label>
+                                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Kyc</label>
                                                     <div class="col-sm-9">
                                                         <div class="form-group clearfix">
                                                             <div class="icheck-primary d-inline">
@@ -271,92 +271,92 @@
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Email</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtemail" placeholder="Email" value="@Model._userProfile.Email">
+                                                        <input type="text" class="form-control" id="txtemail" placeholder="Email" value="@Model.UserProfile.Email">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Mobile</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtmobile" placeholder="Mobile" value="@Model._userProfile.Mobile">
+                                                        <input type="text" class="form-control" id="txtmobile" placeholder="Mobile" value="@Model.UserProfile.Mobile">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">First name</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtFirstname" placeholder="First name" value="@Model._userProfile.Firstname">
+                                                        <input type="text" class="form-control" id="txtFirstname" placeholder="First name" value="@Model.UserProfile.Firstname">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Last name</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtlastname" placeholder="Last name" value="@Model._userProfile.Lastname">
+                                                        <input type="text" class="form-control" id="txtlastname" placeholder="Last name" value="@Model.UserProfile.Lastname">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Address</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtaddress" placeholder="Address" value="@Model._userProfile.Address">
+                                                        <input type="text" class="form-control" id="txtaddress" placeholder="Address" value="@Model.UserProfile.Address">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Bank name</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtbankname" placeholder="Bank name" value="@Model._userProfile.Bankname">
+                                                        <input type="text" class="form-control" id="txtbankname" placeholder="Bank name" value="@Model.UserProfile.BankName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Bank Account</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtbankaccount" placeholder="Bank name" value="@Model._userProfile.Bankaccount">
+                                                        <input type="text" class="form-control" id="txtbankaccount" placeholder="Bank name" value="@Model.UserProfile.BankAccount">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">IFSC Code</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtIFSC" placeholder="IFSC Code" value="@Model._userProfile.Ifsc_code">
+                                                        <input type="text" class="form-control" id="txtIFSC" placeholder="IFSC Code" value="@Model.UserProfile.IfscCode">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     &nbsp; <label for="inputEmail3" class="col-form-label">Account holder name</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtaccountholder" placeholder="Account holder name" value="@Model._userProfile.Account_holder_name">
+                                                        <input type="text" class="form-control" id="txtaccountholder" placeholder="Account holder name" value="@Model.UserProfile.AccountHolderName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">PAN</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtpan" placeholder="PAN" value="@Model._userProfile.Pan">
+                                                        <input type="text" class="form-control" id="txtpan" placeholder="PAN" value="@Model.UserProfile.Pan">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputEmail3" class="col-sm-3 col-form-label">UPI Id</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="txtupi" placeholder="UPI Id" value="@Model._userProfile.Upi_id">
+                                                        <input type="text" class="form-control" id="txtupi" placeholder="UPI Id" value="@Model.UserProfile.UpiId">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Created on</label>
                                                     <div class="col-sm-9">
-                                                        @Model._userProfile.Created_on
+                                                        @Model.UserProfile.CreatedOn
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Tether</label>
                                                     <div class="col-sm-9">
-                                                        <center><img src="@Model._userProfile.QRCode" class="img-fluid w-50" /></center>
-                                                        @Model._userProfile.TetherAddress
+                                                        <center><img src="@Model.UserProfile.QRCode" class="img-fluid w-50" /></center>
+                                                        @Model.UserProfile.TetherAddress
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Created by</label>
                                                     <div class="col-sm-9">
-                                                        @Model._userProfile.Created_by
+                                                        @Model.UserProfile.CreatedBy
                                                     </div>
                                                 </div>
                                          </div>
@@ -402,7 +402,7 @@
                                         }
                                     </div>
                                     <div class="tab-pane" id="activity">
-                                        @await Html.PartialAsync("_ActivityLog", Model._activityLogDashboard)
+                                        @await Html.PartialAsync("_ActivityLog", Model.ActivityLogDashboard)
 
                                     </div>
                                     <div class="tab-pane" id="members">
@@ -415,7 +415,7 @@
                                                         temp = temp.Substring(0, 12) + "...";
                                                     <li>
                                                         <a class="users-list-name" href="/account/userprofile/@item.Id">
-                                                            <img src="@item.Profilepicture" alt="User Image" class="userimage">
+                                                            <img src="@item.ProfilePicture" alt="User Image" class="userimage">
                                                             <br/>
                                                             @temp
 
@@ -453,12 +453,12 @@
 
 
         $("input:radio[name ='r1']").change(function () {
-            var kyc = $("input:radio[name ='r1']:checked").val();
+            var Kyc = $("input:radio[name ='r1']:checked").val();
             var zz = $("#hdnsuerid").val();
             $.ajax({
 
                 type: "GET",
-                url: "/Admin/setkyc?userid=" + zz + "&kyc="+kyc,
+                url: "/Admin/setkyc?userid=" + zz + "&Kyc="+Kyc,
                 async: false,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
@@ -466,17 +466,17 @@
                 success: function (data) {
 
                     if (data == "Pending") {
-                        $("#kycbadge").text(kyc).removeClass().addClass("badge badge-warning"); toastr.success('KYC verification status changed');
+                        $("#kycbadge").text(Kyc).removeClass().addClass("badge badge-warning"); toastr.success('Kyc verification status changed');
                     }
                     else if (data=="Verified") {
-                        $("#kycbadge").text(kyc).removeClass().addClass("badge badge-success"); toastr.success('KYC verification status changed');
+                        $("#kycbadge").text(Kyc).removeClass().addClass("badge badge-success"); toastr.success('Kyc verification status changed');
                     }
                     else if (data == "VerificationFailed")
                     {
-                        $("#kycbadge").text(kyc).removeClass().addClass("badge badge-danger"); toastr.success('KYC verification status changed');
+                        $("#kycbadge").text(Kyc).removeClass().addClass("badge badge-danger"); toastr.success('Kyc verification status changed');
                     }
                     else {
-                        toastr.error('KYC verification status failed');
+                        toastr.error('Kyc verification status failed');
                     }
 
                 },
