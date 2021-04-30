@@ -112,7 +112,7 @@ namespace Bint.Controllers
             return View();
         }
 
-        public IActionResult USDDepositWithdraw()
+        public IActionResult UsdDepositWithdraw()
         {
             try
             {
@@ -132,7 +132,7 @@ namespace Bint.Controllers
             return View();
         }
 
-        public IActionResult BGCDepositWithdraw()
+        public IActionResult BgcDepositWithdraw()
         {
             try
             {
@@ -146,7 +146,7 @@ namespace Bint.Controllers
             return View();
         }
 
-        public IActionResult USDPayback()
+        public IActionResult UsdPayback()
         {
             try
             {
@@ -278,15 +278,15 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
-        public JsonResult setkyc(string userid, string Kyc)
+        public JsonResult SetKyc(string userid, string kyc)
         {
             try
             {
                 var u = _userManager.FindByIdAsync(userid).Result;
-                u.Kyc = Kyc;
+                u.Kyc = kyc;
                 var t = _userManager.UpdateAsync(u).Result;
                 if (t.Succeeded)
-                    return Json(Kyc);
+                    return Json(kyc);
                 return Json("error");
             }
             catch (Exception ex)
@@ -331,7 +331,7 @@ namespace Bint.Controllers
             return View();
         }
 
-        public string checkBalance()
+        public string CheckBalance()
         {
             try
             {

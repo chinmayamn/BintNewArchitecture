@@ -1,8 +1,8 @@
-﻿@inject UserManager<ApplicationUser> UserManager
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+﻿@inject UserManager<ApplicationUser> _userManager
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 @model UserProfileDoc
 @{
-    var myp = UserManager.GetUserAsync(User).Result;
+    var myp = _userManager.GetUserAsync(User).Result;
     Layout = "~/Views/Shared/_InvestorLayout.cshtml";
 }
 <style>
@@ -151,25 +151,25 @@
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Bank name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="txtbankname" placeholder="Bank name" value="@myp.Bankname">
+                                        <input type="text" class="form-control" id="txtbankname" placeholder="Bank name" value="@myp.BankName">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Bank Account</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="txtbankaccount" placeholder="Bank name" value="@myp.Bankaccount">
+                                        <input type="text" class="form-control" id="txtbankaccount" placeholder="Bank name" value="@myp.BankAccount">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">IFSC Code</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="txtIFSC" placeholder="IFSC Code" value="@myp.Ifsc_code">
+                                        <input type="text" class="form-control" id="txtIFSC" placeholder="IFSC Code" value="@myp.IfscCode">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     &nbsp; <label for="inputEmail3" class="col-form-label">Account holder name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="txtaccountholder" placeholder="Account holder name" value="@myp.Account_holder_name">
+                                        <input type="text" class="form-control" id="txtaccountholder" placeholder="Account holder name" value="@myp.AccountHolderName">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
@@ -182,20 +182,20 @@
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">UPI Id</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="txtupi" placeholder="UPI Id" value="@myp.Upi_id">
+                                        <input type="text" class="form-control" id="txtupi" placeholder="UPI Id" value="@myp.UpiId">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Created on</label>
                                     <div class="col-sm-9">
-                                        @myp.Created_on
+                                        @myp.CreatedOn
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Tether</label>
                                     <div class="col-sm-9">
-                                        <center><img src="@myp.QRCode" class="img-fluid w-50" /></center>
+                                        <center><img src="@myp.QrCode" class="img-fluid w-50" /></center>
                                         @myp.TetherAddress
                                     </div>
                                 </div>
@@ -204,7 +204,7 @@
                                 <div class="form-group col-md-6 col-sm-12 col-xs-12">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Created by</label>
                                     <div class="col-sm-9">
-                                        @myp.Created_by
+                                        @myp.CreatedBy
                                     </div>
                                 </div>
 
@@ -399,20 +399,20 @@
             var lastname = $("#txtlastname").val();
             var mobile = $("#txtmobile").val();
             var address = $("#txtaddress").val();
-            var bankname = $("#txtbankname").val();
+            var BankName = $("#txtbankname").val();
             var ifsc = $("#txtIFSC").val();
             var accountholder = $("#txtaccountholder").val();
             var pan = $("#txtpan").val();
             var upi = $("#txtupi").val();
-            var bankaccount = $("#txtbankaccount").val();
+            var BankAccount = $("#txtbankaccount").val();
             var status = true;
 
             if (upi == "") { toastr.error("Upi required"); status = false; }
             if (pan == "") { toastr.error("Pan number required"); status = false; }
             if (accountholder == "") { toastr.error("Account holder name required"); status = false; }
             if (ifsc == "") { toastr.error("Ifsc required"); status = false; }
-            if (bankaccount == "") { toastr.error("Bank account required"); status = false; }
-            if (bankname == "") { toastr.error("Bankname required"); status = false; }
+            if (BankAccount == "") { toastr.error("Bank account required"); status = false; }
+            if (BankName == "") { toastr.error("BankName required"); status = false; }
             if (address == "") { toastr.error("Address required"); status = false; }
             if (isNaN(mobile)) { toastr.error("Mobile number not valid"); status = false; }
             if (mobile == "") { toastr.error("Mobile number required"); status = false; }
@@ -428,7 +428,7 @@
                     dataType: "text json",
                     contentType: "application/json;charset=utf-8",
                     data: {
-                        "id": id, "firstname": firstname, "lastname": lastname, "mobile": mobile, "address": address, "bankname": bankname, "ifsc": ifsc, "accountholder": accountholder, "pan": pan, "upi": upi, "bankaccount": bankaccount
+                        "id": id, "firstname": firstname, "lastname": lastname, "mobile": mobile, "address": address, "BankName": BankName, "ifsc": ifsc, "accountholder": accountholder, "pan": pan, "upi": upi, "BankAccount": BankAccount
                     },
                     success: function (data) {
 
