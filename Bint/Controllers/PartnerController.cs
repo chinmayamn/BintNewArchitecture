@@ -137,7 +137,7 @@ namespace Bint.Controllers
         {
             try
             {
-                UsdDashboard bd = new UsdDashboard();
+                var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
                 bd.RequestUsd = _dbf.GetRequestUSDReport(r.UserId);
                 bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);

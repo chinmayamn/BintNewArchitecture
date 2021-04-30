@@ -242,7 +242,7 @@ namespace Bint.Models
         public string Userid { get; set; }
         public string FromUserId { get; set; }
         public string ToUserId { get; set; }
-        public Decimal Amount { get; set; }
+        public decimal Amount { get; set; }
         public DateTime RequestedDate { get; set; }
         public DateTime? TransferDate { get; set; }
         public string FromStatus { get; set; }
@@ -289,7 +289,7 @@ namespace Bint.Models
         public DateTime CreatedDate { get; set; }
         public string UserId { get; set; }
         public string TransactionId { get; set; }
-        public Decimal Amount { get; set; }
+        public decimal Amount { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
     }

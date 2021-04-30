@@ -47,27 +47,31 @@ namespace Bint.Controllers
         }
         public IActionResult Statistics()
         {
-            SavedStatsDashboard sd = new SavedStatsDashboard();
-            sd.Os = _context._captureDeviceData.GroupBy(s => s.OsName).Select(bn => new CaptureDeviceData { OsName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+            var sd = new SavedStatsDashboard
+            {
+                Os = _context._captureDeviceData.GroupBy(s => s.OsName).Select(bn => new CaptureDeviceData { OsName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() }),
 
-            sd.Browser = _context._captureDeviceData.GroupBy(s => s.BrowserName).Select(bn => new CaptureDeviceData { BrowserName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+                Browser = _context._captureDeviceData.GroupBy(s => s.BrowserName).Select(bn => new CaptureDeviceData { BrowserName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() }),
 
-            sd.WifiMobile = _context._captureDeviceData.GroupBy(s => s.Ipv4 == "" ? "Mobile Data" : "Wifi").Select(bn => new CaptureDeviceData { PublicIp = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+                WifiMobile = _context._captureDeviceData.GroupBy(s => s.Ipv4 == "" ? "Mobile Data" : "Wifi").Select(bn => new CaptureDeviceData { PublicIp = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() }),
 
-            sd.DeviceName = _context._captureDeviceData.GroupBy(s => s.DeviceName).Select(bn => new CaptureDeviceData { DeviceName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+                DeviceName = _context._captureDeviceData.GroupBy(s => s.DeviceName).Select(bn => new CaptureDeviceData { DeviceName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() }),
 
-            sd.BrandName = _context._captureDeviceData.Where(s => s.BrandName != "").GroupBy(s =>  s.BrandName).Select(bn => new CaptureDeviceData { BrandName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+                BrandName = _context._captureDeviceData.Where(s => s.BrandName != "").GroupBy(s => s.BrandName).Select(bn => new CaptureDeviceData { BrandName = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() }),
 
-            sd.URole = _context._captureDeviceData.GroupBy(s => s.URole).Select(bn => new CaptureDeviceData { URole = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+                URole = _context._captureDeviceData.GroupBy(s => s.URole).Select(bn => new CaptureDeviceData { URole = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() }),
 
-            sd.PublicIp = _context._captureDeviceData.Where(s => s.PublicIp != "" && s.PublicIp != "::1").GroupBy(s => s.PublicIp).Select(bn => new CaptureDeviceData { PublicIp = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() });
+                PublicIp = _context._captureDeviceData.Where(s => s.PublicIp != "" && s.PublicIp != "::1").GroupBy(s => s.PublicIp).Select(bn => new CaptureDeviceData { PublicIp = bn.Key, UserId = bn.Select(u2 => u2.UserId).Distinct().Count().ToString() })
+            };
             //bn.Select(u2 => u2.userid.Distinct().Count()).ToString()
             return View(sd);
         }
         public IActionResult Restricted()
         {
-            RestrictedAccessDashboard rdb = new RestrictedAccessDashboard();
-            rdb.RestrictedAccess = _context._restrictedAccess;
+            var rdb = new RestrictedAccessDashboard
+            {
+                RestrictedAccess = _context._restrictedAccess
+            };
             return View(rdb);
         }
         public IActionResult Settings()
@@ -87,8 +91,7 @@ namespace Bint.Controllers
         {
             try
             {
-                List<ErrorLog> el = new List<ErrorLog>();
-                el = _context.Log.ToList();
+                var el = _context.Log.ToList();
                 return View();
             }
             catch (Exception e)

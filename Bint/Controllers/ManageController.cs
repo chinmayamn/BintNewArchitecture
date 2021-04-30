@@ -667,7 +667,7 @@ namespace Bint.Controllers
                 var route = Request.Path.Value.Split("/")[1];
                 var ud = await _userManager.GetUserAsync(User); //get own wallet details
 
-                TransferUsd tusd = _context.TransferUsd.First(x => x.Id == id);
+                var tusd = _context.TransferUsd.First(x => x.Id == id);
 
                 if (act == "Transfer")
                 {
