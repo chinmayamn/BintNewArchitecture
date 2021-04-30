@@ -35,7 +35,7 @@
 
                             <div class="info-box-content-new">
                                 <span class="info-box-text-new">SMS Balance</span>
-                                <span class="info-box-number-new">@Model.SMSBalance</span>
+                                <span class="info-box-number-new">@Model.SmsBalance</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -48,7 +48,7 @@
 
                             <div class="info-box-content-new">
                                 <span class="info-box-text-new">Investor ID Counter</span>
-                                <span class="info-box-number-new">@Model._regId.InvestorId</span>
+                                <span class="info-box-number-new">@Model.RegId.InvestorId</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -61,7 +61,7 @@
 
                             <div class="info-box-content-new">
                                 <span class="info-box-text-new">Partner ID Counter</span>
-                                <span class="info-box-number-new">@Model._regId.PartnerId</span>
+                                <span class="info-box-number-new">@Model.RegId.PartnerId</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -77,7 +77,7 @@
 
                             <div class="info-box-content-new">
                                 <span class="info-box-text-new">Client ID Counter</span>
-                                <span class="info-box-number-new">@Model._regId.ClientId</span>
+                                <span class="info-box-number-new">@Model.RegId.ClientId</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -106,12 +106,12 @@
                                 <div>
                                     <h3 class="text-center">Deposit Tether USD</h3>
                                     <p class="text-center">by scanning this QR Code</p>
-                                    <img src="@Model.u.AdminQRCode" class="img-fluid" />
+                                    <img src="@Model.ApplicationUser.AdminQrCode" class="img-fluid" />
 
                                 </div>
                                 <p class="text-center mt-3 mb-1">or use this address below</p>
                                 <div class="alert alert-secondary">
-                                    @Model.u.AdminTetherAddress
+                                    @Model.ApplicationUser.AdminTetherAddress
                                 </div>
                                 <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
                                 <ul>
@@ -140,12 +140,12 @@
                                 <div>
                                     <h3 class="text-center">Deposit Tether USD</h3>
                                     <p class="text-center">by scanning this QR Code</p>
-                                    <img src="@Model.u.InvestorQRCode" class="img-fluid" />
+                                    <img src="@Model.ApplicationUser.InvestorQrCode" class="img-fluid" />
 
                                 </div>
                                 <p class="text-center mt-3 mb-1">or use this address below</p>
                                 <div class="alert alert-secondary">
-                                   @Model.u.InvestorTetherAddress
+                                   @Model.ApplicationUser.InvestorTetherAddress
                                 </div>
                                 <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
                                 <ul>
@@ -174,12 +174,12 @@
                                 <div>
                                     <h3 class="text-center">Deposit Tether USD</h3>
                                     <p class="text-center">by scanning this QR Code</p>
-                                    <img src="@Model.u.PartnerQRCode" class="img-fluid" />
+                                    <img src="@Model.ApplicationUser.PartnerQrCode" class="img-fluid" />
 
                                 </div>
                                 <p class="text-center mt-3 mb-1">or use this address below</p>
                                 <div class="alert alert-secondary">
-                                    @Model.u.PartnerTetherAddress
+                                    @Model.ApplicationUser.PartnerTetherAddress
                                 </div>
                                 <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
                                 <ul>
@@ -208,12 +208,12 @@
                                 <div>
                                     <h3 class="text-center">Deposit Tether USD</h3>
                                     <p class="text-center">by scanning this QR Code</p>
-                                    <img src="@Model.u.ClientQRCode" class="img-fluid" />
+                                    <img src="@Model.ApplicationUser.ClientQrCode" class="img-fluid" />
 
                                 </div>
                                 <p class="text-center mt-3 mb-1">or use this address below</p>
                                 <div class="alert alert-secondary">
-                                   @Model.u.ClientTetherAddress
+                                   @Model.ApplicationUser.ClientTetherAddress
                                 </div>
                                 <h5 class="text-center"><i class="icon fas fa-exclamation-triangle text-yellow"></i> IMPORTANT !</h5>
                                 <ul>

@@ -1,6 +1,6 @@
 ﻿@model RegisterViewModel
 @{
-    string u = Convert.ToString(ViewData["layout"]).ToLower();
+    var u = Convert.ToString(ViewData["layout"]).ToLower();
     if (u == "admin")
     {
         Layout = "~/Views/Shared/_AdminLayout.cshtml";

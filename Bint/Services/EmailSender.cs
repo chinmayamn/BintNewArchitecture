@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bint.Models;
+﻿using Bint.Models;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 namespace Bint.Services
 {
     // This class is used by the application to send email for account confirmation and password reset.
@@ -18,7 +15,7 @@ namespace Bint.Services
         }
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            Message m = new Message(_logger)
+            var m = new Message(_logger)
             {
                 EmailMessageBody = message,
                 To = email,

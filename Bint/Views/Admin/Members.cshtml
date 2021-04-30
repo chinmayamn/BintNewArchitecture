@@ -52,7 +52,7 @@
                                     @foreach (var item in Model.appUser)
                                     {
                                     <tr>
-                                        <td>@item.UserId <img class="img-circle elevation-2 userimagesmall float-right" alt="User Image" id="img3" src="@item.Profilepicture"></td>
+                                        <td>@item.UserId <img class="img-circle elevation-2 userimagesmall float-right" alt="User Image" id="img3" src="@item.ProfilePicture"></td>
                                       
                                         <td>@item.Email</td>
                                         <td>
@@ -61,7 +61,7 @@
                                         <td>@item.Lastname</td>
                                         <td>@item.Mobile</td>
                                         <td>@(item.LockoutEnd == null ? "Active" : "Locked")</td>
-                                        <td>@item.Created_on</td>
+                                        <td>@item.CreatedOn</td>
                                         <td>
                                            
                                             <form asp-action="deleteuser" method="post" asp-route-id=@item.Id>
