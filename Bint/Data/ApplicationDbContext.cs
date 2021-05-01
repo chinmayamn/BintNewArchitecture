@@ -1,9 +1,11 @@
-﻿using Bint.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using Bint.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bint.Data
 {
+    [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>,IApplicationDBContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

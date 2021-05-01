@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Serilog;
 
 namespace Bint
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()

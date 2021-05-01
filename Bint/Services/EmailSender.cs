@@ -1,8 +1,10 @@
-﻿using Bint.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using Bint.Models;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 namespace Bint.Services
 {
+    [ExcludeFromCodeCoverage]
     // This class is used by the application to send email for account confirmation and password reset.
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
     public class EmailSender : IEmailSender

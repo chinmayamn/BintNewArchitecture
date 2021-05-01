@@ -13,9 +13,11 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Bint
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -43,6 +45,7 @@ namespace Bint
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IApplicationDBContext, ApplicationDbContext>();
             services.AddTransient<IMessage, Message>();
+            services.AddTransient<IDbFunc, DbFunc>();
             
 
 
