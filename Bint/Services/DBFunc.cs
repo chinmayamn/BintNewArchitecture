@@ -4,11 +4,18 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using Bint.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Bint.Services
 {
     public class DbFunc:IDbFunc
     {
+        private static SqlConnection _conn;
+        private readonly ApplicationDbContext _context;
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
         private readonly IDbConstants _dbConstants;
@@ -18,6 +25,13 @@ namespace Bint.Services
             _logger = logger;
             _configuration = configuration;
             _dbConstants = dbConstants;
+        }
+
+        public IConfigurationRoot GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true);
+            return builder.Build();
         }
 
         public DataTable GetRequestUsdReport(string userid)
