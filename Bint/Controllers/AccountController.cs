@@ -814,9 +814,8 @@ namespace Bint.Controllers
             try
             {
                 var s = _context.Doc.First(x => x.Id == id);
-                var z = Directory.GetCurrentDirectory();
                 var t = "";
-                t = z + "\\wwwroot" + s.DocPath.Replace("/", "\\");
+                t = Directory.GetCurrentDirectory() + "\\wwwroot" + s.DocPath.Replace("/", "\\");
                 var fileInfo = new FileInfo(t);
                 if (fileInfo.Exists)
                     fileInfo.Delete();

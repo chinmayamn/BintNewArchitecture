@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bint.Data;
 using Bint.Models;
+using Bint.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

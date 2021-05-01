@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace Bint.Models
+namespace Bint.Services
 {
     public interface IDbFunc
     {

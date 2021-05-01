@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Bint.Data;
 using Bint.Models;
+using Bint.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -167,9 +168,8 @@ namespace Bint.Controllers
                 //hard delete previous file
                 try
                 {
-                    var z = Directory.GetCurrentDirectory();
                     var t = "";
-                    t = z + "\\wwwroot" + u.QrCode.Replace("/", "\\");
+                    t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.QrCode.Replace("/", "\\");
                     var fileInfo = new FileInfo(t);
                     if (fileInfo.Exists)
                         fileInfo.Delete();
