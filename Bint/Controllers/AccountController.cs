@@ -30,7 +30,7 @@ namespace Bint.Controllers
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
-        private readonly DbFunc _dbf;
+        private readonly IDbFunc _dbFunc;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
         private readonly IMessage _message;
@@ -48,7 +48,7 @@ namespace Bint.Controllers
             ILogger<AccountController> logger,
             IConfiguration configuration,
             ApplicationDbContext context,
-            IMessage message)
+            IMessage message,IDbFunc iDbFunc)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -59,7 +59,7 @@ namespace Bint.Controllers
             _configuration = configuration;
             _context = context;
             _message = message;
-            _dbf = new DbFunc(_logger, _context);
+            _dbFunc = iDbFunc;
         }
 
         [TempData] public string ErrorMessage { get; set; }
@@ -847,10 +847,10 @@ namespace Bint.Controllers
                 aupd.UserProfile = u;
                 var adb = new ActivityLogDashboard
                 {
-                    ActivityLogTable = _dbf.GetUserActivityLog(u.UserId)
+                    ActivityLogTable = _dbFunc.GetUserActivityLog(u.UserId)
                 };
                 aupd.ActivityLogDashboard = adb;
-                aupd.UserDocs = _dbf.GetKycDocs(id);
+                aupd.UserDocs = _dbFunc.GetKycDocs(id);
                 aupd.UserList = _userManager.Users.Where(x => x.CreatedBy == u.UserId);
                 return View(aupd);
             }

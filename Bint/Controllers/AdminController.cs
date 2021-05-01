@@ -29,12 +29,12 @@ namespace Bint.Controllers
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DbFunc _dbf;
+        private readonly IDbFunc _dbFunc;
         private readonly IHostingEnvironment _environment;
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
-            ApplicationDbContext context)
+            ApplicationDbContext context, IDbFunc iDbFunc)
         {
             _request = httpContext;
 
@@ -45,7 +45,7 @@ namespace Bint.Controllers
             _environment = environment;
             _logger = logger;
             _context = context;
-            _dbf = new DbFunc(_logger, _context);
+            _dbFunc = iDbFunc;
         }
 
         public IActionResult Dashboard()
@@ -73,8 +73,8 @@ namespace Bint.Controllers
                 adb.TotalBgc = _userManager.Users.Sum(x => x.Bgc);
                 adb.TotalUsd = _userManager.Users.Sum(x => x.Usd);
 
-                adb.AdminRequestDashboard = _dbf.GetAdminRequestDashboard();
-                var usdInvestment = _dbf.GetUsdInvestment();
+                adb.AdminRequestDashboard = _dbFunc.GetAdminRequestDashboard();
+                var usdInvestment = _dbFunc.GetUsdInvestment();
                 Dictionary<string,string> dd = new Dictionary<string, string>
                 {
                     {"adminusd", usdInvestment.Rows[0][0].ToString()},
@@ -83,7 +83,7 @@ namespace Bint.Controllers
                     {"clientusd", usdInvestment.Rows[0][3].ToString()}
                 };
                 adb.UsdInvestment = dd;
-                adb.UsdInvestmentMonthWise = _dbf.GetUsdInvestmentMonthwise();
+                adb.UsdInvestmentMonthWise = _dbFunc.GetUsdInvestmentMonthwise();
                 return View(adb);
             }
             catch (Exception ex)
@@ -114,9 +114,9 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Deposit");
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                bd.WithdrawUsd = _dbFunc.GetDepositWithdrawUsdRequestsadmin("Withdraw");
+                bd.DepositUsd = _dbFunc.GetDepositWithdrawUsdRequestsadmin("Deposit");
+                bd.Stats = _dbFunc.GetAlertStats(r.UserId);
                 return View(bd);
             }
             catch (Exception e)
@@ -145,7 +145,7 @@ namespace Bint.Controllers
         {
             try
             {
-                var idb = new Payback {UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)};
+                var idb = new Payback {UsdPayback = _dbFunc.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)};
                 return View(idb);
             }
             catch (Exception e)
@@ -350,7 +350,7 @@ namespace Bint.Controllers
                 var r = _userManager.GetUserAsync(User).Result;
                 var act = new ActivityLogDashboard
                 {
-                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                    ActivityLogTable = _dbFunc.GetUserActivityLog(r.UserId)
                 };
 
                 return View(act);
@@ -369,11 +369,11 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
-                bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
+                bd.RequestUsd = _dbFunc.GetRequestUsdReport(r.UserId);
+                bd.TransferUsd = _dbFunc.GetTransferUsdReport(r.UserId);
                 bd.QrCode = r.AdminQrCode;
                 bd.Tether = r.AdminTetherAddress;
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                bd.Stats = _dbFunc.GetAlertStats(r.UserId);
                 return View(bd);
             }
             catch (Exception e)

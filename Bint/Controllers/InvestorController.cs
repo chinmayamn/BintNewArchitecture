@@ -16,17 +16,17 @@ namespace Bint.Controllers
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
-        private readonly DbFunc _dbf;
+        private readonly IDbFunc _dbFunc;
         private readonly ILogger<InvestorController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context, IDbFunc iDbFunc)
         {
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _dbf = new DbFunc(_logger, _context);
+            _dbFunc = iDbFunc;
         }
 
         public IActionResult Dashboard()
@@ -43,7 +43,7 @@ namespace Bint.Controllers
                 idb.UserCount = u;
                 var pdb = new Payback
                 {
-                    UsdPaybackUser = _dbf.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPaybackUser = _dbFunc.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 idb.Payback = pdb;
                 return View(idb);
@@ -76,7 +76,7 @@ namespace Bint.Controllers
             {
                 var ud = new UserProfileDoc();
                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = _dbf.GetKycDocs(id);
+                ud.UserDocs = _dbFunc.GetKycDocs(id);
                 return View(ud);
             }
             catch (Exception e)
@@ -107,7 +107,7 @@ namespace Bint.Controllers
             {
                 var idb = new Payback
                 {
-                    UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPayback = _dbFunc.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 return View(idb);
             }
@@ -143,13 +143,13 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
-                bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
+                bd.RequestUsd = _dbFunc.GetRequestUsdReport(r.UserId);
+                bd.TransferUsd = _dbFunc.GetTransferUsdReport(r.UserId);
                 var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                bd.WithdrawUsd = _dbFunc.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbFunc.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
+                bd.Stats = _dbFunc.GetAlertStats(r.UserId);
                 switch (uRole)
                 {
                     case "Client":
@@ -242,7 +242,7 @@ namespace Bint.Controllers
                 var r = _userManager.GetUserAsync(User).Result;
                 var act = new ActivityLogDashboard
                 {
-                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                    ActivityLogTable = _dbFunc.GetUserActivityLog(r.UserId)
                 };
                 return View(act);
             }
