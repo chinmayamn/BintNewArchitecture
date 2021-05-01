@@ -20,7 +20,7 @@ namespace BintTest.Controllers
             //mock.Setup(p => p.GetNameById(1)).Returns("Jignesh");
            // string result = home.GetNameById(1);
             //Act
-            var result = _superAdminController.Dashboard() as IActionResult;
+            var result = _superAdminController.Dashboard();
 
             //Assert
             Assert.NotNull(result);
@@ -29,7 +29,7 @@ namespace BintTest.Controllers
         public void Test_Settings()
         {
             //Act
-            var result = _superAdminController.Settings() as IActionResult;
+            var result = _superAdminController.Settings();
 
             //Assert
             Assert.NotNull(result);
@@ -38,7 +38,7 @@ namespace BintTest.Controllers
         public void Test_Restricted()
         {
             //Act
-            var result = _superAdminController.Restricted() as IActionResult;
+            var result = _superAdminController.Restricted();
 
             //Assert
             Assert.NotNull(result);
@@ -48,7 +48,7 @@ namespace BintTest.Controllers
         public void Test_Statistics()
         {
             //Act
-            var result = _superAdminController.Statistics() as IActionResult;
+            var result = _superAdminController.Statistics();
 
             //Assert
             Assert.NotNull(result);

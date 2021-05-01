@@ -35,7 +35,7 @@ namespace BintTest.Controllers
             var roleController = new RoleController(roleManagerMock, userManagerMock.Object, logMock.Object);
 
             //Act
-            var result = roleController.Index() as ViewResult;
+            var result = roleController.Index();
 
             //Assert
             Assert.NotNull(result);
@@ -56,7 +56,7 @@ namespace BintTest.Controllers
             var roleController = new RoleController(roleManagerMock, userManagerMock.Object, logMock.Object);
            
             //Act
-            var result = roleController.Index() as ViewResult;
+            var result = roleController.Index();
 
             //Assert
             Assert.NotNull(result);
