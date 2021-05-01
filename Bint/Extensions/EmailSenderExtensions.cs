@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace Bint.Services
 {
+    [ExcludeFromCodeCoverage]
     public static class EmailSenderExtensions
     {
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
