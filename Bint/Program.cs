@@ -22,13 +22,6 @@ namespace Bint
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger();
-
-            //Serilog.Debugging.SelfLog.Enable(msg =>
-            //{
-            //    Debug.Print(msg);
-            //    Debugger.Break();
-            //});
-
             BuildWebHost(args).Run();
         }
 
