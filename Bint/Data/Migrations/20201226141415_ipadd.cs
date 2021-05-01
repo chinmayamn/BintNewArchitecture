@@ -10,12 +10,12 @@ namespace Bint.Data.Migrations
         {
             migrationBuilder.RenameColumn(
                 name: "IP",
-                table: "_captureDeviceData",
+                table: "CaptureDeviceData",
                 newName: "IPv6");
 
             migrationBuilder.AddColumn<string>(
                 name: "IPv4",
-                table: "_captureDeviceData",
+                table: "CaptureDeviceData",
                 nullable: true);
         }
 
@@ -23,11 +23,11 @@ namespace Bint.Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "IPv4",
-                table: "_captureDeviceData");
+                table: "CaptureDeviceData");
 
             migrationBuilder.RenameColumn(
                 name: "IPv6",
-                table: "_captureDeviceData",
+                table: "CaptureDeviceData",
                 newName: "IP");
         }
     }

@@ -125,7 +125,6 @@ namespace Bint.Controllers
             {
                 ViewBag.ReturnUrl = "/investor/partners";
                 var m = new CustomerUserCreate();
-                var id = _userManager.GetUserId(User);
                 IEnumerable<ApplicationUser> z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
                 m.AppUser = z;
                 return View(m);
@@ -145,26 +144,26 @@ namespace Bint.Controllers
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
                 bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
-                bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);
+                bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
                 var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
                 bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
                 bd.Stats = _dbf.GetAlertStats(r.UserId);
-                if (uRole == "Client")
+                switch (uRole)
                 {
-                    bd.QrCode = au[0].ClientQrCode;
-                    bd.Tether = au[0].ClientTetherAddress;
-                }
-                else if (uRole == "Partner")
-                {
-                    bd.QrCode = au[0].PartnerQrCode;
-                    bd.Tether = au[0].PartnerTetherAddress;
-                }
-                else if (uRole == "Investor")
-                {
-                    bd.QrCode = au[0].InvestorQrCode;
-                    bd.Tether = au[0].InvestorTetherAddress;
+                    case "Client":
+                        bd.QrCode = au[0].ClientQrCode;
+                        bd.Tether = au[0].ClientTetherAddress;
+                        break;
+                    case "Partner":
+                        bd.QrCode = au[0].PartnerQrCode;
+                        bd.Tether = au[0].PartnerTetherAddress;
+                        break;
+                    case "Investor":
+                        bd.QrCode = au[0].InvestorQrCode;
+                        bd.Tether = au[0].InvestorTetherAddress;
+                        break;
                 }
 
                 return View(bd);

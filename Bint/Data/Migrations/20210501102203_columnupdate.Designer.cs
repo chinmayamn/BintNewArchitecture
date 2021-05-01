@@ -11,8 +11,8 @@ using System;
 namespace Bint.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201228170402_roleadding")]
-    partial class roleadding
+    [Migration("20210501102203_columnupdate")]
+    partial class columnupdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,24 @@ namespace Bint.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Bint.Models.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Activity");
+
+                    b.Property<DateTime>("ActivityDate");
+
+                    b.Property<string>("ActivityType");
+
+                    b.Property<string>("Userid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActivityLog");
+                });
 
             modelBuilder.Entity("Bint.Models.ApplicationUser", b =>
                 {
@@ -32,9 +50,19 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("Address");
 
+                    b.Property<string>("AdminQrCode");
+
+                    b.Property<string>("AdminTetherAddress");
+
                     b.Property<string>("BankAccount");
 
                     b.Property<string>("BankName");
+
+                    b.Property<decimal>("Bgc");
+
+                    b.Property<string>("ClientQrCode");
+
+                    b.Property<string>("ClientTetherAddress");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -54,13 +82,19 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("IfscCode");
 
+                    b.Property<string>("InvestorQrCode");
+
+                    b.Property<string>("InvestorTetherAddress");
+
+                    b.Property<string>("Kyc");
+
                     b.Property<string>("Lastname");
 
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<int>("Mobile");
+                    b.Property<string>("Mobile");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -68,9 +102,13 @@ namespace Bint.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("OTP");
+                    b.Property<string>("Otp");
 
                     b.Property<string>("Pan");
+
+                    b.Property<string>("PartnerQrCode");
+
+                    b.Property<string>("PartnerTetherAddress");
 
                     b.Property<string>("PasswordHash");
 
@@ -80,13 +118,19 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("ProfilePicture");
 
+                    b.Property<string>("QrCode");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<string>("Status");
 
+                    b.Property<string>("TetherAddress");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UpiId");
+
+                    b.Property<decimal>("Usd");
 
                     b.Property<string>("UserId");
 
@@ -106,9 +150,9 @@ namespace Bint.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Bint.Models.CaptureData", b =>
+            modelBuilder.Entity("Bint.Models.CaptureDeviceData", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Brand");
@@ -123,31 +167,195 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("DeviceName");
 
-                    b.Property<string>("IPv4");
+                    b.Property<string>("Ipv4");
 
-                    b.Property<string>("IPv6");
+                    b.Property<string>("Ipv6");
 
                     b.Property<DateTime>("LoginTime");
 
                     b.Property<DateTime>("LogoutTime");
 
-                    b.Property<string>("OSName");
+                    b.Property<string>("OsName");
 
-                    b.Property<string>("OSPlatform");
+                    b.Property<string>("OsPlatform");
 
-                    b.Property<string>("OSVersion");
+                    b.Property<string>("OsVersion");
 
                     b.Property<string>("PublicIp");
 
+                    b.Property<string>("URole");
+
+                    b.Property<string>("UserId");
+
                     b.Property<string>("Useragent");
 
-                    b.Property<string>("urole");
-
-                    b.Property<string>("userid");
-
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("CaptureDeviceData");
+                });
+
+            modelBuilder.Entity("Bint.Models.DepositWithdraw", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Amount");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Status");
+
+                    b.Property<string>("TransactionId");
+
+                    b.Property<string>("UsdAction");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DepositWithdraw");
+                });
+
+            modelBuilder.Entity("Bint.Models.Doc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("DocPath");
+
+                    b.Property<string>("Filename");
+
+                    b.Property<string>("Reason");
+
+                    b.Property<string>("Status");
+
+                    b.Property<string>("Userid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Doc");
+                });
+
+            modelBuilder.Entity("Bint.Models.ErrorLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Exception");
+
+                    b.Property<string>("Level");
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("MessageTemplate");
+
+                    b.Property<string>("Properties");
+
+                    b.Property<DateTime>("TimeStamp");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Log");
+                });
+
+            modelBuilder.Entity("Bint.Models.RegId", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdminId");
+
+                    b.Property<string>("ClientId");
+
+                    b.Property<string>("InvestorId");
+
+                    b.Property<string>("PartnerId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RegId");
+                });
+
+            modelBuilder.Entity("Bint.Models.RestrictedAccess", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Brand");
+
+                    b.Property<string>("BrandName");
+
+                    b.Property<string>("BrowserName");
+
+                    b.Property<string>("BrowserVersion");
+
+                    b.Property<string>("DeviceModel");
+
+                    b.Property<string>("DeviceName");
+
+                    b.Property<DateTime>("ErrorTime");
+
+                    b.Property<string>("Ipv4");
+
+                    b.Property<string>("Ipv6");
+
+                    b.Property<string>("OsName");
+
+                    b.Property<string>("OsPlatform");
+
+                    b.Property<string>("OsVersion");
+
+                    b.Property<string>("PublicIp");
+
+                    b.Property<string>("ReturnUrl");
+
+                    b.Property<string>("Urole");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("Useragent");
+
+                    b.Property<string>("Verified");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RestrictedAccess");
+                });
+
+            modelBuilder.Entity("Bint.Models.TransferUsd", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Amount");
+
+                    b.Property<string>("FromStatus");
+
+                    b.Property<decimal>("FromTotalAmount");
+
+                    b.Property<string>("FromUserId");
+
+                    b.Property<string>("Reason");
+
+                    b.Property<DateTime>("RequestedDate");
+
+                    b.Property<string>("ToStatus");
+
+                    b.Property<decimal>("ToTotalAmount");
+
+                    b.Property<string>("ToUserId");
+
+                    b.Property<DateTime?>("TransferDate");
+
+                    b.Property<string>("Userid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransferUsd");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

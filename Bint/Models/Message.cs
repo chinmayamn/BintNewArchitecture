@@ -21,7 +21,7 @@ namespace Bint.Models
             try
             {
                 SendEmail(message);
-                SendSMS(message);
+                SendSms(message);
 
             }
             catch (Exception e)
@@ -67,7 +67,7 @@ namespace Bint.Models
                 }
         }
 
-        public string SendSMS(Message message)
+        public string SendSms(Message message)
         {
             try
             {

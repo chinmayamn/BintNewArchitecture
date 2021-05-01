@@ -77,23 +77,19 @@ namespace Bint.Controllers
                     foreach (var userId in model.AddIds ?? new string[] { })
                     {
                         var user = await _userManager.FindByIdAsync(userId);
-                        if (user != null)
-                        {
-                            result = await _userManager.AddToRoleAsync(user, model.RoleName);
-                            if (!result.Succeeded)
-                                Errors(result);
-                        }
+                        if (user == null) continue;
+                        result = await _userManager.AddToRoleAsync(user, model.RoleName);
+                        if (!result.Succeeded)
+                            Errors(result);
                     }
 
                     foreach (var userId in model.DeleteIds ?? new string[] { })
                     {
                         var user = await _userManager.FindByIdAsync(userId);
-                        if (user != null)
-                        {
-                            result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
-                            if (!result.Succeeded)
-                                Errors(result);
-                        }
+                        if (user == null) continue;
+                        result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
+                        if (!result.Succeeded)
+                            Errors(result);
                     }
                 }
 

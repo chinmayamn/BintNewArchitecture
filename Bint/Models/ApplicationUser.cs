@@ -6,7 +6,6 @@ namespace Bint.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
-        private string Qr { get; set; }
         public string UserId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }

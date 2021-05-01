@@ -12,7 +12,7 @@ namespace Bint.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20210113063220_usd")]
-    partial class usd
+    partial class Usd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,24 +28,24 @@ namespace Bint.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Account_holder_name");
+                    b.Property<string>("AccountHolderName");
 
                     b.Property<string>("Address");
 
-                    b.Property<decimal>("BGC");
+                    b.Property<decimal>("Bgc");
 
-                    b.Property<string>("Bankaccount");
+                    b.Property<string>("BankAccount");
 
-                    b.Property<string>("Bankname");
+                    b.Property<string>("BankName");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Created_by");
+                    b.Property<string>("CreatedBy");
 
-                    b.Property<string>("Created_id");
+                    b.Property<string>("CreatedId");
 
-                    b.Property<DateTime>("Created_on");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -54,7 +54,7 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("Firstname");
 
-                    b.Property<string>("Ifsc_code");
+                    b.Property<string>("IfscCode");
 
                     b.Property<string>("Lastname");
 
@@ -80,7 +80,7 @@ namespace Bint.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("Profilepicture");
+                    b.Property<string>("ProfilePicture");
 
                     b.Property<string>("SecurityStamp");
 
@@ -88,9 +88,9 @@ namespace Bint.Data.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
-                    b.Property<decimal>("USD");
+                    b.Property<decimal>("Usd");
 
-                    b.Property<string>("Upi_id");
+                    b.Property<string>("UpiId");
 
                     b.Property<string>("UserId");
 
@@ -151,7 +151,7 @@ namespace Bint.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("_captureDeviceData");
+                    b.ToTable("CaptureDeviceData");
                 });
 
             modelBuilder.Entity("Bint.Models.Doc", b =>
@@ -259,7 +259,7 @@ namespace Bint.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("_restrictedAccess");
+                    b.ToTable("RestrictedAccess");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

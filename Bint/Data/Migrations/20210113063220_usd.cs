@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 namespace Bint.Data.Migrations
 {
-    public partial class usd : Migration
+    public partial class Usd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>(
-                name: "BGC",
+                name: "Bgc",
                 table: "AspNetUsers",
                 nullable: false,
                 defaultValue: 0m);
 
             migrationBuilder.AddColumn<decimal>(
-                name: "USD",
+                name: "Usd",
                 table: "AspNetUsers",
                 nullable: false,
                 defaultValue: 0m);
@@ -24,11 +24,11 @@ namespace Bint.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "BGC",
+                name: "Bgc",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "USD",
+                name: "Usd",
                 table: "AspNetUsers");
         }
     }

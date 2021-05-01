@@ -669,9 +669,10 @@ namespace Bint.Controllers
 
                 var tusd = _context.TransferUsd.First(x => x.Id == id);
 
-                if (act == "Transfer")
+                switch (act)
                 {
-                    if (ud.Usd >= tusd.Amount) //transfer if having amount
+                    //transfer if having amount
+                    case "Transfer" when ud.Usd >= tusd.Amount:
                     {
                         var mm = new Message(_messageLogger);
                         var activityLog = new ActivityLog();
@@ -700,7 +701,7 @@ namespace Bint.Controllers
                             ActivityType = ActivityLogEnum.ReceiveUsd.ToString(),
                             ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
                             Activity = "Received " + tusd.Amount + " Usd from " + tusd.ToUserId +
-                                               ". Balance : " + uid.Usd
+                                       ". Balance : " + uid.Usd
                         }; //set activitylog
                         _context.ActivityLog.Add(activityLog);
                         await _context.SaveChangesAsync();
@@ -741,7 +742,7 @@ namespace Bint.Controllers
                             ActivityType = ActivityLogEnum.TransferUsd.ToString(),
                             ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
                             Activity = "Transferred " + tusd.Amount + " Usd to " + tusd.FromUserId +
-                                               ". Balance : " + ud.Usd
+                                       ". Balance : " + ud.Usd
                         }; //set activitylog
                         _context.ActivityLog.Add(activityLog);
                         await _context.SaveChangesAsync();
@@ -761,64 +762,63 @@ namespace Bint.Controllers
                         TempData["data"] = activityLog.Activity;
                         return Json("success");
                     }
-
                     // TempData["error"] = "Insufficient amount in Usd wallet";
-                    return Json("Insufficient amount in Usd wallet");
+                    case "Transfer":
+                        return Json("Insufficient amount in Usd wallet");
+                    case "Reject":
+                    {
+                        tusd.FromStatus = tusd.ToStatus = TransferUsdStatusEnum.Rejected.ToString();
+                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                        await _context.SaveChangesAsync();
+
+                        var activityLog = new ActivityLog
+                        {
+                            Userid = tusd.ToUserId,
+                            ActivityType = ActivityLogEnum.Reject.ToString(),
+                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                            Activity = "Rejected " + tusd.Amount + " Usd to " + tusd.FromUserId
+                        }; //set activitylog
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        var mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = ud.Mobile,
+                            To = ud.Email,
+                            Subject = "Usd Rejected"
+                        }; //sending message to himself
+                        _message.SendMessage(mm);
+
+                        var uid = await _userManager.FindByIdAsync(tusd.Userid); //sending message to requested person
+
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer",
+                            SmsMessageBody = ud.UserId + " has transferred " + tusd.Amount + " Usd to transfer",
+                            MobileNumber = uid.Mobile,
+                            To = uid.Email,
+                            Subject = "Usd Rejected"
+                        };
+                        _message.SendMessage(mm);
+
+                        activityLog = new ActivityLog
+                        {
+                            Userid = uid.UserId,
+                            ActivityType = ActivityLogEnum.Reject.ToString(),
+                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                            Activity = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer"
+                        }; //set activitylog
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        TempData["data"] = activityLog.Activity;
+                        return Json("success");
+                    }
+                    default:
+                        return RedirectToAction("Usd", route);
                 }
-
-                if (act == "Reject")
-                {
-                    tusd.FromStatus = tusd.ToStatus = TransferUsdStatusEnum.Rejected.ToString();
-                    tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-                    await _context.SaveChangesAsync();
-
-                    var activityLog = new ActivityLog
-                    {
-                        Userid = tusd.ToUserId,
-                        ActivityType = ActivityLogEnum.Reject.ToString(),
-                        ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
-                        Activity = "Rejected " + tusd.Amount + " Usd to " + tusd.FromUserId
-                    }; //set activitylog
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    var mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = ud.Mobile,
-                        To = ud.Email,
-                        Subject = "Usd Rejected"
-                    }; //sending message to himself
-                    _message.SendMessage(mm);
-
-                    var uid = await _userManager.FindByIdAsync(tusd.Userid); //sending message to requested person
-
-                    mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer",
-                        SmsMessageBody = ud.UserId + " has transferred " + tusd.Amount + " Usd to transfer",
-                        MobileNumber = uid.Mobile,
-                        To = uid.Email,
-                        Subject = "Usd Rejected"
-                    };
-                    _message.SendMessage(mm);
-
-                    activityLog = new ActivityLog
-                    {
-                        Userid = uid.UserId,
-                        ActivityType = ActivityLogEnum.Reject.ToString(),
-                        ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
-                        Activity = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer"
-                    }; //set activitylog
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    TempData["data"] = activityLog.Activity;
-                    return Json("success");
-                }
-
-                return RedirectToAction("Usd", route);
             }
             catch (Exception ex)
             {

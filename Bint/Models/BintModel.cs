@@ -155,12 +155,6 @@ namespace Bint.Models
         public List<IdentityRole> URole { get; set; }
 
     }
-
-    public class SuperAdmin
-    {
-        public IList<ApplicationUser> LoggedInUser { get; set; }
-    }
-
     public class ErrorLog
     {
         public int Id { get; set; }
@@ -267,14 +261,7 @@ namespace Bint.Models
     {
         public DataTable UserDocs { get; set; }
     }
-    public enum KycDocsStatusEnum
-    {
-        Accepted, Pending, Rejected
-    }
-    //public enum UserStatusEnum
-    //{
-    //    Verified, Pending, VerificationFailed, Processing
-    //}
+
     public enum ActivityLogEnum
     {
         Person,Usd,Bgc,TransferUsd,ReceiveUsd,RequestUsd,Plan,Reject,Debit,Credit,DeletePerson,Pending,VerificationFailed,Verified,DepositUsd,WithdrawUsd,ConfirmDepositUsd,ConfirmWithdrawUsd

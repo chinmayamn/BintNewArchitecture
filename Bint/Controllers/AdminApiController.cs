@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.IO;
 namespace Bint.Controllers
 {
     [Produces("application/json")]
@@ -183,15 +182,22 @@ namespace Bint.Controllers
                 try
                 {
                     var t = "";
-                    if (role == "Admin")
-                        t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
-                    if (role == "Investor")
-                        t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
-                    if (role == "Partner")
-                        t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\"); 
-                    if (role == "Client")
-                       t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ClientQrCode.Replace("/", "\\");
-   
+                    switch (role)
+                    {
+                        case "Admin":
+                            t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.AdminQrCode.Replace("/", "\\");
+                            break;
+                        case "Investor":
+                            t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.InvestorQrCode.Replace("/", "\\");
+                            break;
+                        case "Partner":
+                            t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.PartnerQrCode.Replace("/", "\\");
+                            break;
+                        case "Client":
+                            t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ClientQrCode.Replace("/", "\\");
+                            break;
+                    }
+
                     var fileInfo = new FileInfo(t);
                     if (fileInfo.Exists)
                         fileInfo.Delete();
@@ -204,25 +210,24 @@ namespace Bint.Controllers
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream);
-                    if (role == "Admin")
+                    switch (role)
                     {
-                        u.AdminQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
-                        u.AdminTetherAddress = txtTether;
-                    }
-                    else if (role == "Investor")
-                    {
-                        u.InvestorQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
-                        u.InvestorTetherAddress = txtTether;
-                    }
-                    else if (role == "Partner")
-                    {
-                        u.PartnerQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
-                        u.PartnerTetherAddress = txtTether;
-                    }
-                    else if (role == "Client")
-                    {
-                        u.ClientQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
-                        u.ClientTetherAddress = txtTether;
+                        case "Admin":
+                            u.AdminQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                            u.AdminTetherAddress = txtTether;
+                            break;
+                        case "Investor":
+                            u.InvestorQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                            u.InvestorTetherAddress = txtTether;
+                            break;
+                        case "Partner":
+                            u.PartnerQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                            u.PartnerTetherAddress = txtTether;
+                            break;
+                        case "Client":
+                            u.ClientQrCode = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
+                            u.ClientTetherAddress = txtTether;
+                            break;
                     }
 
 
@@ -254,127 +259,129 @@ namespace Bint.Controllers
                 var activityLog = new ActivityLog();
                 var tusd = _context.DepositWithdraw.First(x => x.Id == id); //deposit here
 
-                if (status == "Deposit")
+                switch (status)
                 {
-                    tusd.ModifiedDate = dt;
-                    tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
-                    await _context.SaveChangesAsync();
-                    var ud = _userManager.Users.First(x => x.UserId == tusd.UserId); //update his account with deposit
-                    ud.Usd += tusd.Amount;
-                    await _userManager.UpdateAsync(ud);
-
-                    var myt = new TransferUsd
+                    case "Deposit":
                     {
-                        Amount = tusd.Amount,
-                        FromStatus = TransferUsdStatusEnum.Deposit.ToString(),
-                        ToStatus = TransferUsdStatusEnum.Deposit.ToString(),
-                        FromTotalAmount = ud.Usd,
-                        ToTotalAmount = ud.Usd,
-                        RequestedDate = dt,
-                        TransferDate = dt,
-                        FromUserId = tusd.UserId,
-                        ToUserId = tusd.UserId,
-                        Userid = ud.Id
-                    };
-                    _context.TransferUsd.Add(myt);
-                    await _context.SaveChangesAsync();
+                        tusd.ModifiedDate = dt;
+                        tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
+                        await _context.SaveChangesAsync();
+                        var ud = _userManager.Users.First(x => x.UserId == tusd.UserId); //update his account with deposit
+                        ud.Usd += tusd.Amount;
+                        await _userManager.UpdateAsync(ud);
+
+                        var myt = new TransferUsd
+                        {
+                            Amount = tusd.Amount,
+                            FromStatus = TransferUsdStatusEnum.Deposit.ToString(),
+                            ToStatus = TransferUsdStatusEnum.Deposit.ToString(),
+                            FromTotalAmount = ud.Usd,
+                            ToTotalAmount = ud.Usd,
+                            RequestedDate = dt,
+                            TransferDate = dt,
+                            FromUserId = tusd.UserId,
+                            ToUserId = tusd.UserId,
+                            Userid = ud.Id
+                        };
+                        _context.TransferUsd.Add(myt);
+                        await _context.SaveChangesAsync();
 
 
-                    //to admin
-                    activityLog.Userid = au[0].UserId;
-                    activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString();
-                    activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId +
-                                           ". Balance : " + ud.Usd;
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
+                        //to admin
+                        activityLog.Userid = au[0].UserId;
+                        activityLog.ActivityDate = dt;
+                        activityLog.ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString();
+                        activityLog.Activity = "Confirmed deposit " + tusd.Amount + " Usd of user " + tusd.UserId +
+                                               ". Balance : " + ud.Usd;
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
 
-                    mm = new Message(_messageLogger)
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = au[0].Mobile,
+                            To = au[0].Email,
+                            Subject = "Usd Deposit Confirmed"
+                        }; //to admin
+                        _message.SendMessage(mm);
+
+                        activityLog = new ActivityLog
+                        {
+                            Userid = tusd.UserId,
+                            ActivityDate = dt,
+                            ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString(),
+                            Activity = "Confirmed deposit " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
+                        }; //to user
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = ud.Mobile,
+                            To = ud.Email,
+                            Subject = "Usd Deposit Confirmed"
+                        }; //to user
+                        _message.SendMessage(mm);
+
+                        TempData["data"] = activityLog.Activity;
+                        return Json("success");
+                    }
+                    case "Reject":
                     {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = au[0].Mobile,
-                        To = au[0].Email,
-                        Subject = "Usd Deposit Confirmed"
-                    }; //to admin
-                    _message.SendMessage(mm);
+                        tusd.ModifiedDate = dt;
+                        tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
+                        await _context.SaveChangesAsync();
 
-                    activityLog = new ActivityLog
-                    {
-                        Userid = tusd.UserId,
-                        ActivityDate = dt,
-                        ActivityType = ActivityLogEnum.ConfirmDepositUsd.ToString(),
-                        Activity = "Confirmed deposit " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
-                    }; //to user
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
+                        var ud = await _userManager.GetUserAsync(User); //update his account with deposit
 
-                    mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = ud.Mobile,
-                        To = ud.Email,
-                        Subject = "Usd Deposit Confirmed"
-                    }; //to user
-                    _message.SendMessage(mm);
 
-                    TempData["data"] = activityLog.Activity;
-                    return Json("success");
+                        //to admin
+                        activityLog.Userid = au[0].UserId;
+                        activityLog.ActivityDate = dt;
+                        activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
+                        activityLog.Activity = "Rejected deposit " + tusd.Amount + " Usd of user " + tusd.UserId;
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = au[0].Mobile,
+                            To = au[0].Email,
+                            Subject = "Usd Deposit Rejected"
+                        }; //to admin
+                        _message.SendMessage(mm);
+
+                        activityLog = new ActivityLog
+                        {
+                            Userid = tusd.UserId,
+                            ActivityDate = dt,
+                            ActivityType = ActivityLogEnum.Reject.ToString(),
+                            Activity = "Rejected deposit " + tusd.Amount + " Usd by Admin"
+                        }; //to user
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = ud.Mobile,
+                            To = ud.Email,
+                            Subject = "Usd Deposit Rejected"
+                        }; //to user
+                        _message.SendMessage(mm);
+
+                        TempData["data"] = activityLog.Activity;
+                        return Json("success");
+                    }
+                    default:
+                        return Json("success");
                 }
-
-                if (status == "Reject")
-                {
-                    tusd.ModifiedDate = dt;
-                    tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
-                    await _context.SaveChangesAsync();
-
-                    var ud = await _userManager.GetUserAsync(User); //update his account with deposit
-
-
-                    //to admin
-                    activityLog.Userid = au[0].UserId;
-                    activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.Activity = "Rejected deposit " + tusd.Amount + " Usd of user " + tusd.UserId;
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = au[0].Mobile,
-                        To = au[0].Email,
-                        Subject = "Usd Deposit Rejected"
-                    }; //to admin
-                    _message.SendMessage(mm);
-
-                    activityLog = new ActivityLog
-                    {
-                        Userid = tusd.UserId,
-                        ActivityDate = dt,
-                        ActivityType = ActivityLogEnum.Reject.ToString(),
-                        Activity = "Rejected deposit " + tusd.Amount + " Usd by Admin"
-                    }; //to user
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = ud.Mobile,
-                        To = ud.Email,
-                        Subject = "Usd Deposit Rejected"
-                    }; //to user
-                    _message.SendMessage(mm);
-
-                    TempData["data"] = activityLog.Activity;
-                    return Json("success");
-                }
-
-                return Json("success");
             }
             catch (Exception ex)
             {
@@ -397,9 +404,9 @@ namespace Bint.Controllers
                 var tusd = _context.DepositWithdraw.First(x => x.Id == id); //deposit here
                 var ud = _userManager.Users.First(x => x.UserId == tusd.UserId);
 
-                if (status == "Withdraw")
+                switch (status)
                 {
-                    if (ud.Usd >= tusd.Amount)
+                    case "Withdraw" when ud.Usd >= tusd.Amount:
                     {
                         tusd.ModifiedDate = dt;
                         tusd.Status = TransferUsdStatusEnum.Accepted.ToString();
@@ -452,7 +459,7 @@ namespace Bint.Controllers
                             ActivityDate = dt,
                             ActivityType = ActivityLogEnum.ConfirmWithdrawUsd.ToString(),
                             Activity =
-                            "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
+                                "Confirmed withdraw " + tusd.Amount + " Usd by Admin. Balance : " + ud.Usd
                         }; //to user
                         _context.ActivityLog.Add(activityLog);
                         await _context.SaveChangesAsync();
@@ -470,59 +477,59 @@ namespace Bint.Controllers
                         TempData["data"] = activityLog.Activity;
                         return Json("success");
                     }
+                    case "Withdraw":
+                        TempData["error"] = "Insufficient amount in user account balance to withdraw";
+                        break;
+                    case "Reject":
+                    {
+                        tusd.ModifiedDate = dt;
+                        tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
+                        await _context.SaveChangesAsync();
+                        var sud = await _userManager.GetUserAsync(User); //update his account with deposit
 
-                    TempData["error"] = "Insufficient amount in user account balance to withdraw";
+                        //to admin
+                        activityLog.Userid = au[0].UserId;
+                        activityLog.ActivityDate = dt;
+                        activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
+                        activityLog.Activity = "Rejected withdraw " + tusd.Amount + " Usd of user " + tusd.UserId;
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = au[0].Mobile,
+                            To = au[0].Email,
+                            Subject = "Usd Withdraw Rejected"
+                        }; //to admin
+                        _message.SendMessage(mm);
+
+                        activityLog = new ActivityLog
+                        {
+                            Userid = tusd.UserId,
+                            ActivityDate = dt,
+                            ActivityType = ActivityLogEnum.Reject.ToString(),
+                            Activity = "Rejected withdraw " + tusd.Amount + " Usd by Admin"
+                        }; //to user
+                        _context.ActivityLog.Add(activityLog);
+                        await _context.SaveChangesAsync();
+
+                        mm = new Message(_messageLogger)
+                        {
+                            EmailMessageBody = activityLog.Activity,
+                            SmsMessageBody = activityLog.Activity,
+                            MobileNumber = sud.Mobile,
+                            To = sud.Email,
+                            Subject = "Usd Withdraw Rejected"
+                        }; //to user
+                        _message.SendMessage(mm);
+
+                        TempData["data"] = activityLog.Activity;
+                        return Json("success");
+                    }
                 }
 
-
-                if (status == "Reject")
-                {
-                    tusd.ModifiedDate = dt;
-                    tusd.Status = TransferUsdStatusEnum.Rejected.ToString();
-                    await _context.SaveChangesAsync();
-                    var sud = await _userManager.GetUserAsync(User); //update his account with deposit
-
-                    //to admin
-                    activityLog.Userid = au[0].UserId;
-                    activityLog.ActivityDate = dt;
-                    activityLog.ActivityType = ActivityLogEnum.Reject.ToString();
-                    activityLog.Activity = "Rejected withdraw " + tusd.Amount + " Usd of user " + tusd.UserId;
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = au[0].Mobile,
-                        To = au[0].Email,
-                        Subject = "Usd Withdraw Rejected"
-                    }; //to admin
-                    _message.SendMessage(mm);
-
-                    activityLog = new ActivityLog
-                    {
-                        Userid = tusd.UserId,
-                        ActivityDate = dt,
-                        ActivityType = ActivityLogEnum.Reject.ToString(),
-                        Activity = "Rejected withdraw " + tusd.Amount + " Usd by Admin"
-                    }; //to user
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    mm = new Message(_messageLogger)
-                    {
-                        EmailMessageBody = activityLog.Activity,
-                        SmsMessageBody = activityLog.Activity,
-                        MobileNumber = sud.Mobile,
-                        To = sud.Email,
-                        Subject = "Usd Withdraw Rejected"
-                    }; //to user
-                    _message.SendMessage(mm);
-
-                    TempData["data"] = activityLog.Activity;
-                    return Json("success");
-                }
 
                 return Json("success");
             }

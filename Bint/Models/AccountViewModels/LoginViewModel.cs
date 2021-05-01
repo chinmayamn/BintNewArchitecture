@@ -24,8 +24,6 @@ namespace Bint.Models.AccountViewModels
         [Required]
         public string OTP { get; set; }
 
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
     }
 
 

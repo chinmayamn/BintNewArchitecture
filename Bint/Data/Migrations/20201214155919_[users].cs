@@ -21,7 +21,7 @@ namespace Bint.Data.Migrations
                 table: "AspNetRoles");
 
             migrationBuilder.AddColumn<string>(
-                name: "Account_holder_name",
+                name: "AccountHolderName",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -31,27 +31,27 @@ namespace Bint.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Bankaccount",
+                name: "BankAccount",
                 table: "AspNetUsers",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Bankname",
+                name: "BankName",
                 table: "AspNetUsers",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Created_by",
+                name: "CreatedBy",
                 table: "AspNetUsers",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Created_id",
+                name: "CreatedId",
                 table: "AspNetUsers",
                 nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(
-                name: "Created_on",
+                name: "CreatedOn",
                 table: "AspNetUsers",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
@@ -62,7 +62,7 @@ namespace Bint.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Ifsc_code",
+                name: "IfscCode",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -82,7 +82,7 @@ namespace Bint.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Profilepicture",
+                name: "ProfilePicture",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -92,7 +92,7 @@ namespace Bint.Data.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Upi_id",
+                name: "UpiId",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -134,7 +134,7 @@ namespace Bint.Data.Migrations
                 table: "AspNetRoles");
 
             migrationBuilder.DropColumn(
-                name: "Account_holder_name",
+                name: "AccountHolderName",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
@@ -142,23 +142,23 @@ namespace Bint.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Bankaccount",
+                name: "BankAccount",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Bankname",
+                name: "BankName",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Created_by",
+                name: "CreatedBy",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Created_id",
+                name: "CreatedId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Created_on",
+                name: "CreatedOn",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
@@ -166,7 +166,7 @@ namespace Bint.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Ifsc_code",
+                name: "IfscCode",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
@@ -182,7 +182,7 @@ namespace Bint.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Profilepicture",
+                name: "ProfilePicture",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
@@ -190,7 +190,7 @@ namespace Bint.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "Upi_id",
+                name: "UpiId",
                 table: "AspNetUsers");
 
             migrationBuilder.CreateIndex(

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace Bint.Data.Migrations
 {
-    public partial class kyc : Migration
+    public partial class Kyc : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "KYC",
+                name: "Kyc",
                 table: "AspNetUsers",
                 nullable: true);
         }
@@ -17,7 +17,7 @@ namespace Bint.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "KYC",
+                name: "Kyc",
                 table: "AspNetUsers");
         }
     }

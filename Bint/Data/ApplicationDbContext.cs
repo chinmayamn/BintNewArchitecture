@@ -19,8 +19,8 @@ namespace Bint.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
 
-        public virtual DbSet<CaptureDeviceData> _captureDeviceData { get; set; }
-        public virtual DbSet<RestrictedAccess> _restrictedAccess { get; set; }
+        public virtual DbSet<CaptureDeviceData> CaptureDeviceData{ get; set; }
+        public virtual DbSet<RestrictedAccess> RestrictedAccess { get; set; }
         public virtual DbSet<ErrorLog> Log { get; set; }
         public virtual DbSet<Doc> Doc { get; set; }
         public virtual DbSet<RegId> RegId { get; set; }

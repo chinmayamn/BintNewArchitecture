@@ -5,8 +5,8 @@ namespace Bint.Data
 {
     public interface IApplicationDBContext
     {
-        DbSet<CaptureDeviceData> _captureDeviceData { get; set; }
-        DbSet<RestrictedAccess> _restrictedAccess { get; set; }
+        DbSet<CaptureDeviceData> CaptureDeviceData { get; set; }
+        DbSet<RestrictedAccess> RestrictedAccess { get; set; }
 
         DbSet<ErrorLog> Log { get; set; }
         int SaveChanges();

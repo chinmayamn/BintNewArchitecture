@@ -61,7 +61,7 @@ namespace Bint.Controllers
                     ClientList = _userManager.GetUsersInRoleAsync("Client").Result.TakeLast(8),
                     PartnerList = _userManager.GetUsersInRoleAsync("Partner").Result.TakeLast(8),
                     LockedUsersList = _userManager.Users.AsEnumerable().Where(uu => uu.LockoutEnd != null),
-                    PendingKycCount = _userManager.Users.AsEnumerable().Where(uu => uu.Kyc == "Pending").Count()
+                    PendingKycCount = _userManager.Users.AsEnumerable().Count(uu => uu.Kyc == "Pending")
                 };
 
                 u.AdminCount = u.AdminList.Count();
@@ -115,7 +115,6 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Withdraw");
                 bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Deposit");
                 bd.Stats = _dbf.GetAlertStats(r.UserId);
@@ -175,47 +174,36 @@ namespace Bint.Controllers
                 var k = _roleManager.Roles.ToList();
                 m.URole = k;
 
-                if (route.ToLower() == "admin")
+                switch (route.ToLower())
                 {
-                    ViewBag.ReturnUrl = "/admin/admin";
-                    z = _userManager.GetUsersInRoleAsync("Admin").Result;
-                    m.AppUser = z;
-                    return View(m);
+                    case "admin":
+                        ViewBag.ReturnUrl = "/admin/admin";
+                        z = _userManager.GetUsersInRoleAsync("Admin").Result;
+                        m.AppUser = z;
+                        return View(m);
+                    case "investor":
+                        ViewBag.ReturnUrl = "/admin/investor";
+                        z = _userManager.GetUsersInRoleAsync("Investor").Result;
+                        m.AppUser = z;
+                        return View(m);
+                    case "client":
+                        ViewBag.ReturnUrl = "/admin/client";
+                        z = _userManager.GetUsersInRoleAsync("Client").Result;
+                        m.AppUser = z;
+                        return View(m);
+                    case "partner":
+                        ViewBag.ReturnUrl = "/admin/partner";
+                        z = _userManager.GetUsersInRoleAsync("Partner").Result;
+                        m.AppUser = z;
+                        return View(m);
+                    case "locked":
+                        ViewBag.ReturnUrl = "/admin/locked";
+                        z = _userManager.Users.AsEnumerable().Where(u => u.LockoutEnd != null);
+                        m.AppUser = z;
+                        return View(m);
+                    default:
+                        return View();
                 }
-
-                if (route.ToLower() == "investor")
-                {
-                    ViewBag.ReturnUrl = "/admin/investor";
-                    z = _userManager.GetUsersInRoleAsync("Investor").Result;
-                    m.AppUser = z;
-                    return View(m);
-                }
-
-                if (route.ToLower() == "client")
-                {
-                    ViewBag.ReturnUrl = "/admin/client";
-                    z = _userManager.GetUsersInRoleAsync("Client").Result;
-                    m.AppUser = z;
-                    return View(m);
-                }
-
-                if (route.ToLower() == "partner")
-                {
-                    ViewBag.ReturnUrl = "/admin/partner";
-                    z = _userManager.GetUsersInRoleAsync("Partner").Result;
-                    m.AppUser = z;
-                    return View(m);
-                }
-
-                if (route.ToLower() == "locked")
-                {
-                    ViewBag.ReturnUrl = "/admin/locked";
-                    z = _userManager.Users.AsEnumerable().Where(u => u.LockoutEnd != null);
-                    m.AppUser = z;
-                    return View(m);
-                }
-
-                return View();
             }
             catch (Exception e)
             {
@@ -383,7 +371,7 @@ namespace Bint.Controllers
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
                 bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
-                bd.TransferUsd = _dbf.GetTransferUSDReport(r.UserId);
+                bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
                 bd.QrCode = r.AdminQrCode;
                 bd.Tether = r.AdminTetherAddress;
                 bd.Stats = _dbf.GetAlertStats(r.UserId);

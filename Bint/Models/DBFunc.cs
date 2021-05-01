@@ -49,7 +49,7 @@ namespace Bint.Models
             }
         }
 
-        public DataTable GetTransferUSDReport(string userid)
+        public DataTable GetTransferUsdReport(string userid)
         {
             var dt = new DataTable();
             try

@@ -35,7 +35,7 @@ namespace Bint.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("activitylog");
+                    b.ToTable("ActivityLog");
                 });
 
             modelBuilder.Entity("Bint.Models.ApplicationUser", b =>
@@ -45,32 +45,32 @@ namespace Bint.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Account_holder_name");
+                    b.Property<string>("AccountHolderName");
 
                     b.Property<string>("Address");
 
-                    b.Property<string>("AdminQRCode");
+                    b.Property<string>("AdminQrCode");
 
                     b.Property<string>("AdminTetherAddress");
 
-                    b.Property<decimal>("BGC");
+                    b.Property<string>("BankAccount");
 
-                    b.Property<string>("Bankaccount");
+                    b.Property<string>("BankName");
 
-                    b.Property<string>("Bankname");
+                    b.Property<decimal>("Bgc");
 
-                    b.Property<string>("ClientQRCode");
+                    b.Property<string>("ClientQrCode");
 
                     b.Property<string>("ClientTetherAddress");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Created_by");
+                    b.Property<string>("CreatedBy");
 
-                    b.Property<string>("Created_id");
+                    b.Property<string>("CreatedId");
 
-                    b.Property<DateTime>("Created_on");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -79,13 +79,13 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("Firstname");
 
-                    b.Property<string>("Ifsc_code");
+                    b.Property<string>("IfscCode");
 
-                    b.Property<string>("InvestorQRCode");
+                    b.Property<string>("InvestorQrCode");
 
                     b.Property<string>("InvestorTetherAddress");
 
-                    b.Property<string>("KYC");
+                    b.Property<string>("Kyc");
 
                     b.Property<string>("Lastname");
 
@@ -101,11 +101,11 @@ namespace Bint.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("OTP");
+                    b.Property<string>("Otp");
 
                     b.Property<string>("Pan");
 
-                    b.Property<string>("PartnerQRCode");
+                    b.Property<string>("PartnerQrCode");
 
                     b.Property<string>("PartnerTetherAddress");
 
@@ -115,9 +115,9 @@ namespace Bint.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("Profilepicture");
+                    b.Property<string>("ProfilePicture");
 
-                    b.Property<string>("QRCode");
+                    b.Property<string>("QrCode");
 
                     b.Property<string>("SecurityStamp");
 
@@ -127,9 +127,9 @@ namespace Bint.Data.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
-                    b.Property<decimal>("USD");
+                    b.Property<string>("UpiId");
 
-                    b.Property<string>("Upi_id");
+                    b.Property<decimal>("Usd");
 
                     b.Property<string>("UserId");
 
@@ -151,7 +151,7 @@ namespace Bint.Data.Migrations
 
             modelBuilder.Entity("Bint.Models.CaptureDeviceData", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Brand");
@@ -166,31 +166,31 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("DeviceName");
 
-                    b.Property<string>("IPv4");
+                    b.Property<string>("Ipv4");
 
-                    b.Property<string>("IPv6");
+                    b.Property<string>("Ipv6");
 
                     b.Property<DateTime>("LoginTime");
 
                     b.Property<DateTime>("LogoutTime");
 
-                    b.Property<string>("OSName");
+                    b.Property<string>("OsName");
 
-                    b.Property<string>("OSPlatform");
+                    b.Property<string>("OsPlatform");
 
-                    b.Property<string>("OSVersion");
+                    b.Property<string>("OsVersion");
 
                     b.Property<string>("PublicIp");
 
+                    b.Property<string>("URole");
+
+                    b.Property<string>("UserId");
+
                     b.Property<string>("Useragent");
 
-                    b.Property<string>("urole");
+                    b.HasKey("Id");
 
-                    b.Property<string>("userid");
-
-                    b.HasKey("id");
-
-                    b.ToTable("_captureDeviceData");
+                    b.ToTable("CaptureDeviceData");
                 });
 
             modelBuilder.Entity("Bint.Models.DepositWithdraw", b =>
@@ -208,13 +208,13 @@ namespace Bint.Data.Migrations
 
                     b.Property<string>("TransactionId");
 
-                    b.Property<string>("USDAction");
+                    b.Property<string>("UsdAction");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.ToTable("depositwithdraw");
+                    b.ToTable("DepositWithdraw");
                 });
 
             modelBuilder.Entity("Bint.Models.Doc", b =>
@@ -224,7 +224,7 @@ namespace Bint.Data.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<string>("Docpath");
+                    b.Property<string>("DocPath");
 
                     b.Property<string>("Filename");
 
@@ -276,12 +276,12 @@ namespace Bint.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("regId");
+                    b.ToTable("RegId");
                 });
 
             modelBuilder.Entity("Bint.Models.RestrictedAccess", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Brand");
@@ -298,34 +298,34 @@ namespace Bint.Data.Migrations
 
                     b.Property<DateTime>("ErrorTime");
 
-                    b.Property<string>("IPv4");
+                    b.Property<string>("Ipv4");
 
-                    b.Property<string>("IPv6");
+                    b.Property<string>("Ipv6");
 
-                    b.Property<string>("OSName");
+                    b.Property<string>("OsName");
 
-                    b.Property<string>("OSPlatform");
+                    b.Property<string>("OsPlatform");
 
-                    b.Property<string>("OSVersion");
+                    b.Property<string>("OsVersion");
 
                     b.Property<string>("PublicIp");
 
                     b.Property<string>("ReturnUrl");
 
+                    b.Property<string>("Urole");
+
+                    b.Property<string>("UserId");
+
                     b.Property<string>("Useragent");
 
                     b.Property<string>("Verified");
 
-                    b.Property<string>("urole");
+                    b.HasKey("Id");
 
-                    b.Property<string>("userid");
-
-                    b.HasKey("id");
-
-                    b.ToTable("_restrictedAccess");
+                    b.ToTable("RestrictedAccess");
                 });
 
-            modelBuilder.Entity("Bint.Models.TransferUSD", b =>
+            modelBuilder.Entity("Bint.Models.TransferUsd", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -354,7 +354,7 @@ namespace Bint.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("transferusd");
+                    b.ToTable("TransferUsd");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -10,11 +10,11 @@ namespace Bint.Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "LoginTime",
-                table: "_restrictedAccess");
+                table: "RestrictedAccess");
 
             migrationBuilder.RenameColumn(
                 name: "LogoutTime",
-                table: "_restrictedAccess",
+                table: "RestrictedAccess",
                 newName: "ErrorTime");
         }
 
@@ -22,12 +22,12 @@ namespace Bint.Data.Migrations
         {
             migrationBuilder.RenameColumn(
                 name: "ErrorTime",
-                table: "_restrictedAccess",
+                table: "RestrictedAccess",
                 newName: "LogoutTime");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "LoginTime",
-                table: "_restrictedAccess",
+                table: "RestrictedAccess",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
         }

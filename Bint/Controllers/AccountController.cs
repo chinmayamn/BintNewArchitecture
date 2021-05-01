@@ -87,130 +87,131 @@ namespace Bint.Controllers
                 await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
                 ViewData["ReturnUrl"] = returnUrl;
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid) return View("login");
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(model.LoginViewModel.Email,
+                    model.LoginViewModel.Password, model.LoginViewModel.RememberMe,true);
+                if (result.Succeeded)
                 {
-                    // This doesn't count login failures towards account lockout
-                    // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                    var result = await _signInManager.PasswordSignInAsync(model.LoginViewModel.Email,
-                        model.LoginViewModel.Password, model.LoginViewModel.RememberMe,true);
-                    if (result.Succeeded)
+                    // Resolve the user via their email
+                    var user = await _userManager.FindByEmailAsync(model.LoginViewModel.Email);
+
+                    if (!user.EmailConfirmed)
                     {
-                        // Resolve the user via their email
-                        var user = await _userManager.FindByEmailAsync(model.LoginViewModel.Email);
-
-                        if (!user.EmailConfirmed)
-                        {
-                            TempData["error"] =
-                                "User account has not been confirm. Check registered email for confirmation";
-                            _logger.LogError(
-                                "User account has not been confirm. Check registered email for confirmation {user}",
-                                user);
-                            return View("login");
-                        }
-
-                        // Get the roles for the user
-                        var roles = await _userManager.GetRolesAsync(user);
-
-                        string uAgent = _request.HttpContext.Request.Headers["User-Agent"];
-
-                        var ipv4 = "";
-                        var ipv6 = "";
-                        var pip = "";
-
-                        var remoteIpAddress =
-                            _request.HttpContext.Connection
-                                .RemoteIpAddress; //major important one, gets public ip address
-                        pip = remoteIpAddress.ToString();
-
-                        //normally will get wifi router ip. for mobile it will throw socket exception
-                        try
-                        {
-                            if ((await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Any())
-                            {
-                                if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
-                                    // for mobiles normally ipv6 will not be there
-                                {
-                                    remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList
-                                        .First(x => x.AddressFamily ==
-                                                    AddressFamily.InterNetwork);
-                                    ipv6 = remoteIpAddress.ToString();
-                                }
-
-
-                                if (remoteIpAddress.AddressFamily == AddressFamily.InterNetwork) //
-                                {
-                                    remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Last(x =>
-                                        x.AddressFamily == AddressFamily.InterNetwork);
-                                    ipv4 = remoteIpAddress.ToString();
-                                }
-                            }
-                        }
-                        catch (SocketException socket)
-                        {
-                            _logger.LogError(socket.ToString(), "Connected through mobile data, no dns {socket}",
-                                socket);
-                        }
-
-
-                        DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
-                        var dd = new DeviceDetector(uAgent);
-                        dd.SetCache(new DictionaryCache());
-                        dd.DiscardBotInformation();
-                        dd.SkipBotDetection();
-                        dd.Parse();
-
-                        var cd = new CaptureDeviceData();
-                        var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
-
-                        cd.OsName = dd.GetOs().Match.Name;
-                        cd.OsVersion = dd.GetOs().Match.Version;
-                        cd.OsPlatform = dd.GetOs().Match.Platform;
-                        cd.BrowserName = dd.GetBrowserClient().Match.Name;
-                        cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
-                        cd.DeviceName = dd.GetDeviceName();
-                        cd.DeviceModel = dd.GetModel();
-                        cd.Brand = dd.GetBrand();
-                        cd.BrandName = dd.GetBrandName();
-                        cd.Useragent = uAgent;
-                        cd.URole = roles[0];
-                        cd.UserId = user.Id;
-                        cd.LoginTime = indianTime;
-                        cd.PublicIp = pip;
-                        cd.Ipv4 = ipv4;
-                        cd.Ipv6 = ipv6;
-
-                        _context._captureDeviceData.Add(cd);
-                        await _context.SaveChangesAsync();
-
-
-                        if (roles[0].ToLower() == "admin")
-                            return RedirectToAction(nameof(AdminController.Dashboard), "Admin");
-                        if (roles[0].ToLower() == "investor")
-                            return RedirectToAction(nameof(InvestorController.Dashboard), "Investor");
-                        if (roles[0].ToLower() == "client")
-                            return RedirectToAction(nameof(ClientController.Dashboard), "Client");
-                        if (roles[0].ToLower() == "partner")
-                            return RedirectToAction(nameof(PartnerController.Dashboard), "Partner");
-                        return RedirectToLocal(returnUrl);
-                    }
-
-                    if (result.RequiresTwoFactor)
-                        return RedirectToAction(nameof(LoginWith2fa), new {returnUrl, model.LoginViewModel.RememberMe});
-                    if (result.IsLockedOut)
-                    {
-                        TempData["error"] = "User account has been locked out. Contact administrator";
-                        _logger.LogError("User account has been locked out, wrong password {User}", User);
+                        TempData["error"] =
+                            "User account has not been confirm. Check registered email for confirmation";
+                        _logger.LogError(
+                            "User account has not been confirm. Check registered email for confirmation {user}",
+                            user);
                         return View("login");
                     }
 
-                    TempData["error"] = "Invalid username and password";
-                    _logger.LogError(
-                        "Invalid username and password {model.LoginViewModel.Email}{model.LoginViewModel.Password}",
-                        model.LoginViewModel.Email, model.LoginViewModel.Password);
+                    // Get the roles for the user
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    string uAgent = _request.HttpContext.Request.Headers["User-Agent"];
+
+                    var ipv4 = "";
+                    var ipv6 = "";
+                    var pip = "";
+
+                    var remoteIpAddress =
+                        _request.HttpContext.Connection
+                            .RemoteIpAddress; //major important one, gets public ip address
+                    pip = remoteIpAddress.ToString();
+
+                    //normally will get wifi router ip. for mobile it will throw socket exception
+                    try
+                    {
+                        if ((await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Any())
+                        {
+                            if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
+                                // for mobiles normally ipv6 will not be there
+                            {
+                                remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList
+                                    .First(x => x.AddressFamily ==
+                                                AddressFamily.InterNetwork);
+                                ipv6 = remoteIpAddress.ToString();
+                            }
+
+
+                            if (remoteIpAddress.AddressFamily == AddressFamily.InterNetwork) //
+                            {
+                                remoteIpAddress = (await Dns.GetHostEntryAsync(remoteIpAddress)).AddressList.Last(x =>
+                                    x.AddressFamily == AddressFamily.InterNetwork);
+                                ipv4 = remoteIpAddress.ToString();
+                            }
+                        }
+                    }
+                    catch (SocketException socket)
+                    {
+                        _logger.LogError(socket.ToString(), "Connected through mobile data, no dns {socket}",
+                            socket);
+                    }
+
+
+                    DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
+                    var dd = new DeviceDetector(uAgent);
+                    dd.SetCache(new DictionaryCache());
+                    dd.DiscardBotInformation();
+                    dd.SkipBotDetection();
+                    dd.Parse();
+
+                    var cd = new CaptureDeviceData();
+                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+
+                    cd.OsName = dd.GetOs().Match.Name;
+                    cd.OsVersion = dd.GetOs().Match.Version;
+                    cd.OsPlatform = dd.GetOs().Match.Platform;
+                    cd.BrowserName = dd.GetBrowserClient().Match.Name;
+                    cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
+                    cd.DeviceName = dd.GetDeviceName();
+                    cd.DeviceModel = dd.GetModel();
+                    cd.Brand = dd.GetBrand();
+                    cd.BrandName = dd.GetBrandName();
+                    cd.Useragent = uAgent;
+                    cd.URole = roles[0];
+                    cd.UserId = user.Id;
+                    cd.LoginTime = indianTime;
+                    cd.PublicIp = pip;
+                    cd.Ipv4 = ipv4;
+                    cd.Ipv6 = ipv6;
+
+                    _context.CaptureDeviceData.Add(cd);
+                    await _context.SaveChangesAsync();
+
+
+                    switch (roles[0].ToLower())
+                    {
+                        case "admin":
+                            return RedirectToAction(nameof(AdminController.Dashboard), "Admin");
+                        case "investor":
+                            return RedirectToAction(nameof(InvestorController.Dashboard), "Investor");
+                        case "client":
+                            return RedirectToAction(nameof(ClientController.Dashboard), "Client");
+                        case "partner":
+                            return RedirectToAction(nameof(PartnerController.Dashboard), "Partner");
+                        default:
+                            return RedirectToLocal(returnUrl);
+                    }
+                }
+
+                if (result.RequiresTwoFactor)
+                    return RedirectToAction(nameof(LoginWith2fa), new {returnUrl, model.LoginViewModel.RememberMe});
+                if (result.IsLockedOut)
+                {
+                    TempData["error"] = "User account has been locked out. Contact administrator";
+                    _logger.LogError("User account has been locked out, wrong password {User}", User);
                     return View("login");
                 }
 
+                TempData["error"] = "Invalid username and password";
+                _logger.LogError(
+                    "Invalid username and password {model.LoginViewModel.Email}{model.LoginViewModel.Password}",
+                    model.LoginViewModel.Email, model.LoginViewModel.Password);
                 return View("login");
+
             }
             catch (Exception ex)
             {
@@ -357,104 +358,101 @@ namespace Bint.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null, string quick = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+
+            var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
+            user.Firstname = model.Firstname;
+            user.Lastname = model.Lastname;
+            user.Mobile = model.Mobile;
+            user.Address = model.Address;
+            user.BankName = model.BankName;
+            user.BankAccount = model.BankAccount;
+            user.IfscCode = model.IfscCode;
+            user.AccountHolderName = model.AccountHolderName;
+            user.Pan = model.Pan;
+            user.UpiId = model.UpiId;
+            user.Status = model.Status;
+            user.CreatedBy = _userManager.GetUserAsync(User).Result.UserId;
+            user.Kyc = ActivityLogEnum.Pending.ToString();
+
+            if (model.ProfilePicture == null)
+                user.ProfilePicture = "/content/avatar.png";
+
+            user.CreatedOn = indianTime;
+            user.CreatedId = _userManager.GetUserId(User);
+
+            //engage role id
+            var f = "";
+            if (quick == "true")
             {
-                var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                f = user.UpiId;
+                user.UpiId = "";
+                user.Status = "Active";
+            }
 
-                var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
-                user.Firstname = model.Firstname;
-                user.Lastname = model.Lastname;
-                user.Mobile = model.Mobile;
-                user.Address = model.Address;
-                user.BankName = model.BankName;
-                user.BankAccount = model.BankAccount;
-                user.IfscCode = model.IfscCode;
-                user.AccountHolderName = model.AccountHolderName;
-                user.Pan = model.Pan;
-                user.UpiId = model.UpiId;
-                user.Status = model.Status;
-                user.CreatedBy = _userManager.GetUserAsync(User).Result.UserId;
-                user.Kyc = ActivityLogEnum.Pending.ToString();
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                if (model.ProfilePicture == null)
-                    user.ProfilePicture = "/content/avatar.png";
+                var role = await _roleManager.FindByIdAsync(f); //get user role and add to his account
+                await _userManager.AddToRoleAsync(user, role.Name);
+                //  await _signInManager.SignInAsync(user, isPersistent: false);    // disabled user signing after registering
 
-                user.CreatedOn = indianTime;
-                user.CreatedId = _userManager.GetUserId(User);
-
-                //engage role id
-                var f = "";
-                if (quick == "true")
+                var z = _context.RegId.First();
+                int z1;
+                switch (role.Name)
                 {
-                    f = user.UpiId;
-                    user.UpiId = "";
-                    user.Status = "Active";
-                }
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-                    var role = await _roleManager.FindByIdAsync(f); //get user role and add to his account
-                    await _userManager.AddToRoleAsync(user, role.Name);
-                    //  await _signInManager.SignInAsync(user, isPersistent: false);    // disabled user signing after registering
-
-                    var z = _context.RegId.First();
-                    int z1;
-                    if (role.Name == "Admin")
-                    {
+                    case "Admin":
                         z1 = Convert.ToInt32(z.AdminId);
                         z1 += 1;
                         user.UserId = "A" + z1.ToString("D4");
                         z.AdminId = z1.ToString("D4");
-                    }
-                    else if (role.Name == "Partner")
-                    {
+                        break;
+                    case "Partner":
                         z1 = Convert.ToInt32(z.PartnerId);
                         z1 += 1;
                         user.UserId = "P" + z1.ToString("D4");
                         z.PartnerId = z1.ToString("D4");
-                    }
-                    else if (role.Name == "Investor")
-                    {
+                        break;
+                    case "Investor":
                         z1 = Convert.ToInt32(z.InvestorId);
                         z1 += 1;
                         user.UserId = "I" + z1.ToString("D4");
                         z.InvestorId = z1.ToString("D4");
-                    }
-                    else if (role.Name == "Client")
-                    {
+                        break;
+                    case "Client":
                         z1 = Convert.ToInt32(z.ClientId);
                         z1 += 1;
                         user.UserId = "C" + z1.ToString("D4");
                         z.ClientId = z1.ToString("D4");
-                    }
-
-                    await _context.SaveChangesAsync();
-                    //update reg id
-                    await _userManager.UpdateAsync(user);
-
-                    var activityLog = new ActivityLog
-                    {
-                        Userid = user.CreatedBy,
-                        ActivityType = ActivityLogEnum.Person.ToString(),
-                        ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
-                        Activity = "Created user " + user.UserId
-                    };
-                    _context.ActivityLog.Add(activityLog);
-                    await _context.SaveChangesAsync();
-
-                    TempData["data"] = "User has been created successfully";
-                    return RedirectToLocal(returnUrl);
+                        break;
                 }
 
-                AddErrors(result);
-                TempData["data"] = "Error occurred while creating user";
-                _logger.LogError("Error occurred while creating user");
+                await _context.SaveChangesAsync();
+                //update reg id
+                await _userManager.UpdateAsync(user);
+
+                var activityLog = new ActivityLog
+                {
+                    Userid = user.CreatedBy,
+                    ActivityType = ActivityLogEnum.Person.ToString(),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    Activity = "Created user " + user.UserId
+                };
+                _context.ActivityLog.Add(activityLog);
+                await _context.SaveChangesAsync();
+
+                TempData["data"] = "User has been created successfully";
+                return RedirectToLocal(returnUrl);
             }
+
+            AddErrors(result);
+            TempData["data"] = "Error occurred while creating user";
+            _logger.LogError("Error occurred while creating user");
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -475,7 +473,7 @@ namespace Bint.Controllers
                 _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
             var pip = remoteIpAddress.ToString();
             var id = _userManager.GetUserId(User);
-            var stu = _context._captureDeviceData.Where(j => j.UserId == id && j.PublicIp == pip).LastOrDefault();
+            var stu = _context.CaptureDeviceData.LastOrDefault(j => j.UserId == id && j.PublicIp == pip);
             var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
             stu.LogoutTime = indianTime;
             await _context.SaveChangesAsync();
@@ -749,7 +747,7 @@ namespace Bint.Controllers
             cd.Ipv6 = ipv6;
             cd.Verified = "Not Verified";
             cd.ReturnUrl = rUrl;
-            _context._restrictedAccess.Add(cd);
+            _context.RestrictedAccess.Add(cd);
             await _context.SaveChangesAsync();
             await _signInManager.SignOutAsync(); //remove session variables
             _logger.LogError("Access denied {rUrl}", rUrl);

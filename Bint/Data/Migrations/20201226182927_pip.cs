@@ -10,7 +10,7 @@ namespace Bint.Data.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "PublicIp",
-                table: "_captureDeviceData",
+                table: "CaptureDeviceData",
                 nullable: true);
         }
 
@@ -18,7 +18,7 @@ namespace Bint.Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "PublicIp",
-                table: "_captureDeviceData");
+                table: "CaptureDeviceData");
         }
     }
 }

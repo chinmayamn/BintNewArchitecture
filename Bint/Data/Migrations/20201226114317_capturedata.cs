@@ -10,7 +10,7 @@ namespace Bint.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "_captureDeviceData",
+                name: "CaptureDeviceData",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
@@ -39,7 +39,7 @@ namespace Bint.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "_captureDeviceData");
+                name: "CaptureDeviceData");
         }
     }
 }
