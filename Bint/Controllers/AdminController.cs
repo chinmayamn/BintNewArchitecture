@@ -45,7 +45,7 @@ namespace Bint.Controllers
             _environment = environment;
             _logger = logger;
             _context = context;
-            _dbf = new DbFunc(_logger);
+            _dbf = new DbFunc(_logger, _context);
         }
 
         public IActionResult Dashboard()
@@ -75,7 +75,7 @@ namespace Bint.Controllers
 
                 adb.AdminRequestDashboard = _dbf.GetAdminRequestDashboard();
                 var usdInvestment = _dbf.GetUsdInvestment();
-                var dd = new Dictionary<string, string>
+                Dictionary<string,string> dd = new Dictionary<string, string>
                 {
                     {"adminusd", usdInvestment.Rows[0][0].ToString()},
                     {"investorusd", usdInvestment.Rows[0][1].ToString()},

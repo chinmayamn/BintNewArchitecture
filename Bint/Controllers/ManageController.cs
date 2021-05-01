@@ -1041,7 +1041,7 @@ namespace Bint.Controllers
         public async Task<ActionResult> GetAlerts()
         {
             var bd = new UsdDashboard();
-            var dbf = new DbFunc(_logger);
+            var dbf = new DbFunc(_logger,_context);
             var r = _userManager.GetUserAsync(User).Result;
             bd.Stats = dbf.GetAlertStats(r.UserId);
             var ll = new Dictionary<string, string>();

@@ -26,7 +26,7 @@ namespace Bint.Controllers
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _dbf = new DbFunc(_logger);
+            _dbf = new DbFunc(_logger, _context);
         }
 
         public IActionResult Dashboard()
