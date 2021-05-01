@@ -72,9 +72,7 @@ namespace Bint
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
-               // app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-               
                 app.UseExceptionHandler("/Account/Error");
             }
             else
