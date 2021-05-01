@@ -171,9 +171,7 @@ namespace Bint.Controllers
                 }
 
                 await _signInManager.SignInAsync(user, false);
-                //_logger.LogInformation("User changed their password successfully.");
                 StatusMessage = "Your password has been changed.";
-                //TempData["data"] = "Your password has been changed";
                 return RedirectToAction("changepassword", route);
             }
             catch (Exception e)
@@ -682,8 +680,7 @@ namespace Bint.Controllers
                         tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
                         tusd.FromStatus = TransferUsdStatusEnum.Received.ToString();
                         tusd.ToStatus = TransferUsdStatusEnum.Transferred.ToString();
-                        // _context.transferusd.Add(tusd);
-
+       
                         var uid = await _userManager.FindByIdAsync(tusd.Userid); //update in user -  credit
                         uid.Usd += tusd.Amount;
                         await _userManager.UpdateAsync(uid);
@@ -762,7 +759,6 @@ namespace Bint.Controllers
                         TempData["data"] = activityLog.Activity;
                         return Json("success");
                     }
-                    // TempData["error"] = "Insufficient amount in Usd wallet";
                     case "Transfer":
                         return Json("Insufficient amount in Usd wallet");
                     case "Reject":
