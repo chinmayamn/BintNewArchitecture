@@ -852,10 +852,10 @@ namespace Bint.Controllers
                 aupd.UserProfile = u;
                 var adb = new ActivityLogDashboard
                 {
-                    ActivityLogTable = _dbf.GetUserActivityLog(u.UserId)
+                    ActivityLogTable = _dbFunc.GetUserActivityLog(u.UserId)
                 };
                 aupd.ActivityLogDashboard = adb;
-                aupd.UserDocs = _dbf.GetKycDocs(id);
+                aupd.UserDocs = _dbFunc.GetKycDocs(id);
                 aupd.UserList = _userManager.Users.Where(x => x.CreatedBy == u.UserId);
                 return View(aupd);
             }

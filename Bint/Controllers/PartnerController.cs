@@ -62,7 +62,7 @@ namespace Bint.Controllers
                 var pdbb = new PartnerDashboard();
                 var pdb = new Payback
                 {
-                    UsdPaybackUser = _dbf.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPaybackUser = _dbFunc.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 pdbb.Payback = pdb;
                 return View(pdbb);
@@ -81,7 +81,7 @@ namespace Bint.Controllers
             {
                 var ud = new UserProfileDoc();
                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = _dbf.GetKycDocs(id);
+                ud.UserDocs = _dbFunc.GetKycDocs(id);
                 return View(ud);
             }
             catch (Exception e)
@@ -112,7 +112,7 @@ namespace Bint.Controllers
             {
                 var idb = new Payback
                 {
-                    UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPayback = _dbFunc.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 return View(idb);
             }
@@ -130,13 +130,13 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
-                bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                bd.RequestUsd = _dbFunc.GetRequestUsdReport(r.UserId);
+                bd.TransferUsd = _dbFunc.GetTransferUsdReport(r.UserId);
+                bd.Stats = _dbFunc.GetAlertStats(r.UserId);
                 var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
+                bd.WithdrawUsd = _dbFunc.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbFunc.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
 
                 switch (uRole)
                 {
@@ -236,7 +236,7 @@ namespace Bint.Controllers
                 var r = _userManager.GetUserAsync(User).Result;
                 var act = new ActivityLogDashboard
                 {
-                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                    ActivityLogTable = _dbFunc.GetUserActivityLog(r.UserId)
                 };
 
                 return View(act);

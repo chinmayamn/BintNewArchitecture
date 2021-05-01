@@ -42,7 +42,7 @@ namespace Bint.Controllers
                 var cdb = new ClientDashboard();
                 var pdb = new Payback
                 {
-                    UsdPaybackUser = _dbf.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
+                    UsdPaybackUser = _dbFunc.GetUsdPaybackUser(_userManager.GetUserAsync(User).Result.UserId)
                 };
                 cdb.Payback = pdb;
                 return View(cdb);
@@ -75,7 +75,7 @@ namespace Bint.Controllers
             {
                 var ud = new UserProfileDoc();
                 var id = _userManager.GetUserId(User);
-                ud.UserDocs = _dbf.GetKycDocs(id);
+                ud.UserDocs = _dbFunc.GetKycDocs(id);
                 return View(ud);
             }
             catch (Exception e)
@@ -92,12 +92,12 @@ namespace Bint.Controllers
             {
                 var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
+                bd.RequestUsd = _dbFunc.GetRequestUsdReport(r.UserId);
                 var uRole = ControllerContext.ActionDescriptor.ControllerName;
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                bd.WithdrawUsd = _dbFunc.GetDepositWithdrawUsdRequests(r.UserId, "Withdraw");
+                bd.DepositUsd = _dbFunc.GetDepositWithdrawUsdRequests(r.UserId, "Deposit");
+                bd.Stats = _dbFunc.GetAlertStats(r.UserId);
                 switch (uRole)
                 {
                     case "Client":
@@ -145,7 +145,7 @@ namespace Bint.Controllers
                 var r = _userManager.GetUserAsync(User).Result;
                 var act = new ActivityLogDashboard
                 {
-                    ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
+                    ActivityLogTable = _dbFunc.GetUserActivityLog(r.UserId)
                 };
 
                 return View(act);
