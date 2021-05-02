@@ -18,6 +18,8 @@ namespace Bint.Controllers
     [Authorize(Roles = "Partner")]
     public class PartnerController : Controller
     {
+        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+
         private readonly IApplicationDbContext _context;
         private readonly ILogger<PartnerController> _logger;
         private readonly IHttpContextAccessor _request;

@@ -6,8 +6,7 @@ using System;
 using System.Linq;
 
 namespace Bint.Controllers
-{
-
+{ 
     public class SuperAdminController : Controller
     {
         private readonly IApplicationDbContext _context;
