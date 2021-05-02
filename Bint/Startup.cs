@@ -42,6 +42,7 @@ namespace Bint
             services.AddTransient<IInvestorRepository, InvestorRepository>();
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IApplicationDBContext, ApplicationDbContext>();
+            services.AddTransient<IDbFunc, DbFunc>();
             services.AddTransient<IMessage, Message>();
             
 
