@@ -19,7 +19,7 @@ namespace Bint.Controllers
         public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
             ILogger<RoleController> logger)
         {
-            _roleManager = roleManager;
+            _roleManager = roleManager; 
             _userManager = userManager;
             _logger = logger;
         }
