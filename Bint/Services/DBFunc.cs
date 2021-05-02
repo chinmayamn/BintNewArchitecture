@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Bint.Services
 {
-    public class DbFunc
+    public class DbFunc:IDbFunc
     {
         private static SqlConnection _conn;
         private readonly ApplicationDbContext _context;
