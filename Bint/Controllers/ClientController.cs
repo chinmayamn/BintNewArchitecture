@@ -16,12 +16,12 @@ namespace Bint.Controllers
     public class ClientController : Controller
     {
         private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ILogger<ClientController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbFunc _dbFunc;
 
-        public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
+        public ClientController(ILogger<ClientController> logger, IApplicationDbContext context,
             UserManager<ApplicationUser> userManager, IDbFunc iDbFunc)
         {
             _logger = logger;

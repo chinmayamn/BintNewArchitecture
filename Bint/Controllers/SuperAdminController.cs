@@ -6,13 +6,12 @@ using System;
 using System.Linq;
 
 namespace Bint.Controllers
-{
-
+{ 
     public class SuperAdminController : Controller
     {
-        private readonly IApplicationDBContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ILogger<SuperAdminController> _logger;
-        public SuperAdminController(IApplicationDBContext context, ILogger<SuperAdminController> logger)
+        public SuperAdminController(IApplicationDbContext context, ILogger<SuperAdminController> logger)
         {
             _context = context; _logger = logger;
         }

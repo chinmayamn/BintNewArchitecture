@@ -29,7 +29,7 @@ namespace Bint.Controllers
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IDbFunc _dbFunc;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
@@ -47,7 +47,7 @@ namespace Bint.Controllers
             IEmailSender emailSender,
             ILogger<AccountController> logger,
             IConfiguration configuration,
-            ApplicationDbContext context,
+            IApplicationDbContext context,
             IMessage message,IDbFunc iDbFunc)
         {
             _userManager = userManager;

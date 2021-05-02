@@ -24,7 +24,7 @@ namespace Bint.Controllers
     public class AdminController : Controller
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ILogger<AdminController> _logger;
         private readonly HttpClient _client = new HttpClient();
         private readonly IHttpContextAccessor _request;
@@ -35,7 +35,7 @@ namespace Bint.Controllers
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
-            ApplicationDbContext context, IDbFunc iDbFunc)
+            IApplicationDbContext context, IDbFunc iDbFunc)
         {
             _request = httpContext;
 

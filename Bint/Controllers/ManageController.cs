@@ -23,7 +23,7 @@ namespace Bint.Controllers
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly IMessage _message;
@@ -39,7 +39,7 @@ namespace Bint.Controllers
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
             ILogger<ManageController> logger,
-            UrlEncoder urlEncoder, ApplicationDbContext context, IMessage message, ILogger<Message> messageLogger)
+            UrlEncoder urlEncoder, IApplicationDbContext context, IMessage message, ILogger<Message> messageLogger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
