@@ -12,3 +12,6 @@
 /BintTest/obj
 /BintIntegrationTest/bin/Debug/netcoreapp2.1
 /Bint/bin/Debug/netcoreapp2.0
+/BintTest/bin/Debug/netcoreapp2.1/bundleconfig.json
+/BintTest/bin/Debug/netcoreapp2.1/appsettings.json
+/BintTest/bin/Debug/netcoreapp2.1/appsettings.Development.json
