@@ -19,7 +19,7 @@ namespace Bint.Controllers
         private static TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ILogger<ClientController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DbFunc _dbf;
+        private readonly IDbFunc _dbf;
 
         public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
             UserManager<ApplicationUser> userManager, IConfiguration configuration)

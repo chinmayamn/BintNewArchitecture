@@ -24,7 +24,7 @@ namespace Bint.Controllers
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DbFunc _dbf;
+        private readonly IDbFunc _dbf;
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
