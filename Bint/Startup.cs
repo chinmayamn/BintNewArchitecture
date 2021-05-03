@@ -13,10 +13,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Bint.Constants;
 
 namespace Bint
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)

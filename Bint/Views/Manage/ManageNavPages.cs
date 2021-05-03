@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Bint.Views.Manage
 {
+    [ExcludeFromCodeCoverage]
     public static class ManageNavPages
     {
         public static string ActivePageKey => "ActivePage";
