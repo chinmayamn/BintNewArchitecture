@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Services;
@@ -28,14 +29,14 @@ namespace Bint.Controllers
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context, IConfiguration configuration)
+            ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants)
         {
             _request = httpContext;
             _logger = logger;
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
-            _dbf = new DbFunc(logger,configuration);
+            _dbf = new DbFunc(logger,configuration,dbConstants);
         }
 
         public ActionResult Stats()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Models.ManageViewModels;
@@ -41,7 +42,8 @@ namespace Bint.Controllers
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
             ILogger<ManageController> logger,
-            UrlEncoder urlEncoder, ApplicationDbContext context, IMessage message, ILogger<Message> messageLogger, IConfiguration configuration)
+            UrlEncoder urlEncoder, ApplicationDbContext context, IMessage message, ILogger<Message> messageLogger,
+            IConfiguration configuration, IDbConstants dbConstants)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -52,7 +54,7 @@ namespace Bint.Controllers
             _context = context;
             _message = message;
             _messageLogger = messageLogger;
-            _dbf = new DbFunc(_logger, configuration);
+            _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
         [TempData] public string StatusMessage { get; set; }

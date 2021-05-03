@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Models.AccountViewModels;
@@ -38,7 +39,7 @@ namespace Bint.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-
+  
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -48,7 +49,7 @@ namespace Bint.Controllers
             ILogger<AccountController> logger,
             IConfiguration configuration,
             ApplicationDbContext context,
-            IMessage message)
+            IMessage message,IDbConstants dbConstants)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -59,7 +60,7 @@ namespace Bint.Controllers
             _configuration = configuration;
             _context = context;
             _message = message;
-            _dbf = new DbFunc(_logger, configuration);
+            _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
         [TempData] public string ErrorMessage { get; set; }

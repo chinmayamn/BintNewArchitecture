@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using Bint.Constants;
 
 namespace Bint.Services
 {
@@ -11,11 +12,13 @@ namespace Bint.Services
     {
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
+        private readonly IDbConstants _dbConstants;
 
-        public DbFunc(ILogger logger,IConfiguration configuration)
+        public DbFunc(ILogger logger,IConfiguration configuration,IDbConstants dbConstants)
         {
             _logger = logger;
             _configuration = configuration;
+            _dbConstants = dbConstants;
         }
 
         public DataTable GetRequestUsdReport(string userid)
@@ -24,7 +27,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getrequestusdreport", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetrequestusdreport, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -46,7 +49,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_gettransferusdreport", con)
+                var cmd = new SqlCommand(_dbConstants.SpGettransferusdreport, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -68,7 +71,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getuseractivity", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetuseractivity, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -90,7 +93,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getalertstats", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetalertstats, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -112,7 +115,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getkycdocs", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetkycdocs, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -134,7 +137,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getdepositwithdrawusdrequests", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetdepositwithdrawusdrequests, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -157,7 +160,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getdepositwithdrawusdrequestsadmin", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetdepositwithdrawusdrequestsadmin, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -180,7 +183,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_adminrequestdashboard", con)
+                var cmd = new SqlCommand(_dbConstants.SpAdminrequestdashboard, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -201,7 +204,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getusdinvestment", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetusdinvestment, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -222,7 +225,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getusdpayback", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetusdpayback, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -244,7 +247,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getusdpaybackuser", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetusdpaybackuser, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -266,7 +269,7 @@ namespace Bint.Services
             try
             {
                 var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
-                var cmd = new SqlCommand("sp_getusdinvestmentmonthwise", con)
+                var cmd = new SqlCommand(_dbConstants.SpGetusdinvestmentmonthwise, con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };

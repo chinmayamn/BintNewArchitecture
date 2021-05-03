@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Services;
@@ -36,7 +37,7 @@ namespace Bint.Controllers
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
-            ApplicationDbContext context,IConfiguration configuration)
+            ApplicationDbContext context,IConfiguration configuration, IDbConstants dbConstants)
         {
             _request = httpContext;
             var baseUrl = $"{_request.HttpContext.Request.Scheme}://{_request.HttpContext.Request.Host}";
@@ -46,7 +47,7 @@ namespace Bint.Controllers
             _environment = environment;
             _logger = logger;
             _context = context;
-            _dbf = new DbFunc(logger, configuration);
+            _dbf = new DbFunc(logger, configuration,dbConstants);
         }
 
         public IActionResult Dashboard()

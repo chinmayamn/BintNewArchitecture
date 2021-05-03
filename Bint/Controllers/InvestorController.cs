@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Services;
@@ -23,12 +24,12 @@ namespace Bint.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
 
         public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context, IConfiguration configuration)
+            ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants)
         {
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _dbf = new DbFunc(_logger, configuration);
+            _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
         public IActionResult Dashboard()

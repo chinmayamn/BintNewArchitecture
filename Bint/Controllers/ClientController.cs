@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Services;
@@ -22,11 +23,11 @@ namespace Bint.Controllers
         private readonly IDbFunc _dbf;
 
         public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager, IConfiguration configuration)
+            UserManager<ApplicationUser> userManager, IConfiguration configuration, IDbConstants dbConstants)
         {
             _logger = logger;
             _userManager = userManager;
-            _dbf = new DbFunc(_logger,configuration);
+            _dbf = new DbFunc(_logger,configuration,dbConstants);
         }
 
         public IActionResult Dashboard()

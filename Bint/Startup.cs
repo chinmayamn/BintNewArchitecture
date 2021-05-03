@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System;
+using Bint.Constants;
 
 namespace Bint
 {
@@ -45,6 +46,7 @@ namespace Bint
             services.AddTransient<IDbFunc, DbFunc>();
             services.AddTransient<IMessage, Message>();
             services.AddTransient<IFileHelper, FileHelper>();
+            services.AddTransient<IDbConstants, DbConstants>();
             
 
 
