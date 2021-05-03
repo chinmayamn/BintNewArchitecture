@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Bint.Constants;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using Bint.Constants;
 
 namespace Bint.Services
 {
