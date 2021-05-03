@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bint.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>,IApplicationDBContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>,IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bint.Data
 {
-    public interface IApplicationDBContext
+    public interface IApplicationDbContext
     {
         DbSet<CaptureDeviceData> CaptureDeviceData { get; set; }
         DbSet<RestrictedAccess> RestrictedAccess { get; set; }
