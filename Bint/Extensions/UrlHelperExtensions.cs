@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Bint.Controllers;
 
 namespace Microsoft.AspNetCore.Mvc
 {
+    [ExcludeFromCodeCoverage]
     public static class UrlHelperExtensions
     {
         public static string EmailConfirmationLink(this IUrlHelper urlHelper, string userId, string code, string scheme)

@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Bint.Data.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class status : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
