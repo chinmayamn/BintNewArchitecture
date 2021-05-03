@@ -32,6 +32,7 @@ namespace Bint.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly DbFunc _dbf;
         private readonly IHostingEnvironment _environment;
+        private readonly ApplicationUser _applicationUser;
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
@@ -47,6 +48,7 @@ namespace Bint.Controllers
             _logger = logger;
             _context = context;
             _dbf = new DbFunc(_logger, _context);
+            _applicationUser = _userManager.GetUserAsync(User).Result;
         }
 
         public IActionResult Dashboard()
@@ -113,10 +115,12 @@ namespace Bint.Controllers
         {
             try
             {
-                var bd = new UsdDashboard();
-                bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Withdraw");
-                bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Deposit");
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                var bd = new UsdDashboard
+                {
+                    WithdrawUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Withdraw"),
+                    DepositUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Deposit"),
+                    Stats = _dbf.GetAlertStats(_applicationUser.UserId)
+                };
                 return View(bd);
             }
             catch (Exception e)
@@ -145,7 +149,7 @@ namespace Bint.Controllers
         {
             try
             {
-                var idb = new Payback {UsdPayback = _dbf.GetUsdPayback(_userManager.GetUserAsync(User).Result.UserId)};
+                var idb = new Payback {UsdPayback = _dbf.GetUsdPayback(_applicationUser.UserId)};
                 return View(idb);
             }
             catch (Exception e)
@@ -234,7 +238,7 @@ namespace Bint.Controllers
                 if (result.Succeeded)
                     TempData["data"] = "User deleted successfully";
 
-                var y = _userManager.GetUserAsync(User).Result;
+                var y = _applicationUser;
                 var activityLog = new ActivityLog
                 {
                     Userid = y.UserId,
@@ -287,7 +291,7 @@ namespace Bint.Controllers
                 {
                     SmsBalance = CheckBalance(),
                     RegId = _context.RegId.First(),
-                    ApplicationUser = _userManager.GetUserAsync(User).Result
+                    ApplicationUser = _applicationUser
                 };
 
                 return View(sd);
@@ -347,7 +351,7 @@ namespace Bint.Controllers
         {
             try
             {
-                var r = _userManager.GetUserAsync(User).Result;
+                var r = _applicationUser;
                 var act = new ActivityLogDashboard
                 {
                     ActivityLogTable = _dbf.GetUserActivityLog(r.UserId)
@@ -368,7 +372,7 @@ namespace Bint.Controllers
             try
             {
                 var bd = new UsdDashboard();
-                var r = _userManager.GetUserAsync(User).Result;
+                var r = _applicationUser;
                 bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
                 bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
                 bd.QrCode = r.AdminQrCode;
