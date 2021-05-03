@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Bint.Controllers
@@ -27,14 +28,14 @@ namespace Bint.Controllers
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context, IConfiguration configuration)
         {
             _request = httpContext;
             _logger = logger;
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
-            _dbf = new DbFunc(logger);
+            _dbf = new DbFunc(logger,configuration);
         }
 
         public ActionResult Stats()

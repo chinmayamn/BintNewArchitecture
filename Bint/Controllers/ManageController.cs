@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Bint.Controllers
@@ -32,6 +33,7 @@ namespace Bint.Controllers
         private readonly UrlEncoder _urlEncoder;
         private readonly UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
+        private readonly IDbFunc _dbf;
 
         public ManageController(
             UserManager<ApplicationUser> userManager,
@@ -39,7 +41,7 @@ namespace Bint.Controllers
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
             ILogger<ManageController> logger,
-            UrlEncoder urlEncoder, ApplicationDbContext context, IMessage message, ILogger<Message> messageLogger)
+            UrlEncoder urlEncoder, ApplicationDbContext context, IMessage message, ILogger<Message> messageLogger, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -50,6 +52,7 @@ namespace Bint.Controllers
             _context = context;
             _message = message;
             _messageLogger = messageLogger;
+            _dbf = new DbFunc(_logger, configuration);
         }
 
         [TempData] public string StatusMessage { get; set; }
@@ -1041,9 +1044,8 @@ namespace Bint.Controllers
         public async Task<ActionResult> GetAlerts()
         {
             var bd = new UsdDashboard();
-            var dbf = new DbFunc(_logger);
             var r = _userManager.GetUserAsync(User).Result;
-            bd.Stats = dbf.GetAlertStats(r.UserId);
+            bd.Stats = _dbf.GetAlertStats(r.UserId);
             var ll = new Dictionary<string, string>();
 
 

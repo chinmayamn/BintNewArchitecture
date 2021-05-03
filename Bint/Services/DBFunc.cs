@@ -9,22 +9,13 @@ namespace Bint.Services
 {
     public class DbFunc:IDbFunc
     {
-        private static SqlConnection _conn;
         private readonly ILogger _logger;
+        private readonly IConfiguration _configuration;
 
-        public DbFunc(ILogger logger)
+        public DbFunc(ILogger logger,IConfiguration configuration)
         {
             _logger = logger;
-             var configuation = GetConfiguration();
-            _conn = new SqlConnection(configuation.GetSection("ConnectionStrings").GetSection("DefaultConnection")
-                .Value);
-        }
-
-        public IConfigurationRoot GetConfiguration()
-        {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true);
-            return builder.Build();
+            _configuration = configuration;
         }
 
         public DataTable GetRequestUsdReport(string userid)
@@ -32,7 +23,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getrequestusdreport", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -54,7 +45,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_gettransferusdreport", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -76,7 +67,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getuseractivity", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -98,7 +89,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getalertstats", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -120,7 +111,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getkycdocs", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -142,7 +133,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getdepositwithdrawusdrequests", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -165,7 +156,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getdepositwithdrawusdrequestsadmin", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -188,7 +179,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_adminrequestdashboard", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -209,7 +200,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getusdinvestment", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -230,7 +221,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getusdpayback", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -252,7 +243,7 @@ namespace Bint.Services
             var dt = new DataTable();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getusdpaybackuser", con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -274,7 +265,7 @@ namespace Bint.Services
             var dt = new DataSet();
             try
             {
-                var con = new SqlConnection(_conn.ConnectionString);
+                var con = new SqlConnection(_configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value);
                 var cmd = new SqlCommand("sp_getusdinvestmentmonthwise", con)
                 {
                     CommandType = CommandType.StoredProcedure

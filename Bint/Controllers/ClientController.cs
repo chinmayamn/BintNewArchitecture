@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Bint.Controllers
@@ -21,11 +22,11 @@ namespace Bint.Controllers
         private readonly DbFunc _dbf;
 
         public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _logger = logger;
             _userManager = userManager;
-            _dbf = new DbFunc(_logger);
+            _dbf = new DbFunc(_logger,configuration);
         }
 
         public IActionResult Dashboard()

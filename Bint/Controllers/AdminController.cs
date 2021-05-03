@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -30,15 +31,14 @@ namespace Bint.Controllers
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DbFunc _dbf;
+        private readonly IDbFunc _dbf;
         private readonly IHostingEnvironment _environment;
-     
+
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
-            ApplicationDbContext context)
+            ApplicationDbContext context,IConfiguration configuration)
         {
             _request = httpContext;
-
             var baseUrl = $"{_request.HttpContext.Request.Scheme}://{_request.HttpContext.Request.Host}";
             _client.BaseAddress = new Uri(baseUrl);
             _roleManager = roleManager;
@@ -46,7 +46,7 @@ namespace Bint.Controllers
             _environment = environment;
             _logger = logger;
             _context = context;
-            _dbf = new DbFunc(_logger);
+            _dbf = new DbFunc(_logger, configuration);
         }
 
         public IActionResult Dashboard()
