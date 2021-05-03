@@ -47,7 +47,7 @@ namespace Bint.Controllers
             _environment = environment;
             _logger = logger;
             _context = context;
-            _dbf = new DbFunc(_logger, _context);
+            _dbf = new DbFunc(_logger);
             _applicationUser = _userManager.GetUserAsync(User).Result;
         }
 

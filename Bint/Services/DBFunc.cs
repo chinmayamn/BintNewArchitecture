@@ -1,25 +1,21 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using Bint.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Bint.Services
 {
     public class DbFunc:IDbFunc
     {
         private static SqlConnection _conn;
-        private readonly ApplicationDbContext _context;
         private readonly ILogger _logger;
 
-        public DbFunc(ILogger logger, ApplicationDbContext context)
+        public DbFunc(ILogger logger)
         {
             _logger = logger;
-            _context = context;
-            var configuation = GetConfiguration();
+             var configuation = GetConfiguration();
             _conn = new SqlConnection(configuation.GetSection("ConnectionStrings").GetSection("DefaultConnection")
                 .Value);
         }

@@ -34,7 +34,7 @@ namespace Bint.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
-            _dbf = new DbFunc(logger, _context);
+            _dbf = new DbFunc(logger);
         }
 
         public ActionResult Stats()

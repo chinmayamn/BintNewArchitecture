@@ -59,7 +59,7 @@ namespace Bint.Controllers
             _configuration = configuration;
             _context = context;
             _message = message;
-            _dbf = new DbFunc(_logger, _context);
+            _dbf = new DbFunc(_logger);
         }
 
         [TempData] public string ErrorMessage { get; set; }
