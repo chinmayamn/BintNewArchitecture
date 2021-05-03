@@ -1,9 +1,11 @@
-﻿using Bint.Controllers;
+﻿using System.Diagnostics.CodeAnalysis;
+using Bint.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace BintTest.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class InvestorControllerTest
     {
         static Mock<ILogger<InvestorController>> mock = new Mock<ILogger<InvestorController>>();

@@ -1,5 +1,8 @@
-﻿namespace BintTest.Controllers
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BintTest.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class ClientControllerTest
     {
         //static Mock<ILogger<ClientController>> mock = new Mock<ILogger<ClientController>>();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace BintTest.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class PartnerControllerTest
     {
         [Fact]

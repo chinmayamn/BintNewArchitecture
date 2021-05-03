@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bint.Controllers;
@@ -15,6 +16,7 @@ using Xunit;
 
 namespace BintTest.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class AdminControllerTest
     {
         //private IHttpContextAccessor _request;

@@ -1,4 +1,5 @@
-﻿using Bint.Controllers;
+﻿using System.Diagnostics.CodeAnalysis;
+using Bint.Controllers;
 using Bint.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace BintTest.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class SuperAdminControllerTest
     {
         private static readonly Mock<ILogger<SuperAdminController>> Mock = new Mock<ILogger<SuperAdminController>>();

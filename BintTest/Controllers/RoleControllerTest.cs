@@ -8,11 +8,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace BintTest.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class RoleControllerTest
     {
        
