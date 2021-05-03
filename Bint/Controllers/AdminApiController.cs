@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bint.Data;
 using Bint.Models;
 using Bint.Repository;
+using Bint.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,11 @@ namespace Bint.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAdminRepository _adminRepository;
+        private readonly IFileHelper _fileHelper;
 
         public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository,
             UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context,
-            ILogger<Message> messageLogger, IMessage message)
+            ILogger<Message> messageLogger, IMessage message,IFileHelper fileHelper)
         {
             _adminRepository = adminRepository;
             _roleManager = roleManager;
@@ -36,6 +38,7 @@ namespace Bint.Controllers
             _context = context;
             _messageLogger = messageLogger;
             _message = message;
+            _fileHelper = fileHelper;
         }
 
         [Route("GetUserRoles")]
@@ -97,10 +100,14 @@ namespace Bint.Controllers
                 //hard delete previous file
                 try
                 {
-                    var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ProfilePicture.Replace("/", "\\");
-                    var fileInfo = new FileInfo(t);
-                    if (fileInfo.Exists)
-                        fileInfo.Delete();
+                    if (u.ProfilePicture != null)
+                    {
+                        var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ProfilePicture.Replace("/", "\\");
+                        var fileInfo = _fileHelper.GetFileInfo(t);
+                        if (_fileHelper.Exists(fileInfo))
+                            _fileHelper.Delete(fileInfo);
+                    }
+                   
                 }
                 catch (Exception ex)
                 {

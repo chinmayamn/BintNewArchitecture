@@ -44,6 +44,7 @@ namespace Bint
             services.AddTransient<IApplicationDBContext, ApplicationDbContext>();
             services.AddTransient<IDbFunc, DbFunc>();
             services.AddTransient<IMessage, Message>();
+            services.AddTransient<IFileHelper, FileHelper>();
             
 
 

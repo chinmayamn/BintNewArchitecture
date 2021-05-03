@@ -114,7 +114,6 @@ namespace Bint.Controllers
             try
             {
                 var bd = new UsdDashboard();
-                var r = _userManager.GetUserAsync(User).Result;
                 bd.WithdrawUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Withdraw");
                 bd.DepositUsd = _dbf.GetDepositWithdrawUsdRequestsadmin("Deposit");
                 bd.Stats = _dbf.GetAlertStats(r.UserId);
