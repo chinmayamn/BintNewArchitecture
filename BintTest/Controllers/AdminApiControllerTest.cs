@@ -54,7 +54,7 @@ namespace BintTest.Controllers
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, _logger, _context, _messageLogger,_message,_fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger,_message,_fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.UserRoles();
@@ -70,7 +70,7 @@ namespace BintTest.Controllers
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, _logger, _context, _messageLogger, _message, _fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.CreateRole(Arg.Any<string>());
@@ -88,7 +88,7 @@ namespace BintTest.Controllers
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
        
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, LogMock.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.ProfilePic(Arg.Any<IFormFile>());
@@ -104,7 +104,7 @@ namespace BintTest.Controllers
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, _logger, _context, _messageLogger, _message, _fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.UploadDocs(Arg.Any<IFormFile>(),Arg.Any<string>());
@@ -120,7 +120,7 @@ namespace BintTest.Controllers
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, _logger, _context, _messageLogger, _message, _fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.TetherUpdate(Arg.Any<string>(),Arg.Any<IFormFile>(), Arg.Any<string>());
@@ -136,7 +136,7 @@ namespace BintTest.Controllers
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, _logger, _context, _messageLogger, _message, _fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.ConfirmDeposit(Arg.Any<int>(),Arg.Any<string>());
@@ -152,7 +152,7 @@ namespace BintTest.Controllers
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
             userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, _logger, _context, _messageLogger, _message, _fileHelper, _dbConstants);
+            AdminApiController adminApiController = new AdminApiController(roleManagerMock, userManagerMock.Object, MockAdminApiLogger.Object, _context, _messageLogger, _message, _fileHelper, _dbConstants);
 
             //Act
             var result = adminApiController.ConfirmWithdraw(Arg.Any<int>(), Arg.Any<string>(),Arg.Any<string>());

@@ -1,65 +1,137 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Bint.Constants;
+using Bint.Controllers;
+using Bint.Data;
+using Bint.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using NSubstitute;
+using Xunit;
+using Microsoft.Extensions.Configuration;
+using Bint.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace BintTest.Controllers
 {
     [ExcludeFromCodeCoverage]
-    public class ClientControllerTest
+    public class ClientControllerTest:Common.Common
     {
-        //static Mock<ILogger<ClientController>> mock = new Mock<ILogger<ClientController>>();
-        //private ClientController _clientController = new ClientController(mock.Object);
-/*
-        [Fact]
-        public void Test_Index()
+        private readonly IApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IDbConstants _dbConstants;
+        private readonly IFileHelper _fileHelper;
+        public ClientControllerTest()
         {
-            //var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            //userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
-
-            //var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            //Mock<ILogger<RoleController>> logMock = new Mock<ILogger<RoleController>>();
+            _context = Substitute.For<IApplicationDbContext>();
+            _configuration = Substitute.For<IConfiguration>();
+            _dbConstants = Substitute.For<IDbConstants>();
+            _fileHelper = Substitute.For<IFileHelper>();
+        }
+   
+        [Fact]
+        public void Test_Dashboard_Throws_Exception()
+        {
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
 
             //Act
-            var result = _clientController.Index() as IActionResult;
+            var result = clientController.Dashboard();
 
             //Assert
             Assert.NotNull(result);
         }
         [Fact]
-        public void Test_Dashboard()
+        public void Test_Plans_Throws_Exception()
         {
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
+
             //Act
-            var result = _clientController.Dashboard() as IActionResult;
+            var result = clientController.Plans();
 
             //Assert
             Assert.NotNull(result);
         }
         [Fact]
-        public void Test_Plans()
+        public void Test_MyProfile_Throws_Exception()
         {
-            //Act
-            var result = _clientController.Plans() as IActionResult;
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
 
-            //Assert
-            Assert.NotNull(result);
-        }
-        [Fact]
-        public void Test_MyProfile()
-        {
             //Act
-            var result = _clientController.MyProfile() as IActionResult;
+            var result = clientController.MyProfile();
 
             //Assert
             Assert.NotNull(result);
         }
 
         [Fact]
-        public void Test_Bitcoin()
+        public void Test_Usd__Throws_Exception()
         {
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
+
             //Act
-            var result = _clientController.Bitcoin() as IActionResult;
+            var result = clientController.Usd();
 
             //Assert
             Assert.NotNull(result);
         }
-        */
+
+        [Fact]
+        public void Test_Bgc__Throws_Exception()
+        {
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
+
+            //Act
+            var result = clientController.Bgc();
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Test_ActivityLog__Throws_Exception()
+        {
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
+
+            //Act
+            var result = clientController.ActivityLog();
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Test_TetherUpdate__Throws_Exception()
+        {
+            //Arrange
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            ClientController clientController = new ClientController(MockClientLogger.Object, _context, userManagerMock.Object, _configuration, _dbConstants, _fileHelper);
+
+            //Act
+            var result = clientController.TetherUpdate(Arg.Any<string>(),Arg.Any<IFormFile>());
+
+            //Assert
+            Assert.NotNull(result);
+        }
     }
 }

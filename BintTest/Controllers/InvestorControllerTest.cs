@@ -1,127 +1,187 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Bint.Constants;
 using Bint.Controllers;
+using Bint.Data;
+using Bint.Models;
+using Bint.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Xunit;
 
 namespace BintTest.Controllers
 {
     [ExcludeFromCodeCoverage]
-    public class InvestorControllerTest
+    public class InvestorControllerTest:Common.Common
     {
-        static Mock<ILogger<InvestorController>> mock = new Mock<ILogger<InvestorController>>();
+        private readonly IApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IDbConstants _dbConstants;
+        public InvestorControllerTest()
+        {
+            _context = Substitute.For<IApplicationDbContext>();
+            _dbConstants = Substitute.For<IDbConstants>();
+            _configuration = Substitute.For<IConfiguration>();
+        }
 
-         
+        [Fact]
+        public void Test_Dashboard_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
+            
+            //Act
+            var result = investorController.Dashboard();
 
-        //[Fact]
-        //public void Test_Index()
-        //{
-        //    var userManagerMock = GetUserManagerMock<ApplicationUser>();
-        //    userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            //Assert
+            Assert.NotNull(result);
+        }
+        [Fact]
+        public void Test_Plans_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
+            
+            //Act
+            var result = investorController.Plans();
 
-        //    InvestorController _investorController = new InvestorController(mock.Object, userManagerMock.Object);
-        //    //Act
-        //    var result = _investorController.Index() as IActionResult;
+            //Assert
+            Assert.NotNull(result);
+        }
+        [Fact]
+        public void Test_Myprofile_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
-        //[Fact]
-        //public void Test_Dashboard()
-        //{
-        //    //Act
-        //    var result = _investorController.Dashboard() as IActionResult;
+            //Act
+            var result = investorController.MyProfile();
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
-        //[Fact]
-        //public void Test_Plans()
-        //{
-        //    //Act
-        //    var result = _investorController.Plans() as IActionResult;
+            //Assert
+            Assert.NotNull(result);
+        }
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
-        //[Fact]
-        //public void Test_Myprofile()
-        //{
-        //    //Act
-        //    var result = _investorController.MyProfile() as IActionResult;
+        [Fact]
+        public void Test_Investments_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
+            //Act
+            var result = investorController.Investments();
 
-        //[Fact]
-        //public void Test_Investments()
-        //{
-        //    //Act
-        //    var result = _investorController.Investments() as IActionResult;
+            //Assert
+            Assert.NotNull(result);
+        }
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
+        [Fact]
+        public void Test_Partners_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
 
-        //[Fact]
-        //public void Test_Partners()
-        //{
-        //    //Act
-        //    var result = _investorController.Partners() as IActionResult;
+            //Act
+            var result = investorController.Partners();
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
+            //Assert
+            Assert.NotNull(result);
+        }
 
-        //[Fact]
-        //public void Test_Bitcoin()
-        //{
-        //    //Act
-        //    var result = _investorController.Bitcoin() as IActionResult;
+        [Fact]
+        public void Test_UsdPayback_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
-        //[Fact]
-        //public void Test_PartnerDetail()
-        //{
-        //    //Act
-        //    var result = _investorController.PartnerDetail() as IActionResult;
+            //Act
+            var result = investorController.UsdPayback();
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
-        //[Fact]
-        //public void Test_Register()
-        //{
-        //    //Act
-        //    var result = _investorController.Register() as IActionResult;
+            //Assert
+            Assert.NotNull(result);
+        }
+        [Fact]
+        public void Test_Usd_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
 
-        //    //Assert
-        //    Assert.NotNull(result);
-        //}
-        //Mock<UserManager<TIDentityUser>> GetUserManagerMock<TIDentityUser>() where TIDentityUser : IdentityUser
-        //{
-        //    return new Mock<UserManager<TIDentityUser>>(
-        //        new Mock<IUserStore<TIDentityUser>>().Object,
-        //        new Mock<IOptions<IdentityOptions>>().Object,
-        //        new Mock<IPasswordHasher<TIDentityUser>>().Object,
-        //        new IUserValidator<TIDentityUser>[0],
-        //        new IPasswordValidator<TIDentityUser>[0],
-        //        new Mock<ILookupNormalizer>().Object,
-        //        new Mock<IdentityErrorDescriber>().Object,
-        //        new Mock<IServiceProvider>().Object,
-        //        new Mock<ILogger<UserManager<TIDentityUser>>>().Object);
-        //}
+            //Act
+            var result = investorController.Usd();
 
-        //Mock<RoleManager<TIdentityRole>> GetRoleManagerMock<TIdentityRole>() where TIdentityRole : IdentityRole
-        //{
-        //    return new Mock<RoleManager<TIdentityRole>>(
-        //        new Mock<IRoleStore<TIdentityRole>>().Object,
-        //        new IRoleValidator<TIdentityRole>[0],
-        //        new Mock<ILookupNormalizer>().Object,
-        //        new Mock<IdentityErrorDescriber>().Object,
-        //        new Mock<ILogger<RoleManager<TIdentityRole>>>().Object);
-        //}
+            //Assert
+            Assert.NotNull(result);
+        }
+        [Fact]
+        public void Test_Bgc_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
+
+            //Act
+            var result = investorController.Bgc();
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Test_PartnerDetail_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
+
+            //Act
+            var result = investorController.PartnerDetail();
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Test_DeleteUser_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
+
+            //Act
+            var result = investorController.DeleteUser(Arg.Any<string>());
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Test_ActivityLog_Throws_Exception()
+        {
+            var userManagerMock = GetUserManagerMock<ApplicationUser>();
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
+            InvestorController investorController = new InvestorController(MockInvestorLogger.Object, userManagerMock.Object, _context, _configuration, _dbConstants);
+
+            //Act
+            var result = investorController.ActivityLog();
+
+            //Assert
+            Assert.NotNull(result);
+        }
     }
 }

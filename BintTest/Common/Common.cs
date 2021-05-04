@@ -35,6 +35,13 @@ namespace BintTest.Common
                 new Mock<ILogger<RoleManager<TIdentityRole>>>().Object);
         }
 
-        public Mock<ILogger<AdminApiController>> LogMock = new Mock<ILogger<AdminApiController>>();
+        public Mock<ILogger<AdminApiController>> MockAdminApiLogger = new Mock<ILogger<AdminApiController>>();
+        public Mock<ILogger<AdminController>> MockAdminLogger = new Mock<ILogger<AdminController>>();
+        public Mock<ILogger<ClientController>> MockClientLogger = new Mock<ILogger<ClientController>>();
+        public Mock<ILogger<ClientApiController>> MockClientApiLogger = new Mock<ILogger<ClientApiController>>();
+        public Mock<ILogger<InvestorController>> MockInvestorLogger = new Mock<ILogger<InvestorController>>();
+        public Mock<ILogger<InvestorApiController>> MockInvestorApiLogger = new Mock<ILogger<InvestorApiController>>();
+        public Mock<ILogger<PartnerController>> MockPartnerLogger = new Mock<ILogger<PartnerController>>();
+       
     }
 }
