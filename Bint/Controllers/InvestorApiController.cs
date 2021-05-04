@@ -36,8 +36,7 @@ namespace Bint.Controllers
             try
             {
                 var route = Request.Path.Value.Split("/")[1];
-                var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) + "_" + DateTime.Now.ToString("yyyyMMddTHHmmssfff") + Path.GetExtension(formFile.FileName);//file extension
-                var path = Path.Combine("wwwroot", "Tether", z1);
+                var path = _fileHelper.DocumentUploadPath(formFile, "Tether");
                 var u = _userManager.GetUserAsync(User).Result;
 
                 //hard delete previous file
