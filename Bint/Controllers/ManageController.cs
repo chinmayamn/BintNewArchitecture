@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -225,6 +226,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ExternalLogins()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -243,6 +245,7 @@ namespace Bint.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> LinkLogin(string provider)
         {
             // Clear the existing external cookie to ensure a clean login process
@@ -257,6 +260,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> LinkLoginCallback()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -282,6 +286,7 @@ namespace Bint.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -299,6 +304,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -316,6 +322,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> Disable2faWarning()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -330,6 +337,7 @@ namespace Bint.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> Disable2fa()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -345,6 +353,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> EnableAuthenticator()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -359,6 +368,7 @@ namespace Bint.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -393,6 +403,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public IActionResult ShowRecoveryCodes()
         {
             var recoveryCodes = (string[]) TempData[RecoveryCodesKey];
@@ -403,6 +414,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public IActionResult ResetAuthenticatorWarning()
         {
             return View(nameof(ResetAuthenticator));
@@ -410,6 +422,7 @@ namespace Bint.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ResetAuthenticator()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -424,6 +437,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> GenerateRecoveryCodesWarning()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -439,6 +453,7 @@ namespace Bint.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> GenerateRecoveryCodes()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -1001,11 +1016,13 @@ namespace Bint.Controllers
 
         #region Helpers
 
+        [ExcludeFromCodeCoverage]
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
         }
 
+        [ExcludeFromCodeCoverage]
         private string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
@@ -1021,6 +1038,7 @@ namespace Bint.Controllers
             return result.ToString().ToLowerInvariant();
         }
 
+        [ExcludeFromCodeCoverage]
         private string GenerateQrCodeUri(string email, string unformattedKey)
         {
             return string.Format(
@@ -1030,6 +1048,7 @@ namespace Bint.Controllers
                 unformattedKey);
         }
 
+        [ExcludeFromCodeCoverage]
         private async Task LoadSharedKeyAndQrCodeUriAsync(ApplicationUser user, EnableAuthenticatorViewModel model)
         {
             var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -66,10 +67,12 @@ namespace Bint.Controllers
             _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
+        [ExcludeFromCodeCoverage]
         [TempData] public string ErrorMessage { get; set; }
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             // Clear the existing external cookie to ensure a clean login process
@@ -229,6 +232,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
@@ -245,6 +249,7 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe,
             string returnUrl = null)
         {
@@ -279,6 +284,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
@@ -293,6 +299,7 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model,
             string returnUrl = null)
         {
@@ -319,6 +326,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public IActionResult Lockout()
         {
             return View();
@@ -326,6 +334,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         [Route("/Account/Error{statusCode:int}")]
         public IActionResult Error(int statusCode)
         {
@@ -477,6 +486,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [ActionName("Logout")]
+        [ExcludeFromCodeCoverage]
         public IActionResult Logouts()
         {
             return View("logout");
@@ -499,6 +509,7 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
@@ -509,6 +520,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (remoteError != null)
@@ -536,6 +548,7 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model,
             string returnUrl = null)
         {
@@ -567,6 +580,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null) return RedirectToAction(nameof(Login), "Home");
@@ -578,6 +592,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public IActionResult ForgotPassword()
         {
             return View();
@@ -618,6 +633,7 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -652,6 +668,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public IActionResult ForgotPasswordConfirmation()
         {
             return View();
@@ -659,6 +676,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public IActionResult ResetPassword(string code = null)
         {
             if (code == null) throw new ApplicationException("A code must be supplied for password reset.");
@@ -669,6 +687,7 @@ namespace Bint.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ExcludeFromCodeCoverage]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -684,6 +703,7 @@ namespace Bint.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ExcludeFromCodeCoverage]
         public IActionResult ResetPasswordConfirmation()
         {
             return View();
@@ -771,12 +791,12 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<ActionResult> SetManualLock(string uid, bool status)
         {
             try
             {
                 var u = await _userManager.FindByIdAsync(uid);
-
                 await _userManager.SetLockoutEnabledAsync(u, true);
                 if (status)
                     await _userManager.SetLockoutEndDateAsync(u, DateTimeOffset.MaxValue);
@@ -791,6 +811,7 @@ namespace Bint.Controllers
         }
 
         [HttpGet]
+        [ExcludeFromCodeCoverage]
         public async Task<ActionResult> SetManualVerification(string uid, bool status)
         {
             try
@@ -816,9 +837,7 @@ namespace Bint.Controllers
             try
             {
                 var s = _context.Doc.First(x => x.Id == id);
-                var z = Directory.GetCurrentDirectory();
-                var t = "";
-                t = z + "\\wwwroot" + s.DocPath.Replace("/", "\\");
+                var t = Directory.GetCurrentDirectory() + "\\wwwroot" + s.DocPath.Replace("/", "\\");
                 _fileHelper.HardDeleteFile(t);
                 _context.Doc.Remove(s);
                 _context.SaveChanges();
