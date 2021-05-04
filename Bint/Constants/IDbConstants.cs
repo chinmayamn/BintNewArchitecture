@@ -1,4 +1,6 @@
-﻿namespace Bint.Constants
+﻿using System;
+
+namespace Bint.Constants
 {
     public interface IDbConstants
     {
@@ -14,5 +16,6 @@
         string SpGetusdpayback { get; }
         string SpGetusdpaybackuser { get; }
         string SpGetusdinvestmentmonthwise { get; }
+        TimeZoneInfo IndianZone { get; }
     }
 }

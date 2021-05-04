@@ -25,28 +25,26 @@ namespace Bint.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AdminController> _logger;
-        private readonly HttpClient _client = new HttpClient();
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbFunc _dbf;
         private readonly IHostingEnvironment _environment;
+        private readonly IDbConstants _dbConstants;
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
             ApplicationDbContext context,IConfiguration configuration, IDbConstants dbConstants)
         {
             _request = httpContext;
-            var baseUrl = $"{_request.HttpContext.Request.Scheme}://{_request.HttpContext.Request.Host}";
-            _client.BaseAddress = new Uri(baseUrl);
             _roleManager = roleManager;
             _userManager = userManager;
             _environment = environment;
             _logger = logger;
             _context = context;
+            _dbConstants = dbConstants;
             _dbf = new DbFunc(logger, configuration,dbConstants);
         }
 
@@ -169,39 +167,31 @@ namespace Bint.Controllers
         {
             try
             {
-                var route = Request.Path.Value.Split("/")[2];
-                IEnumerable<ApplicationUser> z;
-                ViewBag.U = route;
+                ViewBag.U = Request.Path.Value.Split("/")[2];
                 var m = new CustomerUserCreate();
-                var k = _roleManager.Roles.ToList();
-                m.URole = k;
-
-                switch (route.ToLower())
+                m.URole = _roleManager.Roles.ToList();
+                
+                switch (ViewBag.U.ToLower())
                 {
                     case "admin":
                         ViewBag.ReturnUrl = "/admin/admin";
-                        z = _userManager.GetUsersInRoleAsync("Admin").Result;
-                        m.AppUser = z;
+                        m.AppUser = _userManager.GetUsersInRoleAsync("Admin").Result;
                         return View(m);
                     case "investor":
                         ViewBag.ReturnUrl = "/admin/investor";
-                        z = _userManager.GetUsersInRoleAsync("Investor").Result;
-                        m.AppUser = z;
+                        m.AppUser = _userManager.GetUsersInRoleAsync("Investor").Result;
                         return View(m);
                     case "client":
                         ViewBag.ReturnUrl = "/admin/client";
-                        z = _userManager.GetUsersInRoleAsync("Client").Result;
-                        m.AppUser = z;
+                        m.AppUser = _userManager.GetUsersInRoleAsync("Client").Result;
                         return View(m);
                     case "partner":
                         ViewBag.ReturnUrl = "/admin/partner";
-                        z = _userManager.GetUsersInRoleAsync("Partner").Result;
-                        m.AppUser = z;
+                        m.AppUser = _userManager.GetUsersInRoleAsync("Partner").Result;
                         return View(m);
                     case "locked":
                         ViewBag.ReturnUrl = "/admin/locked";
-                        z = _userManager.Users.AsEnumerable().Where(u => u.LockoutEnd != null);
-                        m.AppUser = z;
+                        m.AppUser = _userManager.Users.AsEnumerable().Where(u => u.LockoutEnd != null);
                         return View(m);
                     default:
                         return View();
@@ -229,20 +219,18 @@ namespace Bint.Controllers
         [Route("/partner/deleteuser")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var route = Request.Path.Value.Split("/")[1]; //get current user
             try
             {
                 var u = await _userManager.FindByIdAsync(id);
                 var result = await _userManager.DeleteAsync(u);
                 if (result.Succeeded)
                     TempData["data"] = "User deleted successfully";
-
-                var y = _userManager.GetUserAsync(User).Result;
+     
                 var activityLog = new ActivityLog
                 {
-                    Userid = y.UserId,
+                    Userid = _userManager.GetUserAsync(User).Result.UserId,
                     ActivityType = ActivityLogEnum.DeletePerson.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,_dbConstants.IndianZone),
                     Activity = "Deleted user " + u.UserId
                 };
                 _context.ActivityLog.Add(activityLog);
@@ -254,7 +242,7 @@ namespace Bint.Controllers
                 _logger.LogError("Error occurred {id}", id);
             }
 
-            return RedirectToAction(route, "Admin");
+            return RedirectToAction(Request.Path.Value.Split("/")[1], "Admin");
         }
 
 
@@ -370,13 +358,15 @@ namespace Bint.Controllers
         {
             try
             {
-                var bd = new UsdDashboard();
                 var r = _userManager.GetUserAsync(User).Result;
-                bd.RequestUsd = _dbf.GetRequestUsdReport(r.UserId);
-                bd.TransferUsd = _dbf.GetTransferUsdReport(r.UserId);
-                bd.QrCode = r.AdminQrCode;
-                bd.Tether = r.AdminTetherAddress;
-                bd.Stats = _dbf.GetAlertStats(r.UserId);
+                var bd = new UsdDashboard
+                {
+                    RequestUsd = _dbf.GetRequestUsdReport(r.UserId),
+                    TransferUsd = _dbf.GetTransferUsdReport(r.UserId),
+                    QrCode = r.AdminQrCode,
+                    Tether = r.AdminTetherAddress,
+                    Stats = _dbf.GetAlertStats(r.UserId)
+                };
                 return View(bd);
             }
             catch (Exception e)

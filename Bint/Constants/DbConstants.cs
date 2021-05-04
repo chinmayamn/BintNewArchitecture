@@ -1,4 +1,6 @@
-﻿namespace Bint.Constants
+﻿using System;
+
+namespace Bint.Constants
 {
     public sealed class DbConstants:IDbConstants
     {
@@ -14,5 +16,6 @@
         public string SpGetusdpayback => "sp_getusdpayback";
         public string SpGetusdpaybackuser => "sp_getusdpaybackuser";
         public string SpGetusdinvestmentmonthwise => "sp_getusdinvestmentmonthwise";
+        public TimeZoneInfo IndianZone => TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
     }
 }

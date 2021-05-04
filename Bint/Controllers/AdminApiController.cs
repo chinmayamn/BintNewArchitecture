@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
 using Bint.Repository;
@@ -17,7 +18,6 @@ namespace Bint.Controllers
     [Route("api/Admin")]
     public class AdminApiController : Controller
     {
-        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AdminApiController> _logger;
         private readonly IMessage _message;
@@ -26,10 +26,11 @@ namespace Bint.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAdminRepository _adminRepository;
         private readonly IFileHelper _fileHelper;
+        private readonly IDbConstants _dbConstants;
 
         public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository,
             UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context,
-            ILogger<Message> messageLogger, IMessage message,IFileHelper fileHelper)
+            ILogger<Message> messageLogger, IMessage message,IFileHelper fileHelper, IDbConstants dbConstants)
         {
             _adminRepository = adminRepository;
             _roleManager = roleManager;
@@ -39,6 +40,7 @@ namespace Bint.Controllers
             _messageLogger = messageLogger;
             _message = message;
             _fileHelper = fileHelper;
+            _dbConstants = dbConstants;
         }
 
         [Route("GetUserRoles")]
@@ -153,7 +155,7 @@ namespace Bint.Controllers
                 {
                     await formFile.CopyToAsync(stream); //push file
                     var d = new Doc();
-                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
                     d.CreatedDate = indianTime;
                     d.DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
                     d.Filename = filename;
@@ -260,7 +262,7 @@ namespace Bint.Controllers
         {
             try
             {
-                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 Message mm;
                 var activityLog = new ActivityLog();
@@ -404,7 +406,7 @@ namespace Bint.Controllers
         {
             try
             {
-                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
                 var au = _userManager.GetUsersInRoleAsync("Admin").Result;
                 Message mm;
                 var activityLog = new ActivityLog();

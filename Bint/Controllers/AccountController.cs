@@ -28,7 +28,6 @@ namespace Bint.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
         private readonly IDbFunc _dbf;
@@ -39,6 +38,7 @@ namespace Bint.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDbConstants _dbConstants;
   
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -60,6 +60,7 @@ namespace Bint.Controllers
             _configuration = configuration;
             _context = context;
             _message = message;
+            _dbConstants = dbConstants;
             _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
@@ -160,7 +161,7 @@ namespace Bint.Controllers
                     dd.Parse();
 
                     var cd = new CaptureDeviceData();
-                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
 
                     cd.OsName = dd.GetOs().Match.Name;
                     cd.OsVersion = dd.GetOs().Match.Version;
@@ -374,7 +375,7 @@ namespace Bint.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(model);
-            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
 
             var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
             user.Firstname = model.Firstname;
@@ -455,7 +456,7 @@ namespace Bint.Controllers
                 {
                     Userid = user.CreatedBy,
                     ActivityType = ActivityLogEnum.Person.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     Activity = "Created user " + user.UserId
                 };
                 _context.ActivityLog.Add(activityLog);
@@ -489,7 +490,7 @@ namespace Bint.Controllers
             var pip = remoteIpAddress.ToString();
             var id = _userManager.GetUserId(User);
             var stu = _context.CaptureDeviceData.LastOrDefault(j => j.UserId == id && j.PublicIp == pip);
-            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
             stu.LogoutTime = indianTime;
             await _context.SaveChangesAsync();
             await _signInManager.SignOutAsync();
@@ -743,7 +744,7 @@ namespace Bint.Controllers
             dd.Parse();
 
             var cd = new RestrictedAccess();
-            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
             cd.OsName = dd.GetOs().Match.Name;
             cd.OsVersion = dd.GetOs().Match.Version;
             cd.OsPlatform = dd.GetOs().Match.Platform;

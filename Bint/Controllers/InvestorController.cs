@@ -17,11 +17,11 @@ namespace Bint.Controllers
     [Authorize(Roles = "Investor")]
     public class InvestorController : Controller
     {
-        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         private readonly ApplicationDbContext _context;
         private readonly IDbFunc _dbf;
         private readonly ILogger<InvestorController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDbConstants _dbConstants;
 
         public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
             ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants)
@@ -29,6 +29,7 @@ namespace Bint.Controllers
             _logger = logger;
             _userManager = userManager;
             _context = context;
+            _dbConstants = dbConstants;
             _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
@@ -223,7 +224,7 @@ namespace Bint.Controllers
                 {
                     Userid = y.UserId,
                     ActivityType = ActivityLogEnum.DeletePerson.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     Activity = "Deleted user " + u.UserId
                 };
                 _context.ActivityLog.Add(activityLog);

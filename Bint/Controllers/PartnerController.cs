@@ -18,14 +18,13 @@ namespace Bint.Controllers
     [Authorize(Roles = "Partner")]
     public class PartnerController : Controller
     {
-        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-
-        private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
         private readonly ILogger<PartnerController> _logger;
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbFunc _dbf;
+        private readonly IDbConstants _dbConstants;
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
@@ -36,6 +35,7 @@ namespace Bint.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
+            _dbConstants = dbConstants;
             _dbf = new DbFunc(logger,configuration,dbConstants);
         }
 
@@ -211,7 +211,7 @@ namespace Bint.Controllers
                 {
                     Userid = y.UserId,
                     ActivityType = ActivityLogEnum.DeletePerson.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     Activity = "Deleted user " + u.UserId
                 };
                 _context.ActivityLog.Add(activityLog);

@@ -24,8 +24,7 @@ namespace Bint.Controllers
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
-        private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly ApplicationDbContext _context;
+         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly IMessage _message;
@@ -35,7 +34,7 @@ namespace Bint.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
         private readonly IDbFunc _dbf;
-
+        private readonly IDbConstants _dbConstants;
         public ManageController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -54,6 +53,7 @@ namespace Bint.Controllers
             _context = context;
             _message = message;
             _messageLogger = messageLogger;
+            _dbConstants = dbConstants;
             _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
@@ -475,7 +475,7 @@ namespace Bint.Controllers
                 {
                     /**************** crediting action **************/
 
-                    var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
                     var tusd = new TransferUsd
                     {
                         Amount = Convert.ToDecimal(amount),
@@ -594,7 +594,7 @@ namespace Bint.Controllers
                     Amount = Convert.ToDecimal(amount),
                     FromUserId = ud.UserId,
                     ToUserId = ud.CreatedBy,
-                    RequestedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    RequestedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     TransferDate = null
                 };
                 tusd.FromStatus = tusd.ToStatus = TransferUsdStatusEnum.Requested.ToString();
@@ -606,7 +606,7 @@ namespace Bint.Controllers
                 {
                     Userid = tusd.FromUserId,
                     ActivityType = ActivityLogEnum.RequestUsd.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     Activity = "Requested " + amount + " Usd to " + ud.CreatedBy
                 };
                 _context.ActivityLog.Add(activityLog);
@@ -638,7 +638,7 @@ namespace Bint.Controllers
                 {
                     Userid = tusd.ToUserId,
                     ActivityType = ActivityLogEnum.RequestUsd.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     Activity = ud.UserId + " has requested " + amount + " Usd"
                 };
                 _context.ActivityLog.Add(activityLog);
@@ -682,7 +682,7 @@ namespace Bint.Controllers
 
                         /**************** crediting action starts here **************/
 
-                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
                         tusd.FromStatus = TransferUsdStatusEnum.Received.ToString();
                         tusd.ToStatus = TransferUsdStatusEnum.Transferred.ToString();
        
@@ -701,7 +701,7 @@ namespace Bint.Controllers
                         {
                             Userid = tusd.FromUserId,
                             ActivityType = ActivityLogEnum.ReceiveUsd.ToString(),
-                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                             Activity = "Received " + tusd.Amount + " Usd from " + tusd.ToUserId +
                                        ". Balance : " + uid.Usd
                         }; //set activitylog
@@ -742,7 +742,7 @@ namespace Bint.Controllers
                         {
                             Userid = tusd.ToUserId,
                             ActivityType = ActivityLogEnum.TransferUsd.ToString(),
-                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                             Activity = "Transferred " + tusd.Amount + " Usd to " + tusd.FromUserId +
                                        ". Balance : " + ud.Usd
                         }; //set activitylog
@@ -769,14 +769,14 @@ namespace Bint.Controllers
                     case "Reject":
                     {
                         tusd.FromStatus = tusd.ToStatus = TransferUsdStatusEnum.Rejected.ToString();
-                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                        tusd.TransferDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
                         await _context.SaveChangesAsync();
 
                         var activityLog = new ActivityLog
                         {
                             Userid = tusd.ToUserId,
                             ActivityType = ActivityLogEnum.Reject.ToString(),
-                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                             Activity = "Rejected " + tusd.Amount + " Usd to " + tusd.FromUserId
                         }; //set activitylog
                         _context.ActivityLog.Add(activityLog);
@@ -808,7 +808,7 @@ namespace Bint.Controllers
                         {
                             Userid = uid.UserId,
                             ActivityType = ActivityLogEnum.Reject.ToString(),
-                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                            ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                             Activity = ud.UserId + " has rejected " + tusd.Amount + " Usd to transfer"
                         }; //set activitylog
                         _context.ActivityLog.Add(activityLog);
@@ -844,7 +844,7 @@ namespace Bint.Controllers
                 var ud = await _userManager.GetUserAsync(User);
                 if (ud.Usd >= Convert.ToDecimal(withdrawAmount))
                 {
-                    var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                    var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
 
                     var tusd = new DepositWithdraw
                     {
@@ -893,7 +893,7 @@ namespace Bint.Controllers
                     {
                         Userid = au[0].UserId,
                         ActivityType = ActivityLogEnum.WithdrawUsd.ToString(),
-                        ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                        ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                         Activity = ud.UserId + " has requested " + withdrawAmount + " Usd to withdraw"
                     };
                     _context.ActivityLog.Add(activityLog);
@@ -929,7 +929,7 @@ namespace Bint.Controllers
                 var route = Request.Path.Value.Split("/")[1];
                 var ud = await _userManager.GetUserAsync(User);
 
-                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone);
+                var dt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
 
                 var tusd = new DepositWithdraw
                 {
@@ -980,7 +980,7 @@ namespace Bint.Controllers
                 {
                     Userid = au[0].UserId,
                     ActivityType = ActivityLogEnum.DepositUsd.ToString(),
-                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, IndianZone),
+                    ActivityDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
                     Activity = ud.UserId + " has requested " + txtDepositAmount + " Usd to deposit"
                 };
                 _context.ActivityLog.Add(activityLog);
