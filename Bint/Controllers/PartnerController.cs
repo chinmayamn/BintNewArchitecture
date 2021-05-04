@@ -18,7 +18,7 @@ namespace Bint.Controllers
     [Authorize(Roles = "Partner")]
     public class PartnerController : Controller
     {
-    private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ILogger<PartnerController> _logger;
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -29,7 +29,7 @@ namespace Bint.Controllers
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants, IFileHelper fileHelper)
+            IApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants, IFileHelper fileHelper)
         {
             _request = httpContext;
             _logger = logger;

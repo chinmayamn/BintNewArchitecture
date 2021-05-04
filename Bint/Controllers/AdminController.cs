@@ -25,7 +25,7 @@ namespace Bint.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ILogger<AdminController> _logger;
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -36,7 +36,7 @@ namespace Bint.Controllers
 
         public AdminController(IHttpContextAccessor httpContext, RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager, IHostingEnvironment environment, ILogger<AdminController> logger,
-            ApplicationDbContext context,IConfiguration configuration, IDbConstants dbConstants)
+            IApplicationDbContext context,IConfiguration configuration, IDbConstants dbConstants)
         {
             _request = httpContext;
             _roleManager = roleManager;

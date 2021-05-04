@@ -25,7 +25,7 @@ namespace Bint.Controllers
     {
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
-         private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly IMessage _message;
@@ -42,7 +42,7 @@ namespace Bint.Controllers
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
             ILogger<ManageController> logger,
-            UrlEncoder urlEncoder, ApplicationDbContext context, IMessage message, ILogger<Message> messageLogger,
+            UrlEncoder urlEncoder, IApplicationDbContext context, IMessage message, ILogger<Message> messageLogger,
             IConfiguration configuration, IDbConstants dbConstants)
         {
             _userManager = userManager;

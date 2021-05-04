@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Bint.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace Bint.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-
+        public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
         public virtual DbSet<CaptureDeviceData> CaptureDeviceData{ get; set; }
         public virtual DbSet<RestrictedAccess> RestrictedAccess { get; set; }
         public virtual DbSet<ErrorLog> Log { get; set; }

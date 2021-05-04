@@ -30,7 +30,7 @@ namespace Bint.Controllers
     public class AccountController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IDbFunc _dbf;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
@@ -50,7 +50,7 @@ namespace Bint.Controllers
             IEmailSender emailSender,
             ILogger<AccountController> logger,
             IConfiguration configuration,
-            ApplicationDbContext context,
+            IApplicationDbContext context,
             IMessage message,IDbConstants dbConstants, IFileHelper fileHelper)
         {
             _userManager = userManager;

@@ -22,14 +22,16 @@ namespace Bint.Controllers
         private readonly IDbFunc _dbf;
         private readonly IDbConstants _dbConstants;
         private readonly IFileHelper _fileHelper;
+        private readonly IApplicationDbContext _context;
 
-        public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
+        public ClientController(ILogger<ClientController> logger, IApplicationDbContext context,
             UserManager<ApplicationUser> userManager, IConfiguration configuration, IDbConstants dbConstants, IFileHelper fileHelper)
         {
             _logger = logger;
             _userManager = userManager;
             _dbConstants = dbConstants;
             _fileHelper = fileHelper;
+            _context = context;
             _dbf = new DbFunc(_logger,configuration,dbConstants);
         }
 

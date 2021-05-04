@@ -1,4 +1,5 @@
-﻿using Bint.Constants;
+﻿using System;
+using Bint.Constants;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -72,6 +73,11 @@ namespace BintTest.Constants
         public void SpGetusdinvestmentmonthwise_Successfully()
         {
             Assert.Equal("sp_getusdinvestmentmonthwise", _dbConstants.SpGetusdinvestmentmonthwise);
+        }
+        [Fact]
+        public void IndianZone_Successfully()
+        {
+            Assert.Equal("(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi", _dbConstants.IndianZone.ToString());
         }
     }
 }

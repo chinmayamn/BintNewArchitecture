@@ -1,6 +1,7 @@
-﻿using Bint.Models;
+﻿using System.Threading;
+using Bint.Models;
 using Microsoft.EntityFrameworkCore;
-
+using System.Threading.Tasks;
 namespace Bint.Data
 {
     public interface IApplicationDbContext
@@ -14,5 +15,6 @@ namespace Bint.Data
         DbSet<TransferUsd> TransferUsd { get; set; }
         DbSet<DepositWithdraw> DepositWithdraw { get; set; }
         int SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }

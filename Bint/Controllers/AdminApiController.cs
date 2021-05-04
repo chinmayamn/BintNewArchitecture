@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Bint.Constants;
 using Bint.Data;
 using Bint.Models;
-using Bint.Repository;
 using Bint.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,21 +17,18 @@ namespace Bint.Controllers
     [Route("api/Admin")]
     public class AdminApiController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly ILogger<AdminApiController> _logger;
         private readonly IMessage _message;
         private readonly ILogger<Message> _messageLogger;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IAdminRepository _adminRepository;
         private readonly IFileHelper _fileHelper;
         private readonly IDbConstants _dbConstants;
 
-        public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository,
-            UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context,
+        public AdminApiController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, IApplicationDbContext context,
             ILogger<Message> messageLogger, IMessage message,IFileHelper fileHelper, IDbConstants dbConstants)
         {
-            _adminRepository = adminRepository;
             _roleManager = roleManager;
             _userManager = userManager;
             _logger = logger;

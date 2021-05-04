@@ -17,14 +17,14 @@ namespace Bint.Controllers
     [Authorize(Roles = "Investor")]
     public class InvestorController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
         private readonly IDbFunc _dbf;
         private readonly ILogger<InvestorController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbConstants _dbConstants;
 
         public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants)
+            IApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants)
         {
             _logger = logger;
             _userManager = userManager;
