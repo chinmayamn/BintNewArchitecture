@@ -26,5 +26,12 @@ namespace Bint.Services
             var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) + "_" + DateTime.Now.ToString("yyyyMMddTHHmmssfff") + Path.GetExtension(formFile.FileName);//file extension
             return Path.Combine("wwwroot", uploadFolder, z1);
         }
+
+        public void HardDeleteFile(string url)
+        {
+            var fileInfo = new FileInfo(url);
+            if (fileInfo.Exists)
+                fileInfo.Delete();
+        }
     }
 }

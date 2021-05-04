@@ -13,5 +13,6 @@ namespace Bint.Services
         void Delete(FileInfo fileInfo);
         bool Exists(FileInfo fileInfo);
         string DocumentUploadPath(IFormFile formFile, string uploadFolder);
+        void HardDeleteFile(string url);
     }
 }

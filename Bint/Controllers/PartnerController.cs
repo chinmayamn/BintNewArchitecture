@@ -263,9 +263,7 @@ namespace Bint.Controllers
                 try
                 {
                     var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.QrCode.Replace("/", "\\");
-                    var fileInfo = _fileHelper.GetFileInfo(t);
-                    if (_fileHelper.Exists(fileInfo))
-                        _fileHelper.Delete(fileInfo);
+                    _fileHelper.HardDeleteFile(t);
                 }
                 catch (Exception ex)
                 {

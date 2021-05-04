@@ -104,9 +104,7 @@ namespace Bint.Controllers
                     if (u.ProfilePicture != null)
                     {
                         var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.ProfilePicture.Replace("/", "\\");
-                        var fileInfo = _fileHelper.GetFileInfo(t);
-                        if (_fileHelper.Exists(fileInfo))
-                            _fileHelper.Delete(fileInfo);
+                        _fileHelper.HardDeleteFile(t);
                     }
                    
                 }
@@ -203,9 +201,7 @@ namespace Bint.Controllers
                             break;
                     }
 
-                    var fileInfo = _fileHelper.GetFileInfo(t);
-                    if (_fileHelper.Exists(fileInfo))
-                        _fileHelper.Delete(fileInfo);
+                    _fileHelper.HardDeleteFile(t);
                 }
                 catch (Exception ex)
                 {

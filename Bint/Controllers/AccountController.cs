@@ -819,9 +819,7 @@ namespace Bint.Controllers
                 var z = Directory.GetCurrentDirectory();
                 var t = "";
                 t = z + "\\wwwroot" + s.DocPath.Replace("/", "\\");
-                var fileInfo = _fileHelper.GetFileInfo(t);
-                if (_fileHelper.Exists(fileInfo))
-                    _fileHelper.Delete(fileInfo);
+                _fileHelper.HardDeleteFile(t);
                 _context.Doc.Remove(s);
                 _context.SaveChanges();
                 return Json("success");
