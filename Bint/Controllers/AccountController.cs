@@ -39,7 +39,8 @@ namespace Bint.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbConstants _dbConstants;
-  
+        private readonly IFileHelper _fileHelper;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -49,7 +50,7 @@ namespace Bint.Controllers
             ILogger<AccountController> logger,
             IConfiguration configuration,
             ApplicationDbContext context,
-            IMessage message,IDbConstants dbConstants)
+            IMessage message,IDbConstants dbConstants, IFileHelper fileHelper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -61,6 +62,7 @@ namespace Bint.Controllers
             _context = context;
             _message = message;
             _dbConstants = dbConstants;
+            _fileHelper = fileHelper;
             _dbf = new DbFunc(_logger, configuration,dbConstants);
         }
 
@@ -817,9 +819,9 @@ namespace Bint.Controllers
                 var z = Directory.GetCurrentDirectory();
                 var t = "";
                 t = z + "\\wwwroot" + s.DocPath.Replace("/", "\\");
-                var fileInfo = new FileInfo(t);
-                if (fileInfo.Exists)
-                    fileInfo.Delete();
+                var fileInfo = _fileHelper.GetFileInfo(t);
+                if (_fileHelper.Exists(fileInfo))
+                    _fileHelper.Delete(fileInfo);
                 _context.Doc.Remove(s);
                 _context.SaveChanges();
                 return Json("success");

@@ -206,9 +206,9 @@ namespace Bint.Controllers
                             break;
                     }
 
-                    var fileInfo = new FileInfo(t);
-                    if (fileInfo.Exists)
-                        fileInfo.Delete();
+                    var fileInfo = _fileHelper.GetFileInfo(t);
+                    if (_fileHelper.Exists(fileInfo))
+                        _fileHelper.Delete(fileInfo);
                 }
                 catch (Exception ex)
                 {

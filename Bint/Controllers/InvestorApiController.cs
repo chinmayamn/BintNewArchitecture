@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Bint.Models;
 using Bint.Repository;
+using Bint.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,14 @@ namespace Bint.Controllers
         private readonly IInvestorRepository _investorRepository;
         private readonly ILogger<InvestorApiController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFileHelper _fileHelper;
 
         public InvestorApiController(IInvestorRepository investorRepository, UserManager<ApplicationUser> userManager,
-            ILogger<InvestorApiController> logger)
+            ILogger<InvestorApiController> logger, IFileHelper fileHelper)
         {
             _investorRepository = investorRepository;
             _userManager = userManager;
+            _fileHelper = fileHelper;
             _logger = logger;
         }
 
@@ -40,11 +43,10 @@ namespace Bint.Controllers
                 //hard delete previous file
                 try
                 {
-                    var t = "";
-                    t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.QrCode.Replace("/", "\\");
-                    var fileInfo = new FileInfo(t);
-                    if (fileInfo.Exists)
-                        fileInfo.Delete();
+                    var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.QrCode.Replace("/", "\\");
+                    var fileInfo = _fileHelper.GetFileInfo(t);
+                    if (_fileHelper.Exists(fileInfo))
+                        _fileHelper.Delete(fileInfo);
                 }
                 catch (Exception ex)
                 {

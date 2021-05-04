@@ -25,16 +25,18 @@ namespace Bint.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbFunc _dbf;
         private readonly IDbConstants _dbConstants;
+        private readonly IFileHelper _fileHelper;
 
         public PartnerController(IHttpContextAccessor httpContext, ILogger<PartnerController> logger,
             RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants)
+            ApplicationDbContext context, IConfiguration configuration, IDbConstants dbConstants, IFileHelper fileHelper)
         {
             _request = httpContext;
             _logger = logger;
             _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
+            _fileHelper = fileHelper;
             _dbConstants = dbConstants;
             _dbf = new DbFunc(logger,configuration,dbConstants);
         }
@@ -261,9 +263,9 @@ namespace Bint.Controllers
                 try
                 {
                     var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.QrCode.Replace("/", "\\");
-                    var fileInfo = new FileInfo(t);
-                    if (fileInfo.Exists)
-                        fileInfo.Delete();
+                    var fileInfo = _fileHelper.GetFileInfo(t);
+                    if (_fileHelper.Exists(fileInfo))
+                        _fileHelper.Delete(fileInfo);
                 }
                 catch (Exception ex)
                 {

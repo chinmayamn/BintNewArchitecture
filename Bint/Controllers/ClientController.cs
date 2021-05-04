@@ -21,13 +21,15 @@ namespace Bint.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDbFunc _dbf;
         private readonly IDbConstants _dbConstants;
+        private readonly IFileHelper _fileHelper;
 
         public ClientController(ILogger<ClientController> logger, ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager, IConfiguration configuration, IDbConstants dbConstants)
+            UserManager<ApplicationUser> userManager, IConfiguration configuration, IDbConstants dbConstants, IFileHelper fileHelper)
         {
             _logger = logger;
             _userManager = userManager;
             _dbConstants = dbConstants;
+            _fileHelper = fileHelper;
             _dbf = new DbFunc(_logger,configuration,dbConstants);
         }
 
@@ -169,12 +171,10 @@ namespace Bint.Controllers
                 //hard delete previous file
                 try
                 {
-                    var z = Directory.GetCurrentDirectory();
-                    var t = "";
-                    t = z + "\\wwwroot" + u.QrCode.Replace("/", "\\");
-                    var fileInfo = new FileInfo(t);
-                    if (fileInfo.Exists)
-                        fileInfo.Delete();
+                    var t = Directory.GetCurrentDirectory() + "\\wwwroot" + u.QrCode.Replace("/", "\\");
+                    var fileInfo = _fileHelper.GetFileInfo(t);
+                    if (_fileHelper.Exists(fileInfo))
+                        _fileHelper.Delete(fileInfo);
                 }
                 catch (Exception ex)
                 {
