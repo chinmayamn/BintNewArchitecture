@@ -183,10 +183,11 @@ namespace Bint.Controllers
             try
             {
                 ViewBag.ReturnUrl = "/partner/clients";
-                var m = new CustomerUserCreate();
-                var z = _userManager.Users.AsEnumerable().Where(u => u.CreatedId == _userManager.GetUserId(User))
-                    .OrderByDescending(x => x.CreatedOn.TimeOfDay);
-                m.AppUser = z;
+                var m = new CustomerUserCreate
+                {
+                    AppUser = _userManager.Users.AsEnumerable().Where(u => u.CreatedId == _userManager.GetUserId(User))
+                    .OrderByDescending(x => x.CreatedOn.TimeOfDay)
+                };
                 return View(m);
             }
             catch (Exception e)

@@ -128,9 +128,10 @@ namespace Bint.Controllers
             try
             {
                 ViewBag.ReturnUrl = "/investor/partners";
-                var m = new CustomerUserCreate();
-                IEnumerable<ApplicationUser> z = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId);
-                m.AppUser = z;
+                var m = new CustomerUserCreate
+                {
+                    AppUser = _userManager.Users.Where(x => x.CreatedBy == _userManager.GetUserAsync(User).Result.UserId)
+                };
                 return View(m);
             }
             catch (Exception e)
