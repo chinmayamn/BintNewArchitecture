@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using BintTest.Common;
+
 namespace BintTest.Controllers
 {
     [ExcludeFromCodeCoverage]
@@ -36,8 +36,7 @@ namespace BintTest.Controllers
             _logger = Substitute.For<ILogger<AdminController>>();
             _environment = Substitute.For<IHostingEnvironment>();
             _dbf = Substitute.For<IDbFunc>();
-             var userStore = Substitute.For<IUserStore<ApplicationUser>>();
-            _request = Substitute.For<IHttpContextAccessor>();
+             _request = Substitute.For<IHttpContextAccessor>();
             _client = Substitute.For<HttpClient>();
             _dbConstants = Substitute.For<IDbConstants>();
             _configuration = Substitute.For<IConfiguration>();
@@ -48,11 +47,10 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
-            AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
+           AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
             var result = adminController.Dashboard();
@@ -66,10 +64,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -84,10 +81,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -102,11 +98,10 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
-            AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
+           AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
             var result = adminController.BgcDepositWithdraw();
@@ -120,10 +115,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -138,10 +132,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -156,10 +149,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -178,10 +170,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -196,10 +187,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -214,10 +204,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -232,11 +221,10 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
-            AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
+             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
             var result = adminController.ActivityLog();
@@ -250,10 +238,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act
@@ -268,10 +255,9 @@ namespace BintTest.Controllers
         {
             //Arrange
             var userManagerMock = GetUserManagerMock<ApplicationUser>();
-            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<String>())).Returns(Task.FromResult(new ApplicationUser()));
+            userManagerMock.Setup(u => u.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new ApplicationUser()));
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
-            Mock<ILogger<PartnerController>> logMock = new Mock<ILogger<PartnerController>>();
             AdminController adminController = new AdminController(_request, roleManagerMock, userManagerMock.Object, _environment, _logger, _context, _configuration, _dbConstants);
 
             //Act

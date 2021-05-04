@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Bint.Controllers;
 
 namespace BintTest.Common
 {
@@ -33,5 +34,7 @@ namespace BintTest.Common
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<ILogger<RoleManager<TIdentityRole>>>().Object);
         }
+
+        public Mock<ILogger<AdminApiController>> LogMock = new Mock<ILogger<AdminApiController>>();
     }
 }
