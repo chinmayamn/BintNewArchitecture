@@ -46,20 +46,6 @@ namespace Bint.Controllers
             return _roleManager.Roles.ToList();
         }
 
-        // GET: api/Admin
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new[] {"value1", "value2"};
-        }
-
-        // GET: api/Admin/5
-        [HttpGet("{id:int}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST: api/Admin
         [HttpPost]
         [Route("createrole")]
@@ -67,18 +53,6 @@ namespace Bint.Controllers
         {
             var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
             return "success";
-        }
-
-        // PUT: api/Admin/5
-        [HttpPut("{id:int}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id:int}")]
-        public void Delete(int id)
-        {
         }
 
         [HttpPost]
