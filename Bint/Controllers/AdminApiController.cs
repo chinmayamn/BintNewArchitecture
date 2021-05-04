@@ -145,26 +145,25 @@ namespace Bint.Controllers
         {
             try
             {
-                var route = Request.Path.Value.Split("/")[1];
                 var z1 = Path.GetFileNameWithoutExtension(formFile.FileName) +"_"+ DateTime.Now.ToString("yyyyMMddTHHmmssfff") + Path.GetExtension(formFile.FileName); //file extension
                 var path = Path.Combine("wwwroot", "docs", z1);
                 var u = _userManager.GetUserAsync(User).Result;
 
-
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await formFile.CopyToAsync(stream); //push file
-                    var d = new Doc();
-                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
-                    d.CreatedDate = indianTime;
-                    d.DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", "");
-                    d.Filename = filename;
-                    d.Status = "Pending";
-                    d.Userid = u.Id;
+                    var d = new Doc
+                    {
+                        CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
+                        DocPath = "/" + path.Replace("\\", "/").Replace("wwwroot/", ""),
+                        Filename = filename,
+                        Status = "Pending",
+                        Userid = u.Id
+                    };
                     _context.Doc.Add(d);
                     await _context.SaveChangesAsync();
                     TempData["data"] = "File uploaded successfully";
-                    return RedirectToAction("myprofile", route);
+                    return RedirectToAction("myprofile", Request.Path.Value.Split("/")[1]);
                 }
             }
             catch (Exception ex)

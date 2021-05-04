@@ -160,25 +160,25 @@ namespace Bint.Controllers
                     dd.SkipBotDetection();
                     dd.Parse();
 
-                    var cd = new CaptureDeviceData();
-                    var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
-
-                    cd.OsName = dd.GetOs().Match.Name;
-                    cd.OsVersion = dd.GetOs().Match.Version;
-                    cd.OsPlatform = dd.GetOs().Match.Platform;
-                    cd.BrowserName = dd.GetBrowserClient().Match.Name;
-                    cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
-                    cd.DeviceName = dd.GetDeviceName();
-                    cd.DeviceModel = dd.GetModel();
-                    cd.Brand = dd.GetBrand();
-                    cd.BrandName = dd.GetBrandName();
-                    cd.Useragent = uAgent;
-                    cd.URole = roles[0];
-                    cd.UserId = user.Id;
-                    cd.LoginTime = indianTime;
-                    cd.PublicIp = pip;
-                    cd.Ipv4 = ipv4;
-                    cd.Ipv6 = ipv6;
+                    var cd = new CaptureDeviceData
+                    {
+                        OsName = dd.GetOs().Match.Name,
+                        OsVersion = dd.GetOs().Match.Version,
+                        OsPlatform = dd.GetOs().Match.Platform,
+                        BrowserName = dd.GetBrowserClient().Match.Name,
+                        BrowserVersion = dd.GetBrowserClient().Match.Version,
+                        DeviceName = dd.GetDeviceName(),
+                        DeviceModel = dd.GetModel(),
+                        Brand = dd.GetBrand(),
+                        BrandName = dd.GetBrandName(),
+                        Useragent = uAgent,
+                        URole = roles[0],
+                        UserId = user.Id,
+                        LoginTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone),
+                        PublicIp = pip,
+                        Ipv4 = ipv4,
+                        Ipv6 = ipv6
+                    };
 
                     _context.CaptureDeviceData.Add(cd);
                     await _context.SaveChangesAsync();
@@ -375,8 +375,7 @@ namespace Bint.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(model);
-            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
-
+        
             var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
             user.Firstname = model.Firstname;
             user.Lastname = model.Lastname;
@@ -395,7 +394,7 @@ namespace Bint.Controllers
             if (model.ProfilePicture == null)
                 user.ProfilePicture = "/content/avatar.png";
 
-            user.CreatedOn = indianTime;
+            user.CreatedOn = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone); 
             user.CreatedId = _userManager.GetUserId(User);
 
             //engage role id
@@ -485,13 +484,11 @@ namespace Bint.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            var remoteIpAddress =
-                _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
+            var remoteIpAddress = _request.HttpContext.Connection.RemoteIpAddress; //major important one, gets public ip address
             var pip = remoteIpAddress.ToString();
             var id = _userManager.GetUserId(User);
             var stu = _context.CaptureDeviceData.LastOrDefault(j => j.UserId == id && j.PublicIp == pip);
-            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
-            stu.LogoutTime = indianTime;
+            stu.LogoutTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
             await _context.SaveChangesAsync();
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login), "Account");
@@ -743,26 +740,27 @@ namespace Bint.Controllers
             dd.SkipBotDetection();
             dd.Parse();
 
-            var cd = new RestrictedAccess();
-            var indianTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone);
-            cd.OsName = dd.GetOs().Match.Name;
-            cd.OsVersion = dd.GetOs().Match.Version;
-            cd.OsPlatform = dd.GetOs().Match.Platform;
-            cd.BrowserName = dd.GetBrowserClient().Match.Name;
-            cd.BrowserVersion = dd.GetBrowserClient().Match.Version;
-            cd.DeviceName = dd.GetDeviceName();
-            cd.DeviceModel = dd.GetModel();
-            cd.Brand = dd.GetBrand();
-            cd.BrandName = dd.GetBrandName();
-            cd.Useragent = uagent;
-            cd.Urole = cRole;
-            cd.UserId = id;
-            cd.ErrorTime = indianTime;
-            cd.PublicIp = pip;
-            cd.Ipv4 = ipv4;
-            cd.Ipv6 = ipv6;
-            cd.Verified = "Not Verified";
-            cd.ReturnUrl = rUrl;
+            var cd = new RestrictedAccess
+            {
+                OsName = dd.GetOs().Match.Name,
+                OsVersion = dd.GetOs().Match.Version,
+                OsPlatform = dd.GetOs().Match.Platform,
+                BrowserName = dd.GetBrowserClient().Match.Name,
+                BrowserVersion = dd.GetBrowserClient().Match.Version,
+                DeviceName = dd.GetDeviceName(),
+                DeviceModel = dd.GetModel(),
+                Brand = dd.GetBrand(),
+                BrandName = dd.GetBrandName(),
+                Useragent = uagent,
+                Urole = cRole,
+                UserId = id,
+                PublicIp = pip,
+                Ipv4 = ipv4,
+                Ipv6 = ipv6,
+                Verified = "Not Verified",
+                ReturnUrl = rUrl,
+                ErrorTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _dbConstants.IndianZone)
+            };
             _context.RestrictedAccess.Add(cd);
             await _context.SaveChangesAsync();
             await _signInManager.SignOutAsync(); //remove session variables
