@@ -18,11 +18,7 @@ namespace BintTest.Controllers
     public class RoleControllerTest
     {
        
-        //static Mock<RoleManager<IdentityRole>> _mockRoleManager = new Mock<RoleManager<IdentityRole>>();
-        //static Mock<UserManager<ApplicationUser>> _mockUserManager = new Mock<UserManager<ApplicationUser>>();
-        //static Mock<ILogger<RoleController>> mock = new Mock<ILogger<RoleController>>();
-        //RoleController _roleController = new RoleController(_mockRoleManager.Object,_mockUserManager.Object,mock.Object);
-        [Fact]
+       [Fact]
         public void Test_Index()
         {
             var dbSetMock = new Mock<DbSet<ApplicationUser>>();

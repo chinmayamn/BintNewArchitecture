@@ -365,17 +365,6 @@ namespace Bint.Controllers
                 var s = await _userManager.GetRolesAsync(user);
                 ViewData["layout"] = s[0];
             }
-            else
-            {
-                //create first default user and add to admin role
-                await _roleManager.CreateAsync(new IdentityRole("Admin"));
-                var firstUser = new ApplicationUser()
-                {
-                    UserName = "admin@admin.com", Email = "admin@admin.com", PasswordHash = ""
-                };
-                await _userManager.CreateAsync(firstUser,"Mangala@123");
-                await _userManager.AddToRoleAsync(firstUser, "Admin");
-            }
             return View("Register");
         }
 
