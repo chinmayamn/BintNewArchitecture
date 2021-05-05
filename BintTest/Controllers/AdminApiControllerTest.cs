@@ -205,7 +205,7 @@ namespace BintTest.Controllers
             roleManagerMock.CreateAsync(new IdentityRole("Client"));
             roleManagerMock.CreateAsync(new IdentityRole("Investor"));
             AccountController adminController = new AccountController(fakeUserManager.Object, signInManager.Object, roleManagerMock, _request, _emailSender, MockAccountLogger.Object, _configuration, _context, _message, _dbConstants, _fileHelper);
-            adminController.Register();
+            adminController.Register(); 
             //_roleManager.CreateAsync(new IdentityRole("Admin"));
             //var firstUser = new ApplicationUser()
             //{
