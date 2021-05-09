@@ -14,6 +14,7 @@ using Serilog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Bint.Constants;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bint
 {
@@ -45,7 +46,7 @@ namespace Bint
             services.AddTransient<IMessage, Message>();
             services.AddTransient<IFileHelper, FileHelper>();
             services.AddTransient<IDbConstants, DbConstants>();
-            
+           
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             services.Configure<IdentityOptions>(options => {

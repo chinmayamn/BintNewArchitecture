@@ -7,5 +7,11 @@ namespace Bint.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public string getvalue()
+        {
+            return "ss";
+        }
     }
 }

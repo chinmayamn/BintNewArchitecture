@@ -11,36 +11,13 @@ namespace Bint
     [ExcludeFromCodeCoverage]
     public class Program
     {
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", false, true)
-            .AddJsonFile(
-                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}.json",
-                true)
-            .Build();
-
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger();
-
-            //Serilog.Debugging.SelfLog.Enable(msg =>
-            //{
-            //    Debug.Print(msg);
-            //    Debugger.Break();
-            //});
-
-            BuildWebHost(args).Run();
+          CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseConfiguration(Configuration)
-                .UseSerilog()
-                .Build();
-        }
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }
