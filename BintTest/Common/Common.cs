@@ -43,6 +43,7 @@ namespace BintTest.Common
         public Mock<ILogger<InvestorApiController>> MockInvestorApiLogger = new Mock<ILogger<InvestorApiController>>();
         public Mock<ILogger<PartnerController>> MockPartnerLogger = new Mock<ILogger<PartnerController>>();
         public Mock<ILogger<AccountController>> MockAccountLogger = new Mock<ILogger<AccountController>>();
+        public Mock<ILogger<RoleController>> MockRoleLogger = new Mock<ILogger<RoleController>>();
 
     }
 }

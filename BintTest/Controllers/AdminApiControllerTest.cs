@@ -168,7 +168,7 @@ namespace BintTest.Controllers
         }
 
         [Fact]
-        public void CreateRole_CreateUsers()
+        public async Task CreateRole_CreateUsers()
         {
             //Arrange
             var users = new List<ApplicationUser>
@@ -201,11 +201,13 @@ namespace BintTest.Controllers
 
             var roleManagerMock = GetRoleManagerMock<IdentityRole>().Object;
 
-            roleManagerMock.CreateAsync(new IdentityRole("Partner"));
-            roleManagerMock.CreateAsync(new IdentityRole("Client"));
-            roleManagerMock.CreateAsync(new IdentityRole("Investor"));
             AccountController adminController = new AccountController(fakeUserManager.Object, signInManager.Object, roleManagerMock, _request, _emailSender, MockAccountLogger.Object, _configuration, _context, _message, _dbConstants, _fileHelper);
-            adminController.Register(); 
+
+            RoleController roleController = new RoleController(roleManagerMock, fakeUserManager.Object, MockRoleLogger.Object);
+
+            await roleController.CreateRole("Partner");
+            await roleController.CreateRole("Client");
+            await roleController.CreateRole("Investor");
             //_roleManager.CreateAsync(new IdentityRole("Admin"));
             //var firstUser = new ApplicationUser()
             //{

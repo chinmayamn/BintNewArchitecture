@@ -67,6 +67,13 @@ namespace Bint.Controllers
                 TempData["error"] = "Tether details change error";
                 return BadRequest();
             }
+
+           
+        }
+        [HttpGet]
+        public string Get()
+        {
+            return  "ss";
         }
     }
 }
