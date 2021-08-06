@@ -20,7 +20,7 @@ namespace Bint.Controllers
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
 
-        private readonly IApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<PartnerController> _logger;
         private readonly IHttpContextAccessor _request;
         private readonly RoleManager<IdentityRole> _roleManager;

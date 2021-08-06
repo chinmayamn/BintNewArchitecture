@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using Bint.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Bint.Data
 {
     [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>,IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
