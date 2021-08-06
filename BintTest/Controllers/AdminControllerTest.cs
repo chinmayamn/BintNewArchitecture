@@ -17,6 +17,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using NSubstitute.ReturnsExtensions;
 using Xunit;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
+using Moq;
 
 namespace BintTest.Controllers
 {

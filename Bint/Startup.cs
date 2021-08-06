@@ -30,7 +30,7 @@ namespace Bint
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services) 
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -41,8 +41,10 @@ namespace Bint
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IInvestorRepository, InvestorRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
-            services.AddTransient<IDbFunc, DbFunc>();
             services.AddTransient<IMessage, Message>();
             services.AddTransient<IFileHelper, FileHelper>();
             services.AddTransient<IDbConstants, DbConstants>();
