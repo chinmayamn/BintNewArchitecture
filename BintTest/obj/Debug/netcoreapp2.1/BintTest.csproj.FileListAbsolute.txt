@@ -1,7 +1,6 @@
-C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.csprojAssemblyReference.cache
-C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.csproj.CoreCompileInputs.cache
-C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.AssemblyInfoInputs.cache
-C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.AssemblyInfo.cs
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\appsettings.Development.json
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\bundleconfig.json
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\xunit.runner.reporters.netcoreapp10.dll
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\xunit.runner.utility.netcoreapp10.dll
@@ -12,6 +11,11 @@ C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\BintTest.pdb
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\Bint.dll
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\bin\Debug\netcoreapp2.1\Bint.pdb
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.csprojAssemblyReference.cache
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.AssemblyInfoInputs.cache
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.AssemblyInfo.cs
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.csproj.CoreCompileInputs.cache
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.csproj.CopyComplete
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.dll
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.pdb
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintTest\obj\Debug\netcoreapp2.1\BintTest.genruntimeconfig.cache

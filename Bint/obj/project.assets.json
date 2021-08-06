@@ -3351,6 +3351,9 @@
           "lib/netstandard2.0/Serilog.Sinks.PeriodicBatching.dll": {}
         }
       },
+      "SonarAnalyzer.CSharp/8.22.0.31243": {
+        "type": "package"
+      },
       "SQLitePCLRaw.bundle_green/1.1.7": {
         "type": "package",
         "dependencies": {
@@ -9304,6 +9307,25 @@
         "serilog.sinks.periodicbatching.nuspec"
       ]
     },
+    "SonarAnalyzer.CSharp/8.22.0.31243": {
+      "sha512": "WhBWn657RKj8ta8EbFd9huKcH8VZqR7cHiJfMG/UZnx99DolpsEpXfF7bScYx8cM0wZcW5mvsKalR29el0ao0A==",
+      "type": "package",
+      "path": "sonaranalyzer.csharp/8.22.0.31243",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/Google.Protobuf.dll",
+        "analyzers/SonarAnalyzer.CFG.dll",
+        "analyzers/SonarAnalyzer.CSharp.dll",
+        "analyzers/SonarAnalyzer.dll",
+        "images/sonarsource_64.png",
+        "sonaranalyzer.csharp.8.22.0.31243.nupkg.sha512",
+        "sonaranalyzer.csharp.nuspec",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
+      ]
+    },
     "SQLitePCLRaw.bundle_green/1.1.7": {
       "sha512": "Kw+n4CUhQ8S4YAPmpRUldO8S7c4LU7HHukJF0v5Sfggf8Ia9YVdIh0dYkMvKvS+DTX+OBORSMqPM0CGfAzFtVA==",
       "type": "package",
@@ -14455,7 +14477,8 @@
       "Serilog >= 2.10.0",
       "Serilog.AspNetCore >= 3.4.0",
       "Serilog.Settings.Configuration >= 3.1.0",
-      "Serilog.Sinks.MSSqlServer >= 5.6.0"
+      "Serilog.Sinks.MSSqlServer >= 5.6.0",
+      "SonarAnalyzer.CSharp >= 8.22.0.31243"
     ]
   },
   "packageFolders": {
@@ -14488,6 +14511,7 @@
       },
       "frameworks": {
         "netcoreapp2.0": {
+          "targetAlias": "netcoreapp2.0",
           "projectReferences": {}
         }
       },
@@ -14499,6 +14523,7 @@
     },
     "frameworks": {
       "netcoreapp2.0": {
+        "targetAlias": "netcoreapp2.0",
         "dependencies": {
           "DeviceDetector.NET": {
             "target": "Package",
@@ -14518,6 +14543,7 @@
             "version": "[2.0.3, )"
           },
           "Microsoft.NETCore.App": {
+            "suppressParent": "All",
             "target": "Package",
             "version": "[2.0.0, )",
             "autoReferenced": true
@@ -14542,13 +14568,25 @@
           "Serilog.Sinks.MSSqlServer": {
             "target": "Package",
             "version": "[5.6.0, )"
+          },
+          "SonarAnalyzer.CSharp": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[8.22.0.31243, )"
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

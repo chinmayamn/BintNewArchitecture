@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ANBB8rXkfIHZhlaijHtIRil2x63SdwCgrnOqOMroqN7pEb9OiJNjKrDdue9ErSvVmrn3/mHGNb3hWXNe2YCmww==",
+  "dgSpecHash": "NbLZVQHNsJFpfopDmy6xvlXPgL8k0KxT2Y6KOm+VJx+dhAVIZ0sWVolTHSYRlj5wRa77G1MdmBrg1UkPiefd1A==",
   "success": true,
   "projectFilePath": "C:\\Users\\narasimhamurthy_chin\\source\\repos\\Bint\\Bint\\Bint.csproj",
   "expectedPackageFiles": [
@@ -221,6 +221,7 @@
     "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\serilog.sinks.file\\4.1.0\\serilog.sinks.file.4.1.0.nupkg.sha512",
     "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\serilog.sinks.mssqlserver\\5.6.0\\serilog.sinks.mssqlserver.5.6.0.nupkg.sha512",
     "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\serilog.sinks.periodicbatching\\2.3.0\\serilog.sinks.periodicbatching.2.3.0.nupkg.sha512",
+    "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\sonaranalyzer.csharp\\8.22.0.31243\\sonaranalyzer.csharp.8.22.0.31243.nupkg.sha512",
     "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\sqlitepclraw.bundle_green\\1.1.7\\sqlitepclraw.bundle_green.1.1.7.nupkg.sha512",
     "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\sqlitepclraw.core\\1.1.7\\sqlitepclraw.core.1.1.7.nupkg.sha512",
     "C:\\Users\\narasimhamurthy_chin\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3.linux\\1.1.7\\sqlitepclraw.lib.e_sqlite3.linux.1.1.7.nupkg.sha512",

@@ -10,7 +10,7 @@ namespace BintTest.Controllers
     public class SuperAdminControllerTest
     {
         private static readonly Mock<ILogger<SuperAdminController>> Mock = new Mock<ILogger<SuperAdminController>>();
-        private static readonly Mock<IApplicationDBContext> MockAppDbContext = new Mock<IApplicationDBContext>();
+       private static readonly Mock<ApplicationDbContext> MockAppDbContext = new Mock<ApplicationDbContext>();
         private readonly SuperAdminController _superAdminController = new SuperAdminController(MockAppDbContext.Object, Mock.Object);
         
         [Fact]

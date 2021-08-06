@@ -6,8 +6,10 @@ C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\bin\Debug\ne
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\bin\Debug\netcoreapp2.1\BintIntegrationTest.runtimeconfig.dev.json
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\bin\Debug\netcoreapp2.1\BintIntegrationTest.dll
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\bin\Debug\netcoreapp2.1\BintIntegrationTest.pdb
-C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.csproj.CoreCompileInputs.cache
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.csprojAssemblyReference.cache
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.AssemblyInfoInputs.cache
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.AssemblyInfo.cs
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.csproj.CoreCompileInputs.cache
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.dll
 C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.pdb
+C:\Users\narasimhamurthy_chin\source\repos\Bint\BintIntegrationTest\obj\Debug\netcoreapp2.1\BintIntegrationTest.genruntimeconfig.cache
