@@ -16,13 +16,13 @@ namespace Bint.Controllers
     public class InvestorController : Controller
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly IApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IDbFunc _dbFunc;
         private readonly ILogger<InvestorController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public InvestorController(ILogger<InvestorController> logger, UserManager<ApplicationUser> userManager,
-            IApplicationDbContext context, IDbFunc iDbFunc)
+            ApplicationDbContext context, IDbFunc iDbFunc)
         {
             _logger = logger;
             _userManager = userManager;

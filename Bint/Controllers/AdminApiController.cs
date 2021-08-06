@@ -17,7 +17,7 @@ namespace Bint.Controllers
     public class AdminApiController : Controller
     {
         private static readonly TimeZoneInfo IndianZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
-        private readonly IApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<AdminApiController> _logger;
         private readonly IMessage _message;
         private readonly ILogger<Message> _messageLogger;
@@ -26,7 +26,7 @@ namespace Bint.Controllers
         private readonly IAdminRepository _adminRepository;
 
         public AdminApiController(RoleManager<IdentityRole> roleManager, IAdminRepository adminRepository,
-            UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, IApplicationDbContext context,
+            UserManager<ApplicationUser> userManager, ILogger<AdminApiController> logger, ApplicationDbContext context,
             ILogger<Message> messageLogger, IMessage message)
         {
             _adminRepository = adminRepository;

@@ -9,9 +9,9 @@ namespace Bint.Controllers
 { 
     public class SuperAdminController : Controller
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<SuperAdminController> _logger;
-        public SuperAdminController(IApplicationDbContext context, ILogger<SuperAdminController> logger)
+        public SuperAdminController(ApplicationDbContext context, ILogger<SuperAdminController> logger)
         {
             _context = context; _logger = logger;
         }
