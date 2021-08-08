@@ -1,5 +1,6 @@
 ﻿using Bint.Data;
 using Bint.Models;
+using Bint.Repository;
 using Bint.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,9 @@ namespace Bint
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IInvestorRepository, InvestorRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
             services.AddTransient<IDbFunc, DbFunc>();
             services.AddTransient<IMessage, Message>();
