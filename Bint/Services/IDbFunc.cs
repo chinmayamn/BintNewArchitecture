@@ -1,9 +1,11 @@
-﻿using System.Data;
+﻿using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace Bint.Services
 {
     public interface IDbFunc
     {
+        IConfigurationRoot GetConfiguration();
         DataTable GetRequestUsdReport(string userid);
         DataTable GetTransferUsdReport(string userid);
         DataTable GetUserActivityLog(string userid);
